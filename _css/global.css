@@ -16,7 +16,7 @@ body {
     font-size:12px;
     height:100%;
     margin:0px;
-    padding:18px 0 0 0;
+    padding:5px 0 0 0;
     text-transform:uppercase;
     width:100%;
     text-align: center;
@@ -24,12 +24,11 @@ body {
 .button_container {
 	position: absolute;
     text-align: center;
-	bottom: -68px;
-	right: 50%;
-	margin-right: -140px;
+	top: 68px;
+	right: 0;
     padding: 5px;
     background: #131313;
-    border-radius: 0 0 30px 30px;
+    border-radius: 30px 0 0 30px;
     border-bottom: 1px solid #3f3f3f;
     box-shadow: 0px 3px 18px rgba(0,0,0,.8);
 }
@@ -40,7 +39,7 @@ body {
     overflow: hidden;
 }
 .buttons a {
-    display: inline-block;
+    display: block;
     width: 54px;
     text-decoration: none;
     padding: 0;
