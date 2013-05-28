@@ -1,35 +1,51 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-        <title>mobi</title>
-    </head>
-    <script src="_js/jquery.js"></script>
-    <script src="_js/global.js"></script>
+<!doctype html>
+<html lang="en" ng-app>
+<head>
+	<meta charset="utf-8">
+	<title>My HTML File</title>
 
-    <link rel="stylesheet" type="text/css" href="_css/global.css">
-    <body>
+	<link rel="stylesheet" type="text/css" href="_css/global.css">
+</head>
+<body>
 
-		<div class="content_container">
-		    <div class="content_wrapper">
-		    	<div class="content">
-		    	    <iframe frameborder="0" id="iframe_view" src></iframe>
-			    </div>
-		    </div>
-
-    	    <div id="url">
-			    <div id="history_panel">
-				    <ul></ul>
-			    </div>
-
-			    <form id="url_form" method="post" autocomplete="on"><input type="text" name="url_input" id="url_input" placeholder="enter a url" tabindex="1" autocomplete="on"><a href="#" id="frame_reload"></a><a href="#" id="frame_history"></a></form>
-    	    </div>
-
-	    </div>
-    	<div class="button_container">
-		    <div class="buttons">
-		    	<a href="#" id="desktop" class="active">Desktop</a><a href="#" id="ipadL">iPad Landscape</a><a href="#" id="ipadP">iPad Portrait</a><a href="#" id="iphone5">iPhone 5</a><a href="#" id="iphone4">iPhone 4</a>
+	<div class="content_container">
+	    <div class="content_wrapper">
+	    	<div class="content">
+	    	    <iframe frameborder="0" id="iframe_view" width="100%" height="100%" src></iframe>
 		    </div>
 	    </div>
-    </body>
+    </div>
+
+    <div id="panel">
+	    <form id="url_form" method="post">
+	    	<input type="text" name="url_input" id="url_input" placeholder="enter a url" tabindex="1">
+	    	<a href="#" id="frame_reload"></a><a href="#" id="frame_history"></a>
+	    </form>
+	    <div id="menu_button"></div>
+	    <div id="mobi_menu">
+		    <div id="mobi_menu_container">
+		    	<div id="mobi_menu_cards">
+		    		<ol></ol>
+		    	</div>
+	    		<div id="cards_scroll_l" class="card_scroll">&lang;</div>
+	    		<div id="cards_scroll_r" class="card_scroll">&rang;</div>
+		    </div>
+		    <div id="mobi_menu_history"><ul></ul></div>
+		    <div id="mobi_menu_buttons">
+			    <button id="add_card" data-state="add">&plus;</button>
+			    <button id="rotate_iframe">R</button>
+			    <div id="devices"><ul></ul></div>
+		    </div>
+	    </div>
+    </div>
+
+<div id="modal"></div>
+
+<script src="_lib/jquery.min.js"></script>
+<script src="_lib/jquery.ui/jquery-ui.min.js"></script>
+<script src="_js/global.js"></script>
+
+</body>
 </html>
+
+
