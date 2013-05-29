@@ -43,21 +43,17 @@ var storage = {
 var timer = {
 	'cur': '',
 	'idx': 0,
-	'tmr':{
-		'hr': 0,
-		'min': 0,
-		'sec': 0
-	},
+	'tmr': {hr:0, min: 0, sec: 0},
 	'init': function() {},
 	'get': function() {
-		return storage.get(mobi.site)['cards'][timer.idx].timer;
+		var tmr = mobi.sites.get()['cards'][timer.idx].timer;
+		timer.tmr = tmr;
 	},
 
 	'set': function() {
 		var s = mobi.sites.get();
 		s['cards'][timer.idx].timer = timer.tmr;
 		storage.set(mobi.site, s);
-
 	},
 
 	'start_stop': function(id) {
@@ -65,20 +61,17 @@ var timer = {
 		var sym = '&plus;',
 			$this = $('#'+id+' .start_stop');
 
-		timer.tmr = timer.get();
-
-		$this.toggleClass('stop').toggleClass('start');
-
-		if ($this.hasClass('stop')) {
+		if ($this.hasClass('start')) {
 			timer.cur = id;
 			timer.idx = parseFloat(id);
+			timer.get();
 			timer.start();
 			sym = '&times;';
 		} else {
 			timer.stop();
 		}
 
-		$this.html(sym);
+		$this.toggleClass('start').toggleClass('stop').html(sym);
 	},
 
 	'start': function() {
@@ -91,22 +84,21 @@ var timer = {
 			t_min = parseFloat(t_min) > 0 && parseFloat(t_min) < 10 ? '0' + t_min : t_min;
 			t_sec = parseFloat(t_sec) > 0 && parseFloat(t_sec) < 10 ? '0' + t_sec : t_sec;
 
-		this.tmr.sec++;
-		if (this.tmr.sec == 60) {
-			this.tmr.sec = 0;
-			this.tmr.min++;
+		timer.tmr.sec++;
+		if (timer.tmr.sec == 60) {
+			timer.tmr.sec = 0;
+			timer.tmr.min++;
 		}
-		if (this.tmr.min == 60) {
-			this.tmr.min = 0;
-			this.tmr.hr++
+		if (timer.tmr.min == 60) {
+			timer.tmr.min = 0;
+			timer.tmr.hr++
 		}
 
-		timer.set();
 		$timer.val( t_hr + t_min + t_sec );
 		window_timer = setTimeout('timer.start()', 1*1000);
-
 	},
 	'stop': function() {
+		timer.set();
 		window.clearTimeout(window_timer);
 	},
 	'reset': function() {
@@ -207,13 +199,17 @@ var cards = {
 		return card_out;
 	},
 
+	'get': function() {
+		return mobi.sites.get()['cards'];
+	},
+
 	'list': function() {
-		var card_list = mobi.sites.get()['cards'],
+		var c = cards.get(),
 			ret = '';
 
-		for (var x in card_list) {
-			if (card_list[x] != null) {
-				ret += this.cardHTML(card_list[x], x + '-card');
+		for (var x in c) {
+			if (c[x] != null) {
+				ret += this.cardHTML(c[x], x + '-card');
 			}
 		}
 		$('#mobi_menu_container ol').html(ret);
@@ -280,22 +276,14 @@ var cards = {
 	},
 
 	'delete': function(e) {
-		var all_cards = storage.get('cards'),
+		var s = mobi.sites.get(),
 			$id = $(this).data('id');
 
-			all_cards[mobi.site].splice(parseFloat($id), 1);
-//			storage.set('cards', all_cards);
-			$('#' + $id).hide(175, function() {
-				$(this).remove();
-			});
-/*
-
-		all_cards[mobi.site] = all_cards[mobi.site];
-
-
-		console.log(all_cards[mobi.site]);
-
-*/
+		s['cards'].splice(parseFloat($id), 1);
+		storage.set(mobi.site, s);
+		$('#' + $id).hide(175, function() {
+			$(this).remove();
+		});
 	}
 
 };
