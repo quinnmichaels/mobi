@@ -190,6 +190,15 @@ button:focus {
 		.radius(2.2em);
 	    .shadow(0px 1px 9px rgba(0,0,0,.5));
 	}
+	label[for="url_input"] {
+		color: lighten(black, 60%);
+		display: inline-block;
+		position: absolute;
+		font-size: 2em;
+		left: 10px;
+		top: 2px;
+		text-shadow: 0 1px 0 white;
+	}
 	#url_input {
 		position: absolute;
 		font-family: Helvetica, Arial;
@@ -199,7 +208,7 @@ button:focus {
 		border: none;
 		outline: none;
 	    margin: 0 0 0 0;
-	    padding: 2px 0 2px 10px;
+	    padding: 2px 0 2px 80px;
 	    background: none;
 	    text-align: left;
 	    top: 0px;
@@ -209,40 +218,44 @@ button:focus {
 	}
 
 	#frame_reload,
-	#frame_history {
+	#frame_history,
+	#frame_settings {
 		display: inline-block;
 		position: absolute;
 		top: 1px;
-	    background-size: 30px 30px !important;
+	    background-size: 30px auto !important;
+	    background-image: url(../_images/icons/icons-history-settings-refresh.png);
+	    background-repeat: no-repeat;
 	    width: 30px;
 	    height: 30px;
 	}
 	#frame_reload {
 		right: 3px;
-	    background: url(../_images/icon-refresh.png) no-repeat center center;
+		background-position: 0 -67px;
 
 		&:hover {
-		    background: url(../_images/icon-refresh-hover.png) no-repeat center center;
 		    cursor: pointer;
 		}
 		&:active {
-		    background: url(../_images/icon-refresh-active.png) no-repeat center center;
 		    cursor: pointer;
 		}
 	}
 
 	#frame_history {
 		right: 31px;
-	    background: url(../_images/icon-history.png) no-repeat center center;
+		background-position: 0 -33px;
 
 		&:hover {
-		    background: url(../_images/icon-history-hover.png) no-repeat center center;
 		    cursor: pointer;
 		}
 		&:active {
-		    background: url(../_images/icon-history-active.png) no-repeat center center;
 		    cursor: pointer;
 		}
+	}
+
+	#frame_settings {
+		right: 62px;
+		background-position: 0 1px;
 	}
 
 	#menu_button {

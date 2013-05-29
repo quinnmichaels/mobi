@@ -11,15 +11,16 @@
 	<div class="content_container">
 	    <div class="content_wrapper">
 	    	<div class="content">
-	    	    <iframe frameborder="0" id="iframe_view" width="100%" height="100%" src></iframe>
+	    	    <iframe frameborder="0" id="iframe_view" width="100%" height="100%" src="blank.html"></iframe>
 		    </div>
 	    </div>
     </div>
 
     <div id="panel">
 	    <form id="url_form" method="post">
+	    	<label for="url_input">http://</label>
 	    	<input type="text" name="url_input" id="url_input" placeholder="enter a url" tabindex="1">
-	    	<a href="#" id="frame_reload"></a><a href="#" id="frame_history"></a>
+	    	<a href="#" id="frame_settings"></a><a href="#" id="frame_reload"></a><a href="#" id="frame_history"></a>
 	    </form>
 	    <div id="menu_button"></div>
 	    <div id="mobi_menu">
@@ -44,6 +45,7 @@
 <script src="_lib/jquery.min.js"></script>
 <script src="_lib/jquery.ui/jquery-ui.min.js"></script>
 <script src="_js/global.js"></script>
+<script src="_js/redmine.js"></script>
 
 </body>
 </html>

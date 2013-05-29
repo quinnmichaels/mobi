@@ -39,67 +39,72 @@ var storage = {
 	}
 };
 
+//! timer
 var timer = {
 	'cur': '',
-	'running': {},
-	'sec': 0,
-	'min': 0,
-	'hr': 0,
+	'idx': 0,
+	'tmr':{
+		'hr': 0,
+		'min': 0,
+		'sec': 0
+	},
 	'init': function() {},
+	'get': function() {
+		return storage.get(mobi.site)['cards'][timer.idx].timer;
+	},
+
+	'set': function() {
+		var s = mobi.sites.get();
+		s['cards'][timer.idx].timer = timer.tmr;
+		storage.set(mobi.site, s);
+
+	},
 
 	'start_stop': function(id) {
-		console.log(id);
 
 		var sym = '&plus;',
 			$this = $('#'+id+' .start_stop');
 
-		timer.cur = id;
-		console.log(timer.running[timer.cur]);
-
-		if (!timer.running[timer.cur]) {
-			timer.running[timer.cur] = {
-				'hr': timer.hr,
-				'min': timer.min,
-				'sec': timer.sec
-			};
-		}
+		timer.tmr = timer.get();
 
 		$this.toggleClass('stop').toggleClass('start');
 
-		if ($this.hasClass('start')) {
-			timer.stop();
-		} else {
+		if ($this.hasClass('stop')) {
+			timer.cur = id;
+			timer.idx = parseFloat(id);
 			timer.start();
 			sym = '&times;';
+		} else {
+			timer.stop();
 		}
 
 		$this.html(sym);
-
-
 	},
+
 	'start': function() {
-		var $timer = $('#' + timer.cur + ' > input'),
-			t = timer.running[timer.cur],
-			t_hr = t.hr ? t.hr + ':' : '',
-			t_min = t.min ? t.min + ':' : '',
-			t_sec = t.sec;
+		var $timer = $('#' + this.cur + ' > input'),
+			t_hr = timer.tmr.hr ? this.tmr.hr + ':' : '00:',
+			t_min = timer.tmr.min ? this.tmr.min + ':' : '00:',
+			t_sec = timer.tmr.sec ? this.tmr.sec : '00';
 
-		t_hr = parseFloat(t_hr) < 10 ? '0' + t_hr : t_hr;
-		t_min = parseFloat(t_min) < 10 ? '0' + t_min : t_min;
-		t_sec = parseFloat(t_sec) < 10 ? '0' + t_sec : t_sec;
+			t_hr = parseFloat(t_hr) > 0 && parseFloat(t_hr) < 10 ? '0' + t_hr : t_hr;
+			t_min = parseFloat(t_min) > 0 && parseFloat(t_min) < 10 ? '0' + t_min : t_min;
+			t_sec = parseFloat(t_sec) > 0 && parseFloat(t_sec) < 10 ? '0' + t_sec : t_sec;
 
+		this.tmr.sec++;
+		if (this.tmr.sec == 60) {
+			this.tmr.sec = 0;
+			this.tmr.min++;
+		}
+		if (this.tmr.min == 60) {
+			this.tmr.min = 0;
+			this.tmr.hr++
+		}
+
+		timer.set();
 		$timer.val( t_hr + t_min + t_sec );
-		timer.stop(window_timer);
 		window_timer = setTimeout('timer.start()', 1*1000);
-		t.sec++;
-		if (t.sec == 60) {
-			t.sec = 0;
-			t.min++;
-		}
-		if (t.min == 60) {
-			t.min = 0;
-			t.hr++
-		}
+
 	},
 	'stop': function() {
 		window.clearTimeout(window_timer);
@@ -114,10 +119,6 @@ var timer = {
 var cards = {
 	'init': function() {
 		var $drag;
-
-		if (!storage.check('cards')) {
-			storage.set('cards', {});
-		}
 		cards.list();
 
 		$('button[data-action="delete"]').on('click', cards.delete);
@@ -134,7 +135,6 @@ var cards = {
 			}
 		});
 		$('.card_options_menu').on('click', function() {
-			console.log($(this).height());
 			var $height = $(this).height() - 18,
 				$pos = Math.abs(parseFloat($(this).css('bottom'))),
 				nextPos = $pos == 0 ? '-' + $height + 'px' : 0;
@@ -147,9 +147,11 @@ var cards = {
 
 		return false;
 	},
+
 	'cardBlank': function() {
 		return {'title':'','page':'', 'status':'','desc':''};
 	},
+
 	'cardScroll': function(e, ui) {
 		var id = this.id,
 			$card_box = $('#mobi_menu_cards').width(),
@@ -171,20 +173,21 @@ var cards = {
 			$cards.animate({
 				scrollLeft: animate_to
 			})
-
-		console.log($card_box + ' --- ' + pos + ' --- ' + wid);
 	},
+
 	'cardSort': function(e,u) {
 		var new_arr = [],
-			the_cards = storage.get('cards');
+			the_cards = mobi.sites.get()['cards'];
+
 		$('#mobi_menu_container ol li').each(function() {
-			new_arr.push(the_cards[mobi.site][parseFloat(this.id)]);
+			new_arr.push(the_cards[parseFloat(this.id)]);
 		});
-		the_cards[mobi.site] = new_arr;
-		storage.set('cards', the_cards);
+		the_cards = new_arr;
+//		storage.set('cards', the_cards);
 	},
+
 	'cardHTML': function(c, id) {
-		var card_menu = '<div class="card_options_menu"><div class="card_options_button"></div><div class="card_options">';
+		var card_menu = '<div class="card_options_menu" onclick=""><div class="card_options_button"></div><div class="card_options">';
 			card_menu += '<button data-action="archive" data-id="'+id+'">archive</button>';
 			card_menu += '<button data-action="delete" data-id="'+id+'">delete</button>';
 			card_menu += '</div></div>';
@@ -205,7 +208,7 @@ var cards = {
 	},
 
 	'list': function() {
-		var card_list = storage.get('cards')[mobi.site],
+		var card_list = mobi.sites.get()['cards'],
 			ret = '';
 
 		for (var x in card_list) {
@@ -235,53 +238,41 @@ var cards = {
 						$('#new_card input[name="title"]').focus();
 					}
 				});
-			break;
+				break;
 
 			case 'close':
 				n_state = 'add';
 				$('#add_card').html('&plus;');
 				$('#new_card').hide().remove();
-			break;
+				break;
 		}
 
 		$('#add_card').attr('data-state', n_state);
 
 	},
 
+	'add': function(new_card) {
+		var s = mobi.sites.get(),
+			c = s['cards'];
 
+		c.push(new_card);
 
-	'add': function(title, page, status, desc) {
-		var all_cards = storage.get('cards'),
-			this_card = {
-				'title': title,
-				'page': page,
-				'desc': desc,
-				'status': status
-			},
-			valid = true;
-
-		if (!all_cards[mobi.site]) {
-			all_cards[mobi.site] = [];
-		}
-
-		all_cards[mobi.site].push(this_card);
-		storage.set('cards', all_cards);
+		s['cards'] = c;
+		storage.set(mobi.site, s);
 	},
 
 	'save': function() {
-		console.log('save');
-	    var $title = $('#new_card [name="title"]').val(),
-	    	$url = $('#new_card [name="page"]').val(),
-	    	$status = $('#new_card [name="status"]').val(),
-	    	$desc = $('#new_card [name="desc"]').val();
+		var save_card = {
+	    	'title': $('#new_card [name="title"]').val(),
+	    	'page': $('#new_card [name="page"]').val(),
+	    	'status': $('#new_card [name="status"]').val(),
+	    	'desc': $('#new_card [name="desc"]').val(),
+	    	'timer': {'hr':0, 'min':0, 'sec':0},
+	    	'ticket': 0
+		}
 
-	    if ($title) {
-		    this.add($title, $url, $status, $desc);
-
-		    var getCards = storage.get('cards')[mobi.site],
-		    	getCard = getCards[getCards.length - 1],
-		    	cardID = getCards.length - 1 + '-card';
-
+	    if (save_card.title) {
+		    this.add(save_card);
 			this.create();
 			this.list();
 //			$('#mobi_menu_container ol').append(cards.cardHTML(getCard, cardID));
@@ -289,12 +280,11 @@ var cards = {
 	},
 
 	'delete': function(e) {
-		console.log(this)
 		var all_cards = storage.get('cards'),
 			$id = $(this).data('id');
 
 			all_cards[mobi.site].splice(parseFloat($id), 1);
-			storage.set('cards', all_cards);
+//			storage.set('cards', all_cards);
 			$('#' + $id).hide(175, function() {
 				$(this).remove();
 			});
@@ -312,11 +302,37 @@ var cards = {
 
 //! mobi
 var mobi = {
-	'site': $('#iframe_view').attr('src'),
 	'init': function() {
+		mobi.site = $('#iframe_view').attr('src');
+		this.history.init();
 		this.devices.display();
-		mobi.history.init();
+		this.sites.init();
 		cards.init();
+	},
+
+	'site': '',
+
+	'sites': {
+		'init': function() {
+			this.set(mobi.site);
+			cards.list();
+		},
+		'get': function() {
+			return storage.get(mobi.site);
+		},
+		'set': function(si) {
+			var new_site = {
+					'url': si,
+					'title': si,
+					'desc': si,
+					'cards': [],
+					'settings': {}
+				};
+
+			if (!storage.check(si)) {
+				storage.set(si, new_site);
+			}
+		}
 	},
 
 	'devices': {
@@ -376,8 +392,6 @@ var mobi = {
 	    	var cur_view = this.list[id],
 	    		$con = $('.content_container');
 
-	    	console.log(id);
-
 			if (id == 'fullscreen') {
 				$con.addClass('fullscreen');
 			} else {
@@ -402,11 +416,11 @@ var mobi = {
 			if (!storage.check('url_history')) {
 				storage.set('url_history', []);
 			} else {
-				$('#iframe_view').attr('src', last_hist);
+				$('#iframe_view').attr('src', 'http://' + last_hist);
 				$('#url_input').val(last_hist);
 			}
 
-			mobi.site = $('#iframe_view').attr('src');
+			mobi.site = $('#url_input').val();
 			this.list();
 		},
 
@@ -442,15 +456,11 @@ var mobi = {
 	},
 	'go': function(url) {
 		mobi.site = url;
-
-		var $frame = $('#iframe_view'),
-			$url = $('#url_input');
-
 		mobi.history.set(url);
-		cards.list();
+		mobi.sites.init();
 
-		$url.blur();
-		$frame.attr('src', url);
+		$('#url_input').blur();
+		$('#iframe_view').attr('src', 'http://' + url);
 	},
 
 	'refresh': function() {
@@ -462,8 +472,6 @@ var mobi = {
 $(function() {
 
 	$(document).keypress(function(e) {
-		console.log(e);
-		console.log(e.which);
 		function vdev(d) {
 			mobi.devices.view(d);
 		}
@@ -473,7 +481,6 @@ $(function() {
 				break;
 			case 730: // alt/opt + k create a new card;
 				var panel_pos = Math.abs(parseFloat($('#panel').css('bottom')));
-				console.log(panel_pos);
 				if (panel_pos) {
 					toggleMenu();
 				}
@@ -558,14 +565,15 @@ $(function() {
     });
 
 
-	mobi.init()
-
     $('#add_card').on('click', cards.create);
-    $('#devices ul li').on('click', function(e) {
+
+    $('#devices ul li div').on('click', function(e) {
 	    e.preventDefault();
 	    mobi.devices.view(this.id);
     });
 
 //    $('.timer .start_stop').on('click', timer.start_stop);
     $('.card_scroll').on('click', cards.cardScroll);
+
+	mobi.init();
 });
