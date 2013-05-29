@@ -47,15 +47,15 @@ var timer = {
 	'hr': 0,
 	'init': function() {},
 
-	'start_stop': function(e) {
-		console.log(e);
+	'start_stop': function(id) {
+		console.log(id);
 
 		var sym = '&plus;',
-			$this = $(this);
+			$this = $('#'+id+' .start_stop');
 
-		timer.cur = e.currentTarget.parentNode.id;
-
+		timer.cur = id;
 		console.log(timer.running[timer.cur]);
+
 		if (!timer.running[timer.cur]) {
 			timer.running[timer.cur] = {
 				'hr': timer.hr,
@@ -69,7 +69,6 @@ var timer = {
 		if ($this.hasClass('start')) {
 			timer.stop();
 		} else {
-			console.log('started');
 			timer.start();
 			sym = '&times;';
 		}
@@ -85,13 +84,12 @@ var timer = {
 			t_min = t.min ? t.min + ':' : '',
 			t_sec = t.sec;
 
-		console.log(t);
-
 		t_hr = parseFloat(t_hr) < 10 ? '0' + t_hr : t_hr;
 		t_min = parseFloat(t_min) < 10 ? '0' + t_min : t_min;
 		t_sec = parseFloat(t_sec) < 10 ? '0' + t_sec : t_sec;
 
 		$timer.val( t_hr + t_min + t_sec );
+		timer.stop(window_timer);
 		window_timer = setTimeout('timer.start()', 1*1000);
 		t.sec++;
 		if (t.sec == 60) {
@@ -104,7 +102,6 @@ var timer = {
 		}
 	},
 	'stop': function() {
-		console.log('stop');
 		window.clearTimeout(window_timer);
 	},
 	'reset': function() {
@@ -193,7 +190,7 @@ var cards = {
 			card_menu += '</div></div>';
 
 		var card_timer = '<div id="' + id + '-timer" class="timer">';
-			card_timer += '<button class="start_stop start">&plus;</button>';
+			card_timer += '<button class="start_stop start" onclick="timer.start_stop(\''+id+'-timer\')">&plus;</button>';
 			card_timer += '<button class="reset">&oplus;</button>';
 			card_timer += '<input type="text" name="timer" placeholder="00:00:00" value="" readonly="readonly">';
 			card_timer += '</div>';
@@ -569,6 +566,6 @@ $(function() {
 	    mobi.devices.view(this.id);
     });
 
-    $('.timer .start_stop').on('click', timer.start_stop);
+//    $('.timer .start_stop').on('click', timer.start_stop);
     $('.card_scroll').on('click', cards.cardScroll);
 });
