@@ -336,6 +336,7 @@ button:focus {
 							margin-left: @gutter;
 						}
 
+
 						> div {
 							position: relative;
 							padding: 0;
@@ -353,6 +354,10 @@ button:focus {
 							input:focus,
 							textarea:focus {
 								background: rgba(255,255,255,.75) !important;
+							}
+
+							> div {
+								position: relative;
 							}
 
 							.delete {
@@ -387,23 +392,41 @@ button:focus {
 								.radius(7px 7px 0 0);
 								.gradient(darken(@color1, 10%); darken(@color2, 10%));
 							}
-							label[for="page"] {
+							label[for="page"],
+							label[for="issue"] {
 								display: inline-block;
 								width: 35px;
 								font-size: .95em;
-								padding-left: 7px;
+								padding-left: 5px;
 								color: darken(@color2, 20%);
 								text-shadow: 0 1px 0 lighten(@color1, 20%);
 							}
-							input[name="page"] {
+
+							input[name="page"],
+							input[name="issue"] {
 								display: inline-block;
 								font-size: 1em;
-								margin: 0 0 1px -47px;
-								padding: 7px 5px 7px 47px;
+								margin: 0 0 1px -40px;
+								padding: 7px 5px 7px 40px;
 								border: 1px solid transparent;
 								background: transparent;
 								font-weight: normal;
-								width: @cardW - 42;
+								width: @cardW - 47;
+							}
+
+							button.issue_view {
+								position: absolute;
+								top: 2px;
+								right: 5px;
+								width: 24px;
+								height: 24px;
+								padding-bottom: 6px;
+								padding-left: 8px;
+								font-size: 1.7em;
+								line-height: 1px;
+								background: rgba(0,0,0,.1);
+								.b-defaults();
+								.radius(18px);
 							}
 							textarea[name="desc"] {
 								resize: none;
@@ -429,7 +452,7 @@ button:focus {
 									border: none;
 									margin: 0;
 									padding: 5px;
-									width: @cardW - 60;
+									width: @cardW - 35;
 
 								}
 								input {
@@ -450,21 +473,13 @@ button:focus {
 									margin: 0;
 
 									&.start_stop {
-										right: 25px;
+										right: 0px;
 										border: none;
 
 										&.stop {
 											.b-cancel();
 											.b-defaults();
 											border: none;
-										}
-									}
-
-									&.reset {
-										right: 0;
-										.gradient(darken(@color1, 5%), darken(@color2, 5%));
-										&:active {
-											.gradient(darken(@color2, 5%), darken(@color1, 5%));
 										}
 									}
 								}
@@ -524,7 +539,9 @@ button:focus {
 					#new_card {
 						> div {
 							display: none;
-							.timer, .card_options_menu {display: none;}
+							.timer,
+							.card_options_menu,
+							button.issue_view {display: none;}
 
 							input,
 							textarea {
@@ -575,7 +592,6 @@ button:focus {
 					.b-cancel();
 					.b-defaults();
 				}
-
 			}
 			#rotate_iframe {
 			    position: absolute;
@@ -679,23 +695,189 @@ button:focus {
 }
 
 
-#templates > div {
-	display: none;
+.rotateFromTo () {
+	from {-webkit-transform: rotate(0deg);}
+	to {-webkit-transform: rotate(360deg);}
 }
+
+@-webkit-keyframes rotate {.rotateFromTo;}
+@-moz-keyframes rotate {.rotateFromTo;}
+@-ms-keyframes rotate {.rotateFromTo;}
+@-o-keyframes rotate {.rotateFromTo;}
+@keyframes rotate {.rotateFromTo;}
+
+.loading {
+	display: none;
+	position: absolute;
+	background: url(../_images/loading.png) no-repeat center center;
+	width: 100px;
+	height: 100px;
+	top: 50%;
+	margin-top: -50px;
+	left: 50%;
+	margin-left: -50px;
+	-webkit-animation-name:             rotate;
+	-webkit-animation-duration:         1.2s;
+	-webkit-animation-iteration-count:  infinite;
+	-webkit-animation-timing-function: linear;
+
+}
+
 
 #modal {
 	position: absolute;
 	display: none;
-	width: 200px;
-	height: 3px;
-	bottom : 300px;
-	right: 200px;
 	background: rgba(0,0,0,.75);
-	left: 50%;
-	margin-left: -150px;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	height: 100%;
+
+
+	#modal_error {
+		display: none;
+		position: absolute;
+		width: 200px;
+		height: 100px;
+		top: 50%;
+		margin-top: -50px;
+		left: 50%;
+		margin-left: -100px;
+		background: white;
+		.radius(5px);
+	}
+}
+
+#redmine_issue {
+	display: none;
+	position: absolute;
+	width: 400px;
+	height: 600px;
+	background: white;
 	top: 50%;
-	margin-top: -225px;
+	margin-top: -336px;
+	left: 50%;
+	margin-left: -200px;
+	text-align: left;
+	padding: 36px;
+	font-size: 1.2em;
+	overflow: hidden;
+	z-index: 100000;
+	.shadow(0 6px 21px rgba(0,0,0,.7));
 	.radius(5px);
-	.shadow(0 9px 13px rgba(0,0,0,.5));
+
+	> div:before {
+		display: inline-block;
+		font-size: .9em;
+		width: 80px;
+		color: darken(white, 30%);
+	}
+	> div {
+		padding: 5px 0 5px 0;
+	}
+
+	.subject {
+		font-size: 1.5em;
+		margin-top: 9px;
+	}
+	.author:before {
+		content: 'author';
+	}
+
+	.assigned_to:before {
+		content: 'assigned';
+	}
+
+	.author {
+	}
+	.created:before {
+		content: 'created';
+	}
+	.status:before {
+		content: 'status';
+	}
+	.tracker:before {
+		content: 'tracker';
+	}
+	.description:before {
+		content: 'description';
+		margin-left: -80px;
+		clear: both;
+	}
+	.description {
+		margin-left: 80px;
+	}
+
+	.journal {
+		border-top: 1px solid darken(white, 30%);
+		height: 345px;
+		overflow: auto;
+		margin-top: 18px;
+
+		.journal_item {
+			border-top: 1px solid darken(white, 10%);
+			padding-top: 18px;
+			padding-bottom: 18px;
+
+			&:first-child {
+				border-top: none;
+			}
+			> h1 {
+				font-weight: normal;
+				font-size: 1.2em;
+				margin: 0;
+				padding: 0;
+			}
+			> h2 {
+				font-weight: normal;
+				font-size: .8em;
+				margin: 0;
+				padding: 0;
+				color: darken(white, 30%) !important;
+			}
+			> p {
+				padding: 0;
+				margin: 0;
+			}
+		}
+	}
+
+	.toolbar {
+		position: absolute;
+		top: 0;
+		right: 0;
+		left: 0;
+		height: 36px;
+		padding: 3px 2px 3px 2px;
+		.b-ok();
+		.gradient(@color1, @color2);
+		button {
+			border: none;
+			position: relative;
+			height: 100%;
+			padding: 0 9px 0 9px;
+			color: rgba(255,255,255,.6);
+			background: rgba(0,0,0,.2);
+			border-top: 1px solid rgba(255,255,255,.2);
+			border-bottom: 1px solid rgba(0,0,0,.2);
+			.radius(3px);
+
+			&.close_issue {
+				position: absolute;
+				top: 5px;
+				right: 5px;
+				width: 30px;
+				height: 30px;
+				font-size: 1.5em;
+				padding: 0;
+				margin: 0;
+				background: none;
+				border: none;
+			}
+		}
+
+
+	}
 }
 

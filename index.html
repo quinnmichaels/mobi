@@ -18,6 +18,18 @@
 	    	    <iframe frameborder="0" id="iframe_view" width="100%" height="100%" src="blank.html"></iframe>
 		    </div>
 	    </div>
+		<div id="redmine_issue">
+			<div class="loading"></div>
+			<div class="data subject"></div>
+			<div class="data author"></div>
+			<div class="data assigned_to"></div>
+			<div class="data created"></div>
+			<div class="data status"></div>
+			<div class="data tracker"></div>
+			<div class="data description"></div>
+			<div class="data journal"></div>
+			<div class="toolbar"><button class="view_in">view in redmine</button><button class="close_issue">&times;</button></div>
+		</div>
     </div>
 
     <div id="panel">
@@ -44,7 +56,14 @@
 	    </div>
     </div>
 
-<div id="modal"></div>
+
+<div id="modal">
+	<div class="loading"></div>
+	<div id="modal_error">
+		<h1>Error</h1>
+		<p></p>
+	</div>
+</div>
 
 <script src="_lib/jquery.min.js"></script>
 <script src="_lib/jquery.ui/jquery-ui.min.js"></script>

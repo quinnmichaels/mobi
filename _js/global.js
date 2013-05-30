@@ -141,7 +141,7 @@ var cards = {
 	},
 
 	'cardBlank': function() {
-		return {'title':'','page':'', 'status':'','desc':''};
+		return {'title':'','page':'', 'issue':'', 'status':'','desc':''};
 	},
 
 	'cardScroll': function(e, ui) {
@@ -169,13 +169,13 @@ var cards = {
 
 	'cardSort': function(e,u) {
 		var new_arr = [],
-			the_cards = mobi.sites.get()['cards'];
+			s = mobi.sites.get();
 
 		$('#mobi_menu_container ol li').each(function() {
-			new_arr.push(the_cards[parseFloat(this.id)]);
+			new_arr.push(s['cards'][parseFloat(this.id)]);
 		});
-		the_cards = new_arr;
-//		storage.set('cards', the_cards);
+		s['cards'] = new_arr;
+		storage.set(mobi.site, s);
 	},
 
 	'cardHTML': function(c, id) {
@@ -186,14 +186,14 @@ var cards = {
 
 		var card_timer = '<div id="' + id + '-timer" class="timer">';
 			card_timer += '<button class="start_stop start" onclick="timer.start_stop(\''+id+'-timer\')">&plus;</button>';
-			card_timer += '<button class="reset">&oplus;</button>';
 			card_timer += '<input type="text" name="timer" placeholder="00:00:00" value="" readonly="readonly">';
 			card_timer += '</div>';
 
 		var	card_out = card_menu;
 			card_out += '<input type="text" name="title" placeholder="title" value="' + c.title + '">';
 			card_out += card_timer;
-			card_out += '<label for="page">page</label><input type="text" name="page" placeholder="*.html" value="' + c.page + '">';
+			card_out += '<div><label for="page">page</label><input type="text" name="page" placeholder="*.html" value="' + c.page + '"></div>';
+			card_out += '<div><label for="issue">issue</label><input type="text" name="issue" placeholder="#" value="' + c.issue + '"><button class="issue_view" onclick="redmine.issues(' + c.issue + ')">&rsaquo;</button></div>';
 			card_out += '<textarea name="desc" placeholder="notes">' + c.desc + '</textarea>';
 			card_out = '<li class="card" id="' + id + '"><div>' + card_out + '</div></li>';
 		return card_out;
@@ -263,11 +263,11 @@ var cards = {
 	    	'page': $('#new_card [name="page"]').val(),
 	    	'status': $('#new_card [name="status"]').val(),
 	    	'desc': $('#new_card [name="desc"]').val(),
-	    	'timer': {'hr':0, 'min':0, 'sec':0},
-	    	'ticket': 0
+	    	'issue': $('#new_card [name="issue"]').val(),
+	    	'timer': {'hr':0, 'min':0, 'sec':0}
 		}
 
-	    if (save_card.title) {
+		if (save_card.title) {
 		    this.add(save_card);
 			this.create();
 			this.list();
@@ -456,6 +456,27 @@ var mobi = {
 	}
 };
 
+var modal = {
+	'show': function() {
+		this.loading();
+		$('#modal').fadeIn('fast');
+	},
+	'hide': function() {
+		$('#modal').fadeOut('fast', function() {
+			$('#modal > div').hide();
+		});
+	},
+	'loading': function() {
+		$('#modal_loading').toggle();
+	},
+	'err': function(er) {
+		this.loading();
+		$('#modal_error p').html(er)
+		$('#modal_error').show();
+		$('#modal_error p').html(er)
+	}
+};
+
 //! document ready
 $(function() {
 
@@ -510,7 +531,7 @@ $(function() {
 
 
 	//draggable stuff
-	$('#modal').draggable();
+	$('#redmine_issue').draggable({ containment: "parent" });
 
 	var $i = $('#iframe_view');
 
@@ -563,5 +584,15 @@ $(function() {
 //    $('.timer .start_stop').on('click', timer.start_stop);
     $('.card_scroll').on('click', cards.cardScroll);
 
+	$('#modal').on('click', function() {
+		modal.hide();
+	});
+
+	$('#redmine_issue .close_issue').on('click', redmine.closeIssue);
+
+	$('button.issue_view').on('click', function() {
+		console.log(this);
+		redmine.issues($(this).val());
+	})
 	mobi.init();
 });
