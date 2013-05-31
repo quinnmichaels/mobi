@@ -1,7 +1,7 @@
 var redmine = {
 	'key': '3ca22d5c3a4cc0d1281689b76f66e15553531cb0',
 	'baseURL': function(str) {
-		return 'http://q.dev/mobi/_cfc/mobi.cfc?method=callRedMine&redURL=' + str + '&key=' + redmine.key + '&callback=?';
+		return 'http://10.0.0.72/~quinn/dev/mobi/_cfc/mobi.cfc?method=callRedMine&redURL=' + str + '&key=' + redmine.key + '&callback=?';
 	},
 	'issueURL': function (i) {
 		return redmine.baseURL('issues/' + i);

@@ -404,7 +404,7 @@ var mobi = {
 			if (!storage.check('url_history')) {
 				storage.set('url_history', []);
 			} else {
-				$('#iframe_view').attr('src', 'http://' + last_hist);
+				$('#iframe_view').attr('src', last_hist);
 				$('#url_input').val(last_hist);
 			}
 
@@ -448,7 +448,7 @@ var mobi = {
 		mobi.sites.init();
 
 		$('#url_input').blur();
-		$('#iframe_view').attr('src', 'http://' + url);
+		$('#iframe_view').attr('src', url);
 	},
 
 	'refresh': function() {
