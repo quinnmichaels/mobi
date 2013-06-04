@@ -146,7 +146,7 @@ var cards = {
 		$('button[data-action="delete"]').on('click', cards.delete);
 
 		//! draggable cads
-		$('#mobi_menu_cards ol').sortable({
+		$('#card_list').sortable({
 			revert: true,
 			start: function(e,ui) {
 				$drag = $('#' + ui.item[0].id);
@@ -168,7 +168,7 @@ var cards = {
 			});
 
 		});
-		$('#mobi_menu_container ol,#mobi_menu_container li').disableSelection();
+		$('#card_list,#card_list li').disableSelection();
 	},
 
 	'cardBlank': function() {
@@ -178,7 +178,7 @@ var cards = {
 	'cardScroll': function(e, ui) {
 		var id = this.id,
 			$card_box = $('#mobi_menu_cards').width(),
-			$cards = $('#mobi_menu_cards ol'),
+			$cards = $('#card_list'),
 			pos = $cards.scrollLeft(),
 			wid = $cards.width(),
 			jump = 411,
@@ -202,7 +202,7 @@ var cards = {
 		var new_arr = [],
 			s = mobi.sites.get();
 
-		$('#mobi_menu_container ol li').each(function() {
+		$('#card_list li').each(function() {
 			new_arr.push(s['cards'][parseFloat(this.id)]);
 		});
 		s['cards'] = new_arr;
@@ -214,7 +214,8 @@ var cards = {
 	},
 
 	'list': function() {
-		loadTemplate('#mobi_menu_cards ol', 'card', mobi.sites.get());
+		console.log(mobi.sites.get());
+		loadTemplate('#card_list', 'card', mobi.sites.get());
 
 /*
 		for (var x in c) {
@@ -229,28 +230,23 @@ var cards = {
 	'create': function(e) {
 		var n_state,
 			$state = $('#add_card').attr('data-state'),
-			$mobi_menu = $('#mobi_menu_container ol'),
+			$mobi_menu = $('#card_list'),
 			new_card;
 
 		switch ($state) {
 			case 'add':
 				n_state = 'close';
-				new_card = loadTemplate('#mobi_menu_cards ol', 'card-form', cards.cardBlank(), 'append')
 
 				$('#add_card').html('&times;');
 
- 				$('#new_card > div').fadeIn({
-					duration: 200,
-					complete: function() {
-						$('#new_card input[name="title"]').focus();
-					}
-				});
+				loadTemplate('#card_list', 'card-form', cards.cardBlank(), 'append');
+				$('#card_form input[name="title"]').focus();
 				break;
 
 			case 'close':
 				n_state = 'add';
 				$('#add_card').html('&plus;');
-				$('#card_form').hide().remove();
+				$('#card_form').parent().fadeOut().remove();
 				break;
 		}
 
@@ -286,14 +282,14 @@ var cards = {
 	    }
 	},
 
-	'delete': function(e) {
+	'delete': function(idx) {
 		var s = mobi.sites.get(),
-			$id = $(this).data('id');
+			$id = $('#'+idx+'-card');
 
-		s['cards'].splice(parseFloat($id), 1);
+		s['cards'].splice(idx, 1);
 		storage.set(mobi.site, s);
-		$('#' + $id).hide(175, function() {
-			$(this).remove();
+		$id.hide(175, function() {
+			$id.remove();
 		});
 	}
 
@@ -307,6 +303,7 @@ var mobi = {
 		mobi.devices.display();
 		mobi.devices.view(mobi.devices.get());
 		mobi.history.init();
+		cards.init();
 		//! load init templates into app
 		loadTemplate('#settings_panel', 'settings', mobi.sites.get()['settings']);
 	},
@@ -472,7 +469,7 @@ var mobi = {
 		mobi.sites.init();
 		mobi.history.set(url);
 		mobi.history.setTemplate();
-
+		cards.init();
 		$('#url_input').blur().val(url);
 		$('#iframe_view').attr('src', url);
 	},
@@ -524,7 +521,7 @@ $(function() {
 				break;
 
 			case 13:  // return/enter to save card
-				if (e.target.parentNode.offsetParent.id == 'card_form') {
+				if (e.target.parentNode.id == 'card_form') {
 					cards.save();
 				}
 				break;
