@@ -39,6 +39,36 @@ var storage = {
 	}
 };
 
+var loadTemplate = function(id, tmp, tmpData, _tmpType) {
+	var source,
+		template,
+		path = '_hbs/' + tmp + '.hbs',
+		$i = $(id);
+
+	$.ajax({
+		url: path,
+		cache: true,
+		success: function (data) {
+			source = data;
+			template = Handlebars.compile(source),
+			$i = $(id);
+			switch (_tmpType) {
+				case 'append':
+					$i.append(template(tmpData));
+					break;
+				case 'prepend':
+					$i.prepend(template(tmpData));
+					break;
+				default:
+					$i.html(template(tmpData));
+					break;
+			}
+		}
+	});
+}
+
+
+
 //! timer
 var timer = {
 	'cur': '',
@@ -111,11 +141,12 @@ var timer = {
 var cards = {
 	'init': function() {
 		var $drag;
-		cards.list();
+		this.list();
 
 		$('button[data-action="delete"]').on('click', cards.delete);
 
-		$('#mobi_menu_container ol').sortable({
+		//! draggable cads
+		$('#mobi_menu_cards ol').sortable({
 			revert: true,
 			start: function(e,ui) {
 				$drag = $('#' + ui.item[0].id);
@@ -126,6 +157,8 @@ var cards = {
 				cards.cardSort();
 			}
 		});
+
+		//! card options menu
 		$('.card_options_menu').on('click', function() {
 			var $height = $(this).height() - 18,
 				$pos = Math.abs(parseFloat($(this).css('bottom'))),
@@ -136,8 +169,6 @@ var cards = {
 
 		});
 		$('#mobi_menu_container ol,#mobi_menu_container li').disableSelection();
-
-		return false;
 	},
 
 	'cardBlank': function() {
@@ -178,57 +209,37 @@ var cards = {
 		storage.set(mobi.site, s);
 	},
 
-	'cardHTML': function(c, id) {
-		var card_menu = '<div class="card_options_menu" onclick=""><div class="card_options_button"></div><div class="card_options">';
-			card_menu += '<button data-action="archive" data-id="'+id+'">archive</button>';
-			card_menu += '<button data-action="delete" data-id="'+id+'">delete</button>';
-			card_menu += '</div></div>';
-
-		var card_timer = '<div id="' + id + '-timer" class="timer">';
-			card_timer += '<button class="start_stop start" onclick="timer.start_stop(\''+id+'-timer\')">&plus;</button>';
-			card_timer += '<input type="text" name="timer" placeholder="00:00:00" value="" readonly="readonly">';
-			card_timer += '</div>';
-
-		var	card_out = card_menu;
-			card_out += '<input type="text" name="title" placeholder="title" value="' + c.title + '">';
-			card_out += card_timer;
-			card_out += '<div><label for="page">page</label><input type="text" name="page" placeholder="*.html" value="' + c.page + '"></div>';
-			card_out += '<div><label for="issue">issue</label><input type="text" name="issue" placeholder="#" value="' + c.issue + '"><button class="issue_view" onclick="redmine.issues(' + c.issue + ')">&rsaquo;</button></div>';
-			card_out += '<textarea name="desc" placeholder="notes">' + c.desc + '</textarea>';
-			card_out = '<li class="card" id="' + id + '"><div>' + card_out + '</div></li>';
-		return card_out;
-	},
-
 	'get': function() {
 		return mobi.sites.get()['cards'];
 	},
 
 	'list': function() {
-		var c = cards.get(),
-			ret = '';
+		loadTemplate('#mobi_menu_cards ol', 'card', mobi.sites.get());
 
+/*
 		for (var x in c) {
 			if (c[x] != null) {
 				ret += this.cardHTML(c[x], x + '-card');
 			}
 		}
 		$('#mobi_menu_container ol').html(ret);
+*/
 	},
 
 	'create': function(e) {
 		var n_state,
 			$state = $('#add_card').attr('data-state'),
 			$mobi_menu = $('#mobi_menu_container ol'),
-			new_card = cards.cardHTML(cards.cardBlank(), 'new_card');
+			new_card;
 
 		switch ($state) {
 			case 'add':
 				n_state = 'close';
+				new_card = loadTemplate('#mobi_menu_cards ol', 'card-form', cards.cardBlank(), 'append')
+
 				$('#add_card').html('&times;');
 
-				$mobi_menu.append(new_card);
-
-				$('#new_card > div').fadeIn({
+ 				$('#new_card > div').fadeIn({
 					duration: 200,
 					complete: function() {
 						$('#new_card input[name="title"]').focus();
@@ -239,7 +250,7 @@ var cards = {
 			case 'close':
 				n_state = 'add';
 				$('#add_card').html('&plus;');
-				$('#new_card').hide().remove();
+				$('#card_form').hide().remove();
 				break;
 		}
 
@@ -259,11 +270,11 @@ var cards = {
 
 	'save': function() {
 		var save_card = {
-	    	'title': $('#new_card [name="title"]').val(),
-	    	'page': $('#new_card [name="page"]').val(),
-	    	'status': $('#new_card [name="status"]').val(),
-	    	'desc': $('#new_card [name="desc"]').val(),
-	    	'issue': $('#new_card [name="issue"]').val(),
+	    	'title': $('#card_form [name="title"]').val(),
+	    	'page': $('#card_form [name="page"]').val(),
+	    	'status': $('#card_form [name="status"]').val(),
+	    	'desc': $('#card_form [name="desc"]').val(),
+	    	'issue': $('#card_form [name="issue"]').val(),
 	    	'timer': {'hr':0, 'min':0, 'sec':0}
 		}
 
@@ -292,10 +303,12 @@ var cards = {
 var mobi = {
 	'init': function() {
 		mobi.site = $('#iframe_view').attr('src');
-		this.history.init();
-		this.devices.display();
-		this.sites.init();
-		cards.init();
+		mobi.sites.init();
+		mobi.devices.display();
+		mobi.devices.view(mobi.devices.get());
+		mobi.history.init();
+		//! load init templates into app
+		loadTemplate('#settings_panel', 'settings', mobi.sites.get()['settings']);
 	},
 
 	'site': '',
@@ -303,7 +316,6 @@ var mobi = {
 	'sites': {
 		'init': function() {
 			this.set(mobi.site);
-			cards.list();
 		},
 		'get': function() {
 			return storage.get(mobi.site);
@@ -314,7 +326,10 @@ var mobi = {
 					'title': si,
 					'desc': si,
 					'cards': [],
-					'settings': {}
+					'settings': {
+						'red_url': '',
+						'red_key':''
+					}
 				};
 
 			if (!storage.check(si)) {
@@ -354,7 +369,14 @@ var mobi = {
 				'height': 	'800px'
 			}
 		},
+		'get': function() {
+			var v = storage.get('view');
+			if (!v) {
+				v = 'fullscreen';
 
+			}
+			return v;
+		},
 		'active': function(a) {
 
 			$('#devices ul li').removeClass('active');
@@ -374,8 +396,11 @@ var mobi = {
 			$('#devices ul').html(deviceLI);
 
 		},
-
-		'view': function(id) {
+		'view': function(_id) {
+			var id = _id;
+			if (!id) {
+			 storage.set('view', 'fullscreen');
+			}
 	    	this.active(id);
 	    	var cur_view = this.list[id],
 	    		$con = $('.content_container');
@@ -386,7 +411,6 @@ var mobi = {
 				$con.removeClass('fullscreen');
 			}
 
-
 	    	$('#iframe_view').animate({
 	    		width: cur_view.width,
 	    		height: cur_view.height
@@ -394,47 +418,48 @@ var mobi = {
 		}
 	},
 
-
+	//! history
 	'history': {
 		'init': function() {
-			var hist = this.get(),
-				last_hist = hist[hist.length-1];
+			var stor = storage.get('url_history'),
+				new_stor = {'urls': []};
+				new_stor.urls.push(mobi.site);
 
-			//create url history object in local storage
-			if (!storage.check('url_history')) {
-				storage.set('url_history', []);
-			} else {
-				$('#iframe_view').attr('src', last_hist);
-				$('#url_input').val(last_hist);
+			if (!stor) {
+				stor = new_stor;
+				storage.set('url_history', new_stor);
 			}
-
-			mobi.site = $('#url_input').val();
-			this.list();
+			mobi.history.setTemplate();
 		},
 
 		'set': function(url) {
-			var new_history = storage.get('url_history'),
-				in_index = new_history.indexOf('url');
+			var history_get = mobi.history.get(),
+				in_index = history_get['urls'].indexOf(url);
 
-			new_history.push(url);
-			storage.set('url_history', new_history);
+			console.log(in_index);
+
+			if (in_index != -1) {
+				history_get['urls'].splice(in_index, 1);
+			}
+
+			history_get['urls'].push(url);
+			storage.set('url_history', history_get);
+
+		},
+
+		'setTemplate': function() {
+			loadTemplate('#history_panel', 'history', mobi.history.get());
 		},
 
 		'get': function() {
-			var stor = storage.get('url_history');
-
-			if (!stor) {
-				stor = [];
-				storage.set('url_history', stor);
-			}
-			return stor;
+			return storage.get('url_history');
 		},
 
 		'list': function() {
-			var get_history = storage.get('url_history'),
+			var get_history = this.get(),
 				get_html = '';
 
-			get_history.reverse();
+			get_history['urls'].reverse();
 
 			for (var x in get_history) {
 				get_html += '<li><a href="#" class="history_url" data-url="' + get_history[x] + '">' + get_history[x] + '</a></li>';
@@ -444,10 +469,11 @@ var mobi = {
 	},
 	'go': function(url) {
 		mobi.site = url;
-		mobi.history.set(url);
 		mobi.sites.init();
+		mobi.history.set(url);
+		mobi.history.setTemplate();
 
-		$('#url_input').blur();
+		$('#url_input').blur().val(url);
 		$('#iframe_view').attr('src', url);
 	},
 
@@ -456,6 +482,7 @@ var mobi = {
 	}
 };
 
+//! modal
 var modal = {
 	'show': function() {
 		this.loading();
@@ -497,7 +524,7 @@ $(function() {
 				break;
 
 			case 13:  // return/enter to save card
-				if (e.target.parentNode.offsetParent.id == 'new_card') {
+				if (e.target.parentNode.offsetParent.id == 'card_form') {
 					cards.save();
 				}
 				break;
@@ -529,18 +556,14 @@ $(function() {
 	});
 
 
+	$('.history_url a').on('click', function(evt) {
+		evt.preventDefault();
+		console.log(this);
+		mobi.go($(this).data('url'));
+	});
 
 	//draggable stuff
 	$('#redmine_issue').draggable({ containment: "parent" });
-
-	var $i = $('#iframe_view');
-
-    if (!storage.check('view')) {
-	    mobi.devices.view('fullscreen');
-    } else {
-		$i.attr('class', storage.get('view'));
-		mobi.devices.active(storage.get('view'));
-    }
 
     $('#rotate_iframe').on('click', function() {
 	    viewRotate();
@@ -550,7 +573,18 @@ $(function() {
     	e.preventDefault();
     	mobi.refresh();
     });
+	$('.panel-menu-button').on('click', function(e) {
+		e.preventDefault();
+		var $cl = $(this).data('id'),
+			$mnu = $('.panel-menu');
 
+		$('.panel-menu').each(function() {
+			if ($(this).is(':visible') && $(this).attr('id') != $cl) {
+				$mnu.fadeOut()
+			}
+		});
+		$('#'+$cl).fadeToggle();
+	});
 
     $('#menu_button').on('click', toggleMenu);
 
@@ -581,9 +615,6 @@ $(function() {
 	    mobi.devices.view(this.id);
     });
 
-//    $('.timer .start_stop').on('click', timer.start_stop);
-    $('.card_scroll').on('click', cards.cardScroll);
-
 	$('#modal').on('click', function() {
 		modal.hide();
 	});
@@ -591,8 +622,9 @@ $(function() {
 	$('#redmine_issue .close_issue').on('click', redmine.closeIssue);
 
 	$('button.issue_view').on('click', function() {
-		console.log(this);
 		redmine.issues($(this).val());
 	})
+
+	//! init app
 	mobi.init();
 });

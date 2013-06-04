@@ -1,0 +1,25 @@
+{{#each cards}}
+	<li class="card" id="{{@index}}-card">
+		<div>
+			<div class="title">{{title}} {{@index}}<button class="edit_card"></button></div>
+
+			<div id="{{@index}}-timer" class="timer">
+				<button class="start_stop start" onclick="timer.start_stop('{{@index}}-timer')">&plus;</button>
+				<input type="text" name="timer" placeholder="00:00:00" value="" readonly="readonly">
+			</div>
+
+			<div class="page">{{page}}</div>
+			<div class="issue">{{issue}}<button class="issue_view" onclick="redmine.issues({{isue}})">&rsaquo;</button></div>
+			<div class="desc">{{desc}}</div>
+
+			<div class="card_options_menu" onclick="">
+				<div class="card_options_button"></div>
+				<div class="card_options">
+					<button data-action="archive" data-id="{{@index}}-card">archive</button>
+					<button data-action="delete" data-id="{{@index}}-card">delete</button>
+				</div>
+			</div>
+
+		</div>
+	</li>
+{{/each}}

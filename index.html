@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" ng-app>
+<html lang="en">
 <head>
 	<meta name="apple-mobile-web-app-capable" content="yes" />
 	<meta name="apple-mobile-web-app-status-bar-style" content="black">
@@ -9,15 +9,18 @@
 	<title>My HTML File</title>
 
 	<link rel="stylesheet" type="text/css" href="_css/global.css">
+
 </head>
 <body>
 
 	<div class="content_container">
+
 	    <div class="content_wrapper">
 	    	<div class="content">
 	    	    <iframe frameborder="0" id="iframe_view" width="100%" height="100%" src="blank.html"></iframe>
 		    </div>
 	    </div>
+
 		<div id="redmine_issue">
 			<div class="loading"></div>
 			<div class="data subject"></div>
@@ -36,7 +39,7 @@
 	    <form id="url_form" method="post">
 	    	<label for="url_input">url:</label>
 	    	<input type="text" name="url_input" id="url_input" placeholder="enter a url" tabindex="1">
-	    	<a href="#" id="frame_settings"></a><a href="#" id="frame_reload"></a><a href="#" id="frame_history"></a>
+	    	<a href="#" id="frame_settings" class="panel-menu-button" data-id="settings_panel"></a><a href="#" id="frame_reload"></a><a href="#" id="frame_history" class="panel-menu-button" data-id="history_panel"></a>
 	    </form>
 	    <div id="menu_button"></div>
 	    <div id="mobi_menu">
@@ -44,16 +47,15 @@
 		    	<div id="mobi_menu_cards">
 		    		<ol></ol>
 		    	</div>
-	    		<div id="cards_scroll_l" class="card_scroll">&lang;</div>
-	    		<div id="cards_scroll_r" class="card_scroll">&rang;</div>
 		    </div>
-		    <div id="mobi_menu_history"><ul></ul></div>
 		    <div id="mobi_menu_buttons">
 			    <button id="add_card" data-state="add">&plus;</button>
 			    <button id="rotate_iframe">R</button>
 			    <div id="devices"><ul></ul></div>
 		    </div>
 	    </div>
+    	<div id="settings_panel" class="panel-menu"></div>
+	    <div id="history_panel" class="panel-menu"></div>
     </div>
 
 
@@ -65,10 +67,32 @@
 	</div>
 </div>
 
+
+
+<script src="_js/redmine.js"></script>
 <script src="_lib/jquery.min.js"></script>
 <script src="_lib/jquery.ui/jquery-ui.min.js"></script>
+<script src="_lib/handlebars.min.js"></script>
 <script src="_js/global.js"></script>
-<script src="_js/redmine.js"></script>
+
+
+<script>
+	$(function() {
+	})
+
+	Handlebars.registerHelper('debug', function(optVal) {
+		console.log("Current Context");
+		console.log("====================");
+		console.log(this);
+
+		if (optVal) {
+			console.log("Value");
+			console.log("====================");
+			console.log(optVal);
+		}
+	});
+</script>
+
 
 </body>
 </html>

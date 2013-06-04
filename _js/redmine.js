@@ -1,25 +1,33 @@
 var redmine = {
 	'key': '3ca22d5c3a4cc0d1281689b76f66e15553531cb0',
-	'baseURL': function(str) {
-		return 'http://10.0.0.72/~quinn/dev/mobi/_cfc/mobi.cfc?method=callRedMine&redURL=' + str + '&key=' + redmine.key + '&callback=?';
+	'url': 'https://popart.plan.io',
+
+	'init': function(k, u) {
+		this.key = k;
+		this.url = u;
 	},
-	'issueURL': function (i) {
-		return redmine.baseURL('issues/' + i);
+
+	'callURL': function(str) {
+		var webserviceURL = 'http://q.dev/mobi/_cfc/mobi.cfc?method=callRedMine&redURL=';
+		return webserviceURL + this.url + str + '&key=' + this.key + '&callback=?';
 	},
+
 	'loading': function() {
 		$('#redmine_issue .data').toggle();
 		$('#redmine_issue .loading').toggle();
 	},
-	'closeIssue': function() {
+
+	'close': function() {
 		$('#redmine_issue').fadeOut('fast', function() {
 			$('#redmine_issue .data').html('');
 		});
 	},
-	'issues': function(i) {
+
+	'issue': function(i) {
 		$('#redmine_issue').fadeIn('fast');
 		//get issue
 		$.ajax({
-			url: redmine.issueURL(i),
+			url: redmine.callURL('/issues/' + i + '.json?include=journals'),
 			async: false,
 			dataType: 'json',
 			contentType: 'application/json',

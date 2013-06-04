@@ -1,10 +1,21 @@
+//! ----- card defaults -----
 @cardW: 200px;
 @cardH: 290px;
 
+@panel-width: 250px;
+@panel-height: 300px;
+
+@ui-color-1: lighten(black, 10%);
+@ui-color-2: lighten(black, 25%);
+
+@menu-color-1: #3f72b1;
+@menu-color-2: darken(@menu-color-1, 10%);
+//! ----- global font -----
 .global-font () {
 	font-family: 'HelveticaNeue-Light', 'HelveticaNeue', Helvetica, Arial, sans-serif;
 };
 
+//! ----- button defaults -----
 .b-ok () {
 	@color1: #1678ce;
 	@color2: #1064ae;
@@ -41,8 +52,8 @@
 	.b-defaults();
 }
 
-
-.gradient (@grad1: #cccccc; @grad2: #a1a1a1; @percent: 100%) {
+//! ----- gradients -----
+.gradient (@grad1: @ui-color-1; @grad2: @ui-color-2; @percent: 100%) {
 	background: @grad1; /* Old browsers */
 	background: -moz-linear-gradient(top,  @grad1 0%, @grad2 @percent); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,@grad1), color-stop(@percent,@grad2)); /* Chrome,Safari4+ */
@@ -51,8 +62,8 @@
 	background: -ms-linear-gradient(top,  @grad1 0%,@grad2 @percent); /* IE10+ */
 	background: linear-gradient(to bottom,  @grad1 0%,@grad2 @percent); /* W3C */
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='@grad1', endColorstr='@grad2',GradientType=0 ); /* IE6-9 */
-};
-.gradient-left (@grad1: #cccccc; @grad2: #a1a1a1; @percent: @percent) {
+}
+.gradient-left (@grad1: @ui-color-1; @grad2: @ui-color-2; @percent: @percent) {
 	background: @grad1; /* Old browsers */
 	background: -moz-linear-gradient(left,  @grad1 0%, @grad2 @percent); /* FF3.6+ */
 	background: -webkit-gradient(linear, left top, right top, color-stop(0%,@grad1), color-stop(@percent,@grad2)); /* Chrome,Safari4+ */
@@ -63,12 +74,14 @@
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='@grad1', endColorstr='@grad2',GradientType=0 ); /* IE6-9 */
 }
 
+//! ----- shadow -----
 .shadow (@shade: 3px 3px 5px 6px #ccc) {
   -moz-box-shadow:    @shade;
   -webkit-box-shadow: @shade;
   box-shadow:         @shade;
 }
 
+//! ----- border radius -----
 .radius (@radius: 5px) {
   -webkit-border-radius: @radius;
   -moz-border-radius: @radius;
@@ -77,6 +90,7 @@
   border-radius: @radius;
 }
 
+//! ----- cover styles -----
 .cover () {
 	display: block;
 	position: absolute;
@@ -86,7 +100,7 @@
 	bottom: 0;
 }
 
-/*! body styles */
+//! ----- global styles -----
 html, body {
 	height: 100%;
 	overflow: hidden;
@@ -94,6 +108,7 @@ html, body {
 body {
 	.gradient;
 	.global-font;
+	background: #fff;
     font-size: 100%;
     background-attachment:fixed;
     font-family:;
@@ -105,13 +120,15 @@ body {
     text-align: center;
 }
 
+//! ----- input defaults -----
 input:focus,
 textarea:focus,
 select:focus,
 button:focus {
 	outline: none;
 }
-//! content container styles
+
+//! ----- content container styles -----
 .content_container {
 	.cover();
 	bottom: 43px;
@@ -144,6 +161,8 @@ button:focus {
 	}
 }
 
+
+//! ----- iframe display styles -----
 .fullscreen {
 	bottom: 43px;
 	.content_wrapper {
@@ -168,7 +187,8 @@ button:focus {
 		}
 	}
 }
-//!panel styles
+
+//! -panel styles
 #panel {
 	position: fixed;
 	bottom: -300px;
@@ -177,8 +197,9 @@ button:focus {
     padding: 0;
     margin: auto;
     text-align: center;
-    .gradient(rgba(0,0,0,.8); rgba(0,0,0,.6));
+    .gradient();
 
+	//! --url bar styles
 	#url_form {
 		position: relative;
 		display: block;
@@ -191,7 +212,7 @@ button:focus {
 	    .shadow(0px 1px 9px rgba(0,0,0,.5));
 	}
 	label[for="url_input"] {
-		color: lighten(black, 60%);
+		color: lighten(@ui-color-1, 60%);
 		display: inline-block;
 		position: absolute;
 		font-size: 2em;
@@ -223,7 +244,7 @@ button:focus {
 		display: inline-block;
 		position: absolute;
 		top: 1px;
-	    background-size: 30px auto !important;
+	    background-size: auto 30px !important;
 	    background-image: url(../_images/icons/icons-history-settings-refresh.png);
 	    background-repeat: no-repeat;
 	    width: 30px;
@@ -231,7 +252,7 @@ button:focus {
 	}
 	#frame_reload {
 		right: 3px;
-		background-position: 0 -67px;
+		background-position: -60px 0;
 
 		&:hover {
 		    cursor: pointer;
@@ -243,7 +264,7 @@ button:focus {
 
 	#frame_history {
 		right: 32px;
-		background-position: 0 -33px;
+		background-position: -30px 0;
 
 		&:hover {
 		    cursor: pointer;
@@ -255,8 +276,129 @@ button:focus {
 
 	#frame_settings {
 		right: 62px;
-		background-position: 0 1px;
+		background-position: 0 0;
 	}
+
+
+	.panel-menu {
+		@border-color: lighten(@menu-color-1, 25%);
+		display: none;
+		position: absolute;
+		bottom: 345px;
+		width: @panel-width;
+		height: @panel-height;
+		border: 2px solid @border-color;
+		.radius(18px);
+		.gradient(@menu-color-1, @menu-color-2);
+		&:after,
+		&:before {
+			top: 100%;
+			border: solid transparent;
+			content: "";
+			height: 0;
+			width: 0;
+			position: absolute;
+			pointer-events: none;
+			left: 85%;
+		}
+		&:after {
+			border-color: rgba(15, 15, 15, 0);
+			border-top-color: @menu-color-2;
+			border-width: 10px;
+			margin-left: -10px;
+		}
+		&:before {
+			border-color: rgba(161, 161, 161, 0);
+			border-top-color: @border-color;
+			border-width: 12px;
+			margin-left: -12px;
+		}
+
+		> div {
+			padding: 7px 5px 5px 5px;
+		}
+	}
+
+	#settings_panel {
+		right: 102px;
+
+		.settings {
+			fieldset {
+				position: relative;
+				border-radius: 9px;
+				border: none;
+				box-shadow: 0 0 1px darken(@menu-color-2, 25%);
+				background: lighten(@menu-color-1, 10%);
+				padding: 23px 0 9px 0;
+				legend {
+					position: absolute;
+					padding: 3px 5px;
+					top: -10px;
+					right: 9px;
+					text-align: left;
+					margin-top: 10px;
+					font-size: 1.1em;
+					color: lighten(@menu-color-1, 30%);
+					text-shadow: 0 1px 1px darken(@menu-color-1, 30%);
+					background: darken(@menu-color-1, 30%);
+					.radius(0 0 3px 3px);
+				}
+				> div {
+					label {
+						display: inline-block;
+						width: 50px;
+						text-align: left;
+						color: darken(@menu-color-1, 30%);
+						text-shadow: 0 1px 0 lighten(@menu-color-1, 30%);
+						font-size: 1em;
+						font-weight: bold;
+					}
+					input {
+						border: none;
+						width: 148px;
+						padding: 5px;
+						.radius(5px);
+					}
+				}
+			}
+		}
+	}
+	#history_panel {
+		right: 72px;
+		height: auto;
+		padding: 0;
+		margin: 0;
+		.history_list {
+			overflow: hidden;
+			padding: 5px;
+
+			> div {
+				width: @panel-width - 10;
+				max-height: @panel-height - 10;
+				.radius(12px);
+				overflow: auto;
+				.gradient(darken(white, 5%), darken(white, 7%));
+				button {
+					background: transparent;
+					display: block;
+					text-align: left;
+					border: 0;
+					margin: 0;
+					font-size: .9em;
+					padding: 9px;
+					width: @panel-width - 10;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					&:first-child {
+					}
+					&:last-child {
+						border-bottom: 0;
+					}
+				}
+			}
+		}
+	}
+
 
 	#menu_button {
 		position: absolute;
@@ -267,6 +409,7 @@ button:focus {
 		background: url(../_images/menu.png) no-repeat;
 	}
 
+	//! -- expanded menu styles
 	#mobi_menu {
 		@height: 300px;
 		height: @height;
@@ -280,33 +423,10 @@ button:focus {
 			margin-right: 65px;
 			text-align: left;
 
-			#cards_scroll_l,
-			#cards_scroll_r {
-				.b-ok();
-				font-family: Arial;
-				position: absolute;
-				width: 30px;
-				height: 100%;
-				top: 0;
-				color: darken(#fff, 15%);
-				font-size: 6em;
-				line-height: 3.5em;
-				text-align: center;
-				&:active {
-					color: @color1;
-				}
-			}
-			#cards_scroll_l {
-				left: 0px;
-			}
-			#cards_scroll_r {
-				right: 0px;
-			}
+			//! ---- card styles
 			#mobi_menu_cards {
 				position: relative;
 				overflow: hidden;
-				margin-left: 30px;
-				margin-right: 30px;
 
 				ol {
 					@color1: #eaeaea;
@@ -324,6 +444,7 @@ button:focus {
 					padding: 0 0 30px 0;
 					overflow-x: scroll;
 
+					//! ------ card styles
 					.card {
 						@gutter: 5px;
 						position: relative;
@@ -377,7 +498,8 @@ button:focus {
 								.radius(7px);
 							}
 
-							input[name="title"] {
+							input[name="title"],
+							.title {
 								font-weight: bold;
 								display: block;
 								font-size: 1.1em;
@@ -391,7 +513,19 @@ button:focus {
 								color: darken(@color1, 50%);
 								.radius(7px 7px 0 0);
 								.gradient(darken(@color1, 10%); darken(@color2, 10%));
+
+								.edit_card {
+									background: url(../_images/icons/edit.png) no-repeat;
+									background-size: 16px 16px;
+									width: 16px;
+									height: 16px;
+									border: none;
+									float: right;
+									margin: 0 -3px 0 0;
+								}
 							}
+
+
 							label[for="page"],
 							label[for="issue"] {
 								display: inline-block;
@@ -403,7 +537,9 @@ button:focus {
 							}
 
 							input[name="page"],
-							input[name="issue"] {
+							input[name="issue"],
+							.page,
+							.issue {
 								display: inline-block;
 								font-size: 1em;
 								margin: 0 0 1px -40px;
@@ -428,7 +564,9 @@ button:focus {
 								.b-defaults();
 								.radius(18px);
 							}
-							textarea[name="desc"] {
+
+							textarea[name="desc"],
+							.desc {
 								resize: none;
 								display: block;
 								background: transparent;
@@ -529,6 +667,8 @@ button:focus {
 
 						}
 					}
+
+					//! ------ dragging styles
 					.dragging {
 						> div {
 							opacity: .90;
@@ -553,12 +693,11 @@ button:focus {
 						}
 					}
 
-					#added_card {
-						display: none;
-					}
 				}
 			}
 		}
+
+		//! --- mobi buttons
 		#mobi_menu_buttons {
 			height: @height;
 			position: absolute;
@@ -606,7 +745,7 @@ button:focus {
 			}
 
 
-			//! device buttons
+			//! ---- device buttons
 			#devices {
 				margin: 50px 0 0 0;
 				display: block;
@@ -660,7 +799,7 @@ button:focus {
 	}
 }
 
-
+//! - history menu
 #history_menu {
 	display: none;
     text-align: left;
@@ -694,7 +833,7 @@ button:focus {
 	}
 }
 
-
+//! - rotate loading
 .rotateFromTo () {
 	from {-webkit-transform: rotate(0deg);}
 	to {-webkit-transform: rotate(360deg);}
@@ -723,7 +862,7 @@ button:focus {
 
 }
 
-
+//! - modal styles
 #modal {
 	position: absolute;
 	display: none;
@@ -749,6 +888,7 @@ button:focus {
 	}
 }
 
+//! - redmine issue
 #redmine_issue {
 	display: none;
 	position: absolute;
@@ -876,8 +1016,6 @@ button:focus {
 				border: none;
 			}
 		}
-
-
 	}
 }
 
