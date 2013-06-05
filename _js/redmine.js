@@ -1,6 +1,7 @@
 var redmine = {
 	'key': '3ca22d5c3a4cc0d1281689b76f66e15553531cb0',
 	'url': 'https://popart.plan.io',
+	'service_url': 'http://q.dev/mobi/_cfc/mobi.cfc?method=callRedMine&redURL=',
 
 	'init': function(k, u) {
 		this.key = k;
@@ -8,8 +9,7 @@ var redmine = {
 	},
 
 	'callURL': function(str) {
-		var webserviceURL = 'http://q.dev/mobi/_cfc/mobi.cfc?method=callRedMine&redURL=';
-		return webserviceURL + this.url + str + '&key=' + this.key + '&callback=?';
+		return this.service_url + this.url + str + '&key=' + this.key + '&callback=?';
 	},
 
 	'loading': function() {
@@ -35,6 +35,7 @@ var redmine = {
 				redmine.loading();
 			},
 			success: function(data) {
+				console.log(data);
 				redmine.loading()
 				var d = data.issue,
 				 	j_html = '',

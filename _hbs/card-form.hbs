@@ -1,8 +1,8 @@
-<li class="card" id="card_form">
-	<div>
-		<input type="text" name="title" placeholder="title" value="{{title}}">
-		<div><label for="page">page</label><input type="text" name="page" placeholder="*.html" value="{{page}}"></div>
-		<div><label for="issue">issue</label><input type="text" name="issue" placeholder="#" value="{{issue}}"></div>
-		<textarea name="desc" placeholder="notes">{{desc}}</textarea>
-	</div>
+<li class="card">
+	<form id="card_form">
+		<input type="text" name="title" placeholder="title" tabindex="1" value="{{title}}">
+		<div><label for="page">page</label><input type="text" name="page" placeholder="*.html" tabindex="2" value="{{page}}"></div>
+		<div><label for="issue">issue</label><input type="text" name="issue" placeholder="#" tabindex="3" value="{{issue}}"></div>
+		<textarea name="desc" placeholder="description" tabindex="4">{{desc}}</textarea>
+	</form>
 </li>

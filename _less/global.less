@@ -1,5 +1,5 @@
 //! ----- card defaults -----
-@cardW: 200px;
+@cardW: 225px;
 @cardH: 290px;
 
 @panel-width: 250px;
@@ -157,6 +157,10 @@ button:focus {
 		    width: 1600px;
 		    height: 850px;
 		    margin: auto;
+
+		    #document h1 {
+			    font-family: Arial;
+		    }
 		}
 	}
 }
@@ -458,8 +462,10 @@ button:focus {
 						}
 
 
+						> form,
 						> div {
 							position: relative;
+							display: block;
 							padding: 0;
 							width: @cardW;
 							height: @cardH;
@@ -514,14 +520,30 @@ button:focus {
 								.radius(7px 7px 0 0);
 								.gradient(darken(@color1, 10%); darken(@color2, 10%));
 
-								.edit_card {
-									background: url(../_images/icons/edit.png) no-repeat;
-									background-size: 16px 16px;
+								button {
+									position: absolute;
 									width: 16px;
 									height: 16px;
 									border: none;
-									float: right;
-									margin: 0 -3px 0 0;
+									margin: 0;
+									top: 2px;
+
+									&.edit_card {
+										background: url(../_images/icons/edit.png) no-repeat;
+										background-size: 16px 16px;
+										right: 18px;
+									}
+									&.delete_card {
+										.b-cancel();
+										.b-defaults();
+										.radius(5px);
+										width: 22px;
+										height: 22px;
+										right: 3px;
+										font-weight: bold;
+										font-size: 1.1em;
+										line-height: 1px;
+									}
 								}
 							}
 
@@ -549,11 +571,15 @@ button:focus {
 								font-weight: normal;
 								width: @cardW - 47;
 							}
+							.page,
+							.issue {
+								display: block;
+							}
 
 							button.issue_view {
 								position: absolute;
 								top: 2px;
-								right: 5px;
+								right: -36px;
 								width: 24px;
 								height: 24px;
 								padding-bottom: 6px;
@@ -575,7 +601,9 @@ button:focus {
 								margin: 0;
 								padding: 5px;
 								width: @cardW - 10;
-								height: @cardH - 200;
+								height: @cardH - 100;
+								white-space: normal;
+								overflow: auto;
 							}
 
 							.timer {
@@ -991,7 +1019,7 @@ button:focus {
 		height: 36px;
 		padding: 3px 2px 3px 2px;
 		.b-ok();
-		.gradient(@color1, @color2);
+		.gradient(@ui-color-1, @ui-color-2);
 		button {
 			border: none;
 			position: relative;

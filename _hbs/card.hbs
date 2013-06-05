@@ -1,7 +1,7 @@
 {{#each cards}}
 	<li class="card" id="{{@index}}-card">
 		<div>
-			<div class="title">{{title}} {{@index}}<button class="edit_card"></button></div>
+			<div class="title">{{title}}<button class="edit_card"></button><button class="delete_card" onclick="cards.delete({{@index}});">&times</button></div>
 
 			<div id="{{@index}}-timer" class="timer">
 				<button class="start_stop start" onclick="timer.start_stop('{{@index}}-timer')">&plus;</button>
