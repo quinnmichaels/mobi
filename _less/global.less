@@ -571,11 +571,15 @@ button:focus {
 								font-weight: normal;
 								width: @cardW - 47;
 							}
+							.page,
+							.issue {
+								display: block;
+							}
 
 							button.issue_view {
 								position: absolute;
 								top: 2px;
-								right: 5px;
+								right: -36px;
 								width: 24px;
 								height: 24px;
 								padding-bottom: 6px;
@@ -1015,7 +1019,7 @@ button:focus {
 		height: 36px;
 		padding: 3px 2px 3px 2px;
 		.b-ok();
-		.gradient(@color1, @color2);
+		.gradient(@ui-color-1, @ui-color-2);
 		button {
 			border: none;
 			position: relative;

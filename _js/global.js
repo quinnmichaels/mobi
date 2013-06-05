@@ -616,7 +616,9 @@ $(function() {
 		modal.hide();
 	});
 
-	$('#redmine_issue .close_issue').on('click', redmine.closeIssue);
+	$('#redmine_issue .close_issue').on('click', function() {
+		$('#redmine_issue').fadeOut();
+	});
 
 	$('button.issue_view').on('click', function() {
 		redmine.issues($(this).val());
