@@ -619,11 +619,11 @@ $(function() {
 		modal.hide();
 	});
 
+	$('button.issue_view').on('click', function() {
+		redmine.issue($(this).data('issue'));
+	})
 	$('#redmine_issue .close_issue').on('click', redmine.closeIssue);
 
-	$('button.issue_view').on('click', function() {
-		redmine.issues($(this).val());
-	})
 
 	//! init app
 	mobi.init();
