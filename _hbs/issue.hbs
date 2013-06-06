@@ -1,0 +1,37 @@
+{{debug}}
+	<div class="loading"></div>
+	<div class="data subject">{{issue.subject}}</div>
+	<div class="data author">{{issue.author.name}}</div>
+	<div class="data assigned_to">{{issue.assigned_to.name}}</div>
+	<div class="data created">{{issue.created_on}}</div>
+	<div class="data status">{{issue.status.name}}</div>
+	<div class="data tracker">{{issue.tracker.name}}</div>
+	<div class="data description">{{issue.description}}</div>
+	<div class="data journal">
+		{{#each issue.journals}}
+		<div class="journal_item">
+			<h1>{{issue.journals.user.name}}</h1>
+			<h2>{{issue.journals.created_on}}</h2>
+			<p>{{issue.journals.notes}}</p>
+		</div>
+		{{/each}}
+	</div>
+	<div class="toolbar"><button class="view_in">view in redmine</button><button class="close_issue" onclick="$('#redmine_issue').fadeOut(function(){$('#redmine_issue').html()});">&times;</button></div>
+<script>
+	/*
+				$('#redmine_issue .subject').html(d.subject);
+				$('#redmine_issue .author').html(d.author.name);
+				$('#redmine_issue .assigned_to').html(d.assigned_to.name);
+				$('#redmine_issue .created').html(d.created_on);
+				$('#redmine_issue .status').html(d.status.name);
+				$('#redmine_issue .tracker').html(d.tracker.name);
+				$('#redmine_issue .description').html(d.description);
+
+				for (var x in d.journals) {
+					var cur = d.journals[x];
+				}
+				$('#redmine_issue .journal').html(cur_out);
+
+
+	 */
+</script>

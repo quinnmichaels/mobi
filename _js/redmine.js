@@ -13,8 +13,7 @@ var redmine = {
 	},
 
 	'loading': function() {
-		$('#redmine_issue .data').toggle();
-		$('#redmine_issue .loading').toggle();
+		$('#redmine_issue').fadeIn();
 	},
 
 	'close': function() {
@@ -41,23 +40,8 @@ var redmine = {
 				 	j_html = '',
 				 	cur_out = '';
 				 console.log(data);
-				$('#redmine_issue .subject').html(d.subject);
-				$('#redmine_issue .author').html(d.author.name);
-				$('#redmine_issue .assigned_to').html(d.assigned_to.name);
-				$('#redmine_issue .created').html(d.created_on);
-				$('#redmine_issue .status').html(d.status.name);
-				$('#redmine_issue .tracker').html(d.tracker.name);
-				$('#redmine_issue .description').html(d.description);
 
-				for (var x in d.journals) {
-					var cur = d.journals[x];
-					cur_out += '<div class="journal_item">';
-					cur_out += '<h1>'+ cur.user.name + '</h1>';
-					cur_out += '<h2>'+ cur.created_on + '</h2>';
-					cur_out += '<p>'+ cur.notes + '</p>';
-					cur_out += '</div>';
-				}
-				$('#redmine_issue .journal').html(cur_out);
+				loadTemplate('#redmine_issue', 'issue', data);
 			},
 			error: function(a, b, c) {
 				modal.err('there was an error placing your call. please try again');

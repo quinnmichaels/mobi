@@ -98,6 +98,18 @@
 	left: 0;
 	right: 0;
 	bottom: 0;
+	width: 100%;
+	height: 100%;
+}
+
+//! ------- columns ------
+.columns(@colCount: 2; @colGutter: 20px) {
+	-moz-column-count: @colCount;
+    -moz-column-gap: @colGutter;
+    -webkit-column-count: @colCount;
+    -webkit-column-gap: @colGutter;
+    column-count: @colCount;
+    column-gap: @colGutter;
 }
 
 //! ----- global styles -----
@@ -286,39 +298,26 @@ button:focus {
 
 	.panel-menu {
 		@border-color: lighten(@menu-color-1, 25%);
+		.cover();
+		padding: 5px;
 		display: none;
-		position: absolute;
-		bottom: 345px;
-		width: @panel-width;
-		height: @panel-height;
-		border: 2px solid @border-color;
-		.radius(18px);
-		.gradient(@menu-color-1, @menu-color-2);
-		&:after,
-		&:before {
-			top: 100%;
-			border: solid transparent;
-			content: "";
-			height: 0;
-			width: 0;
-			position: absolute;
-			pointer-events: none;
-			left: 85%;
-		}
-		&:after {
-			border-color: rgba(15, 15, 15, 0);
-			border-top-color: @menu-color-2;
-			border-width: 10px;
-			margin-left: -10px;
-		}
-		&:before {
-			border-color: rgba(161, 161, 161, 0);
-			border-top-color: @border-color;
-			border-width: 12px;
-			margin-left: -12px;
-		}
+		.gradient(rgba(0,0,0,.9), rgba(0,0,0,.6));
+		z-index: 1000;
 
-		> div {
+		.panel-close {
+			position: absolute;
+			top: 5px;
+			right: 5px;
+			width: 30px;
+			height: 30px;
+			.radius(15px);
+			.b-cancel();
+			.b-defaults();
+			font-size: 2em;
+			line-height: 1px;
+			padding-bottom: 5px;
+		}
+		> ul {
 			padding: 7px 5px 5px 5px;
 		}
 	}
@@ -368,35 +367,36 @@ button:focus {
 		}
 	}
 	#history_panel {
-		right: 72px;
-		height: auto;
 		padding: 0;
 		margin: 0;
 		.history_list {
-			overflow: hidden;
+			overflow: visible;
 			padding: 5px;
-
-			> div {
-				width: @panel-width - 10;
-				max-height: @panel-height - 10;
-				.radius(12px);
-				overflow: auto;
-				.gradient(darken(white, 5%), darken(white, 7%));
-				button {
-					background: transparent;
-					display: block;
+			margin: 0;
+			vertical-align: top;
+			.columns(4, 10px);
+			height: 325px;
+			li {
+				border: 0;
+				margin: 0 5px 5px 5px;
+				font-size: .9em;
+				a {
 					text-align: left;
-					border: 0;
-					margin: 0;
-					font-size: .9em;
+					display: block;
 					padding: 9px;
-					width: @panel-width - 25;
-					overflow: hidden;
+					font-size: 1.2em;
+					font-weight: bold;
+					text-decoration: none;
+					color: white;
+					background: rgba(255,255,255,.1);
+					padding: 9px;
 					text-overflow: ellipsis;
-					&:first-child {
+					.radius(9px);
+					&:hover {
+						background: rgba(255,255,255,.2);
 					}
-					&:last-child {
-						border-bottom: 0;
+					&:active {
+						background: rgba(255,255,255,.3);
 					}
 				}
 			}
@@ -769,7 +769,6 @@ button:focus {
 			    .b-ok();
 			    .b-defaults();
 			    .radius(10px);
-			    z-index: 1000;
 			}
 
 
@@ -838,7 +837,6 @@ button:focus {
     background: rgba(0,0,0,.8);
     border-radius: 0 1em 0 1em;
     padding: 20px;
-    z-index: 1000;
 
 	ul {
 		list-style: none;
@@ -934,6 +932,7 @@ button:focus {
 	z-index: 100000;
 	.shadow(0 6px 21px rgba(0,0,0,.7));
 	.radius(5px);
+	border-top: 1px solid lighten(@ui-color-1, 20%);
 
 	> div:before {
 		display: inline-block;
@@ -1020,6 +1019,7 @@ button:focus {
 		padding: 3px 2px 3px 2px;
 		.b-ok();
 		.gradient(@ui-color-1, @ui-color-2);
+
 		button {
 			border: none;
 			position: relative;

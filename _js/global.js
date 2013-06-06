@@ -427,6 +427,7 @@ var mobi = {
 				storage.set('url_history', new_stor);
 			}
 			mobi.history.setTemplate();
+
 		},
 
 		'set': function(url) {
@@ -445,23 +446,13 @@ var mobi = {
 		},
 
 		'setTemplate': function() {
-			loadTemplate('#history_panel', 'history', mobi.history.get());
+			var hist = mobi.history.get();
+				hist['urls'].reverse();
+			loadTemplate('#history_panel', 'history', hist);
 		},
 
 		'get': function() {
 			return storage.get('url_history');
-		},
-
-		'list': function() {
-			var get_history = this.get(),
-				get_html = '';
-
-			get_history['urls'].reverse();
-
-			for (var x in get_history) {
-				get_html += '<li><a href="#" class="history_url" data-url="' + get_history[x] + '">' + get_history[x] + '</a></li>';
-			}
-			$('#history_menu ul').html(get_html);
 		}
 	},
 	'go': function(url) {
@@ -570,14 +561,17 @@ $(function() {
     	e.preventDefault();
     	mobi.refresh();
     });
+
+
 	$('.panel-menu-button').on('click', function(e) {
 		e.preventDefault();
 		var $cl = $(this).data('id'),
-			$mnu = $('.panel-menu');
+			$mnu = $('.panel-menu'),
+			$mobi = $('#mobi_menu');
 
-		$('.panel-menu').each(function() {
+		$mnu.each(function() {
 			if ($(this).is(':visible') && $(this).attr('id') != $cl) {
-				$mnu.fadeOut()
+				$mnu.hide()
 			}
 		});
 		$('#'+$cl).fadeToggle();
@@ -591,7 +585,6 @@ $(function() {
 	   mobi.go(go_url);
 	   cards.list();
     });
-
 
     $('#frame_history').on('click', function(e) {
 		e.preventDefault();
