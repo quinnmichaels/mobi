@@ -25,7 +25,6 @@
 	@color2: #ae1010;
 }
 .b-defaults () {
-	margin: 0;
 	border: none;
 	color: lighten(@color1, 40%);
 	text-shadow: 0 -1px 1px darken(@color1, 30%);
@@ -601,7 +600,7 @@ button:focus {
 								margin: 0;
 								padding: 5px;
 								width: @cardW - 10;
-								height: @cardH - 100;
+								height: @cardH - 136;
 								white-space: normal;
 								overflow: auto;
 							}
@@ -653,46 +652,30 @@ button:focus {
 
 							.card_options_menu {
 								position: absolute;
-								bottom: -80px;
+								bottom: 0px;
 								left: 0px;
 								right: 0px;
-								height: 98px;
+								height: 33px;
 								overflow: hidden;
 								z-index: 100;
 								border-top: 1px solid rgba(0,0,0,.1);
 
-								.card_options_button {
-									position: relative;
-									background: #ccc url(../_images/menu.png) no-repeat;
-									background-position: center center;
-									background-size: 23px 13px;
-									height: 18px;
+								button {
+									display: inline-block;
+									padding: 5px;
+									margin: 4px -4px 0 3px;
+									.radius(5px);
 								}
-
-								.card_options {
-									position: relative;
-									height: 75px;
-									padding-top: 5px;
-									.gradient(darken(@color2, 10%); darken(@color1, 10%));
-
-									button {
-										display: block;
-										width: @cardW - 10;
-										padding: 9px 0 9px 0;
-										margin: 0 auto 3px auto !important;
-										.radius(5px);
-									}
-									button[data-action="archive"] {
-										.b-ok();
-										.b-defaults();
-									}
-									button[data-action="delete"] {
-										.b-cancel();
-										.b-defaults();
-									}
+								button.card-archive,
+								button.card-edit {
+									.b-ok();
+									.b-defaults();
+								}
+								button.card-delete {
+									.b-cancel();
+									.b-defaults();
 								}
 							}
-
 						}
 					}
 
@@ -704,23 +687,6 @@ button:focus {
 
 						}
 					}
-					#new_card {
-						> div {
-							display: none;
-							.timer,
-							.card_options_menu,
-							button.issue_view {display: none;}
-
-							input,
-							textarea {
-								background: rgba(255,255,255,.75) !important;
-							}
-							textarea[name="desc"] {
-								height: @cardH - 71;
-							}
-						}
-					}
-
 				}
 			}
 		}

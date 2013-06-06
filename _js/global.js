@@ -159,15 +159,6 @@ var cards = {
 		});
 
 		//! card options menu
-		$('.card_options_menu').on('click', function() {
-			var $height = $(this).height() - 18,
-				$pos = Math.abs(parseFloat($(this).css('bottom'))),
-				nextPos = $pos == 0 ? '-' + $height + 'px' : 0;
-			$(this).animate({
-			    bottom: nextPos
-			});
-
-		});
 		$('#card_list,#card_list li').disableSelection();
 	},
 
@@ -291,6 +282,17 @@ var cards = {
 		$id.hide(175, function() {
 			$id.remove();
 		});
+	},
+	'archive': function() {
+
+	},
+	'menu': function(e) {
+		console.log(e);
+		var $cm = $('#'+e),
+			$height = $cm.height() - 18,
+			$pos = Math.abs(parseFloat($cm.css('bottom'))),
+			nextPos = $pos == 0 ? '-' + $height + 'px' : 0;
+		$cm.animate({bottom: nextPos});
 	}
 
 };
@@ -511,13 +513,8 @@ $(function() {
 				cards.create();
 				break;
 
-			case 13:  // return/enter to save card
-				if (e.target.parentNode.id == 'card_form') {
-					cards.save();
-				}
-				break;
 			case 186:
-				vdev('fullscreen');
+				vdev('fullscreen'); // alt/opt + 0
 				break;
 			case 161: // alt/opt + 1
 				vdev('desktop');

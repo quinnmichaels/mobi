@@ -4,5 +4,8 @@
 		<div><label for="page">page</label><input type="text" name="page" placeholder="*.html" tabindex="2" value="{{page}}"></div>
 		<div><label for="issue">issue</label><input type="text" name="issue" placeholder="#" tabindex="3" value="{{issue}}"></div>
 		<textarea name="desc" placeholder="description" tabindex="4">{{desc}}</textarea>
+		<div class="card_options_menu">
+			<button class="card-edit" type="button" onclick="cards.save()">save</button>
+		</div>
 	</form>
 </li>
