@@ -50,7 +50,7 @@ var loadTemplate = function(id, tmp, tmpData, _tmpType) {
 		cache: true,
 		success: function (data) {
 			source = data;
-			template = Handlebars.compile(source),
+			template = Handlebars.compile(source);
 			$i = $(id);
 			switch (_tmpType) {
 				case 'append':
@@ -73,7 +73,7 @@ var loadTemplate = function(id, tmp, tmpData, _tmpType) {
 var timer = {
 	'cur': '',
 	'idx': 0,
-	'tmr': {hr:0, min: 0, sec: 0},
+	'tmr': {hr:'00', min: '00', sec: '00'},
 	'init': function() {},
 	'get': function() {
 		var tmr = mobi.sites.get()['cards'][timer.idx].timer;
@@ -92,6 +92,9 @@ var timer = {
 			$this = $('#'+id+' .start_stop');
 
 		if ($this.hasClass('start')) {
+			$('.start_stop').removeClass('stop', function() {
+				$(this).addClass('start').html('&plus;');
+			})
 			timer.cur = id;
 			timer.idx = parseFloat(id);
 			timer.get();
@@ -105,12 +108,13 @@ var timer = {
 	},
 
 	'start': function() {
+		timer.stop();
 		var $timer = $('#' + this.cur + ' > input'),
-			t_hr = timer.tmr.hr ? this.tmr.hr + ':' : '00:',
+			t_hr = timer.tmr.hr ? this.tmr.hr + ':' : '0:',
 			t_min = timer.tmr.min ? this.tmr.min + ':' : '00:',
 			t_sec = timer.tmr.sec ? this.tmr.sec : '00';
 
-			t_hr = parseFloat(t_hr) > 0 && parseFloat(t_hr) < 10 ? '0' + t_hr : t_hr;
+			t_hr = t_hr;
 			t_min = parseFloat(t_min) > 0 && parseFloat(t_min) < 10 ? '0' + t_min : t_min;
 			t_sec = parseFloat(t_sec) > 0 && parseFloat(t_sec) < 10 ? '0' + t_sec : t_sec;
 
@@ -125,12 +129,14 @@ var timer = {
 		}
 
 		$timer.val( t_hr + t_min + t_sec );
+		timer.set();
 		window_timer = setTimeout('timer.start()', 1*1000);
 	},
+
 	'stop': function() {
-		timer.set();
 		window.clearTimeout(window_timer);
 	},
+
 	'reset': function() {
 
 	}
@@ -231,7 +237,6 @@ var cards = {
 				$('#add_card').html('&times;');
 
 				loadTemplate('#card_list', 'card-form', cards.cardBlank(), 'append');
-				$('#card_form input[name="title"]').focus();
 				break;
 
 			case 'close':
@@ -258,11 +263,11 @@ var cards = {
 	'save': function() {
 		var save_card = {
 	    	'title': $('#card_form [name="title"]').val(),
-	    	'page': $('#card_form [name="page"]').val(),
+	    	'page': '',
 	    	'status': $('#card_form [name="status"]').val(),
-	    	'desc': $('#card_form [name="desc"]').val(),
+	    	'desc': $('#card_form [name="desc"]').val().replace(/\n/g, "<br />"),
 	    	'issue': $('#card_form [name="issue"]').val(),
-	    	'timer': {'hr':0, 'min':0, 'sec':0}
+	    	'timer': {'hr':'0', 'min':'00', 'sec':'00'}
 		}
 
 		if (save_card.title) {
@@ -300,6 +305,7 @@ var cards = {
 //! mobi
 var mobi = {
 	'init': function() {
+		redmine.init()
 		mobi.site = $('#iframe_view').attr('src');
 		mobi.sites.init();
 		mobi.devices.display();
@@ -571,7 +577,7 @@ $(function() {
 				$mnu.hide()
 			}
 		});
-		$('#'+$cl).fadeToggle();
+		$('#'+$cl).fadeToggle('fast');
 	});
 
     $('#menu_button').on('click', toggleMenu);

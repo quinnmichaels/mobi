@@ -1,12 +1,11 @@
-{{debug}}
 	<div class="loading"></div>
 	<div class="data subject">{{issue.subject}}</div>
-	<div class="data author">{{issue.author.name}}</div>
-	<div class="data assigned_to">{{issue.assigned_to.name}}</div>
+	<div class="data author" data-id="{{issue.author.id}}">{{issue.author.name}}</div>
+	<div class="data assigned_to" data-id="{{issue.assigned_to.id}}">{{issue.assigned_to.name}}</div>
 	<div class="data created">{{issue.created_on}}</div>
-	<div class="data status">{{issue.status.name}}</div>
-	<div class="data tracker">{{issue.tracker.name}}</div>
-	<div class="data description">{{issue.description}}</div>
+	<div class="data status" data-id="{{issue.status.id}}">{{issue.status.name}}</div>
+	<div class="data tracker" data-id="{{issue.tracker.id}}">{{issue.tracker.name}}</div>
+	<div class="data description">{{{issue.description}}}</div>
 	<div class="data journal">
 		{{#each issue.journals}}
 		<div class="journal_item">
@@ -16,8 +15,37 @@
 		</div>
 		{{/each}}
 	</div>
-	<div class="toolbar"><button class="view_in">view in redmine</button><button class="close_issue" onclick="$('#redmine_issue').fadeOut(function(){$('#redmine_issue').html()});">&times;</button></div>
+	<div class="update-issue">
+		<div>
+			<textarea id="redNotes" placeholder="notes"></textarea>
+		</div>
+		<div>
+			<select id="redUsers"></select>
+			<select id="redStatus"></select>
+			<button type="button" onclick="redmine.update({{issue.id}});">Update</button>
+		</div>
+	</div>
+	<button class="close-issue" onclick="redmine.close();">&times;</button>
 <script>
+	var cur = '',
+		opt = '',
+		$assigned = $('.assigned_to').data('id');
+
+	for (x in redmine.users) {
+		cur = redmine.users[x];
+		opt += '<option value="' + cur.id + '">' + cur.firstname + ' ' + cur.lastname + '</option>';
+	}
+
+	$('#redUsers').html(opt);
+	$('#redUsers option[value="' + $assigned + '"]').attr('selected', true);
+
+	opt = '';
+	cur = '';
+	for (x in redmine.statuses) {
+		cur = redmine.statuses[x];
+		opt += '<option value="' + cur.id + '">' + cur.name + '</option>';
+	}
+	$('#redStatus').html(opt);
 	/*
 				$('#redmine_issue .subject').html(d.subject);
 				$('#redmine_issue .author').html(d.author.name);

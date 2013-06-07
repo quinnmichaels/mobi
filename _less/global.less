@@ -1,3 +1,6 @@
+@import url(http://fonts.googleapis.com/css?family=Orbitron);
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,300,600,700);
+
 //! ----- card defaults -----
 @cardW: 225px;
 @cardH: 290px;
@@ -12,10 +15,14 @@
 @menu-color-2: darken(@menu-color-1, 10%);
 //! ----- global font -----
 .global-font () {
-	font-family: 'HelveticaNeue-Light', 'HelveticaNeue', Helvetica, Arial, sans-serif;
+	font-family: 'Open Sans', 'HelveticaNeue-Light', 'HelveticaNeue', Helvetica, Arial, sans-serif;
 };
 
 //! ----- button defaults -----
+.b-gray () {
+	@color1: lighten(black, 60%);
+	@color2: lighten(black, 50%);
+}
 .b-ok () {
 	@color1: #1678ce;
 	@color2: #1064ae;
@@ -112,13 +119,15 @@
 }
 
 //! ----- global styles -----
+html, body, div, span, a, input, select, textarea, label {
+	.global-font();
+}
 html, body {
 	height: 100%;
 	overflow: hidden;
 }
 body {
 	.gradient;
-	.global-font;
 	background: #fff;
     font-size: 100%;
     background-attachment:fixed;
@@ -231,8 +240,8 @@ button:focus {
 		display: inline-block;
 		position: absolute;
 		font-size: 2em;
-		left: 10px;
-		top: 2px;
+		left: 5px;
+		top: 0;
 		text-shadow: 0 1px 0 white;
 	}
 	#url_input {
@@ -300,7 +309,7 @@ button:focus {
 		.cover();
 		padding: 5px;
 		display: none;
-		.gradient(rgba(0,0,0,.9), rgba(0,0,0,.6));
+		.gradient(rgba(0,0,0,.95), rgba(0,0,0,.85));
 		z-index: 1000;
 
 		.panel-close {
@@ -476,9 +485,6 @@ button:focus {
 							input,
 							textarea {
 								.radius(0px);
-							}
-							input:focus,
-							textarea:focus {
 								background: rgba(255,255,255,.75) !important;
 							}
 
@@ -600,23 +606,28 @@ button:focus {
 								margin: 0;
 								padding: 5px;
 								width: @cardW - 10;
-								height: @cardH - 136;
+								height: @cardH - 104;
 								white-space: normal;
 								overflow: auto;
+								color: lighten(@ui-color-1, 35%);
 							}
 
 							.timer {
-								@bg: darken(@color1, 50%);
+								@bg: lighten(@ui-color-1, 10%);
 								position: relative;
 								input[name="timer"] {
-									font-size: 1em;
+									font-family: Menlo, 'Courier New';
+									.b-ok();
+									letter-spacing: .12em;
+									color: lighten(@color1, 10%);
+									font-size: 1.5em;
 									height: 15px;
 									display: block;
 									text-align: right;
-									background: @bg;
+									background: @bg !important;
 									border: none;
 									margin: 0;
-									padding: 5px;
+									padding: 9px 5px 9px 5px;
 									width: @cardW - 35;
 
 								}
@@ -629,7 +640,7 @@ button:focus {
 									.b-defaults();
 									position: absolute;
 									top: 0;
-									height: 25px;
+									height: 33px;
 									width: 25px;
 									font-size: 1.5em;
 									line-height: 0px;
@@ -662,19 +673,38 @@ button:focus {
 
 								button {
 									display: inline-block;
-									padding: 5px;
-									margin: 4px -4px 0 3px;
-									.radius(5px);
+									padding: 5px 13px 5px 13px;
+									margin: 4px 0 0 0;
+									width: (@cardW - 9) / 3;
+
+									&.card-issue,
+									&.card-edit {
+										.b-gray();
+										.b-defaults();
+									}
+									&.card-delete {
+										.b-cancel();
+										.b-defaults();
+									}
+									&:first-child {
+										.radius(5px 0 0 5px);
+										margin-left: 4px;
+										border-right: 1px solid rgba(0,0,0,.2);
+									}
+									&:last-child {
+										.radius(0 5px 5px 0);
+										margin-right: 4px;
+										border-left: 1px solid rgba(0,0,0,.2);
+									}
+
+									&.card-save {
+										.b-ok();
+										.b-defaults();
+										.radius(5px);
+									}
+
 								}
-								button.card-archive,
-								button.card-edit {
-									.b-ok();
-									.b-defaults();
-								}
-								button.card-delete {
-									.b-cancel();
-									.b-defaults();
-								}
+
 							}
 						}
 					}
@@ -882,10 +912,12 @@ button:focus {
 
 //! - redmine issue
 #redmine_issue {
+	@issueW: 450px;
+	@issueH: 600px;
 	display: none;
 	position: absolute;
-	width: 400px;
-	height: 600px;
+	width: @issueW;
+	height: @issueH;
 	background: white;
 	top: 50%;
 	margin-top: -336px;
@@ -894,12 +926,10 @@ button:focus {
 	text-align: left;
 	padding: 36px;
 	font-size: 1.2em;
-	overflow: hidden;
 	z-index: 100000;
-	.shadow(0 6px 21px rgba(0,0,0,.7));
-	.radius(5px);
-	border-top: 1px solid lighten(@ui-color-1, 20%);
-
+	.shadow(0 6px 27px rgba(0,0,0,.7));
+	.radius(6px);
+	color: darken(white, 50%);
 	> div:before {
 		display: inline-block;
 		font-size: .9em;
@@ -911,8 +941,12 @@ button:focus {
 	}
 
 	.subject {
+		.b-ok();
+		color: lighten(@ui-color-1, 35%);
 		font-size: 1.5em;
-		margin-top: 9px;
+		margin: -36px -30px 0 -30px;
+		padding: 9px 30px 9px 9px;
+		font-weight: 300;
 	}
 	.author:before {
 		content: 'author';
@@ -923,6 +957,7 @@ button:focus {
 	}
 
 	.author {
+		margin-top: 18px;
 	}
 	.created:before {
 		content: 'created';
@@ -976,39 +1011,93 @@ button:focus {
 		}
 	}
 
-	.toolbar {
+	.update-issue {
+		@updateH: 100px;
+		@firstC: @issueW - 150 + 72;
+		@lastC: @issueW + 72 - @firstC - 4;
 		position: absolute;
-		top: 0;
-		right: 0;
+		bottom: 0;
 		left: 0;
-		height: 36px;
-		padding: 3px 2px 3px 2px;
-		.b-ok();
-		.gradient(@ui-color-1, @ui-color-2);
+		right: 0;
+		padding: 0;
+		margin: 0;
+		height: @updateH;
+		.gradient(lighten(@ui-color-2, 30%), lighten(@ui-color-2, 25%));
+		.radius(0 0 5px 5px);
+		> div {
+			.b-ok();
+			display: inline-block;
+			vertical-align: top;
+			height: @updateH;
 
-		button {
-			border: none;
-			position: relative;
-			height: 100%;
-			padding: 0 9px 0 9px;
-			color: rgba(255,255,255,.6);
-			background: rgba(0,0,0,.2);
-			border-top: 1px solid rgba(255,255,255,.2);
-			border-bottom: 1px solid rgba(0,0,0,.2);
-			.radius(3px);
-
-			&.close_issue {
-				position: absolute;
-				top: 5px;
-				right: 5px;
-				width: 30px;
-				height: 30px;
-				font-size: 1.5em;
-				padding: 0;
-				margin: 0;
-				background: none;
-				border: none;
+			textarea,
+			select {
+				margin: 5px;
+				padding: 5px;
+				border: 1px solid lighten(@ui-color-2, 20%);
+				color: lighten(@ui-color-1, 35%);
+				background: lighten(@ui-color-2, 70%);
+				.shadow(0 1px 3px rgba(0,0,0,.5) inset);
+				.radius(3px);
 			}
+			textarea {
+				resize: none;
+				width: @firstC - 13;
+				height: @updateH - 22;
+			}
+
+			select {
+				display: block;
+				width: @lastC - 10;
+				font-size: .8em;
+				-webkit-appearance: none;
+				-moz-appearance: none;
+				appearance: none;
+			}
+
+			button {
+				.b-defaults();
+				.radius(3px);
+				margin: 5px;
+				padding: 5px;
+				display: block;
+				width: @lastC - 10;
+			}
+
+			&:first-child {
+				width: @firstC;
+			}
+			&:last-child {
+				width: @lastC;
+			}
+
+		}
+	}
+
+	button.close-issue {
+		.b-ok();
+		font-size: 1.5em;
+		line-height: 16px;
+		position: absolute;
+		background: transparent;
+		top: 7px;
+		right: 7px;
+		width: 30px;
+		height: 30px;
+		padding: 0 0 3px 0;
+		margin: 0;
+		border: 3px solid lighten(@ui-color-1, 50%);
+		color: lighten(@ui-color-1, 50%);
+		z-index: 100000;
+		.radius(15px);
+
+		&:hover {
+			color: lighten(@ui-color-1, 65%);
+			border-color: lighten(@ui-color-1, 65%);
+		}
+		&:active {
+			color: lighten(@ui-color-1, 15%);
+			border-color: lighten(@ui-color-1, 15%);
 		}
 	}
 }
