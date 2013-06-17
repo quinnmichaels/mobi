@@ -12,5 +12,4 @@
 		<cfreturn arguments.callback & "(" & result.fileContent & ")">
 	</cffunction>
 
-
 </cfcomponent>

@@ -1,7 +1,6 @@
-
 <ul class="history_list">
 	{{#each urls}}
-	<li class="history_url"><a href="javascript:mobi.go('{{this}}');">{{this}}</a></li>
+	<li class="history_url"><a href="javascript:mobi.history.go('{{this}}');">{{this}}</a></li>
 	{{/each}}
 </ul>
 <button class="panel-close" onclick="$(this).parent().fadeOut();">&times;</button>

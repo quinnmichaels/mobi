@@ -1,7 +1,8 @@
 <li class="card">
 	<form id="card_form">
+		<input type="hidden" name="idx" value="new">
 		<input type="text" name="title" placeholder="title" tabindex="1" value="{{title}}">
-<!-- 		<div><label for="page">page</label><input type="text" name="page" placeholder="*.html" tabindex="2" value="{{page}}"></div> -->
+		<div><label for="due">due</label><input type="text" id="due" name="due" placeholder="Due Date" tabindex="2" value="{{due}}"></div>
 		<div><label for="issue">issue</label><input type="text" name="issue" placeholder="#" tabindex="3" value="{{issue}}"></div>
 		<textarea name="desc" placeholder="notes" tabindex="4">{{desc}}</textarea>
 		<div class="card_options_menu">
@@ -11,5 +12,8 @@
 </li>
 
 <script>
-	$('#card_form input[name="title"]').focus();
+	$(function() {
+		$('#due').datepicker();
+		$('#card_form input[name="title"]').focus();
+	});
 </script>

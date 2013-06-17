@@ -1,17 +1,17 @@
 {{#each cards}}
 	<li class="card" id="{{@index}}-card">
 		<div>
-			<div class="title">{{title}}</div>
+			<div class="title">{{title}}<button class="card-delete" onclick="cards.delete({{@index}});">&times;</button></div>
 
-			<div id="{{@index}}-timer" class="timer">
-				<button class="start_stop start" onclick="timer.start_stop('{{@index}}-timer')">&plus;</button>
-				<input type="text" name="timer" placeholder="00:00:00" value="{{timer.hr}}:{{timer.min}}:{{timer.sec}}" readonly="readonly">
-			</div>
-
-<!-- 			<div class="page">{{page}}</div> -->
 			<div class="desc">{{{desc}}}</div>
 
-			<div class="card_options_menu"><button class="card-edit" onclick="cards.edit({{@index}})">edit</button>{{#if issue}}<button class="card-issue" onclick="redmine.issue({{issue}})">issue</button>{{/if}}<button class="card-delete" onclick="cards.delete({{@index}});">delete</button></div>
+			<div class="due-date">{{{formatDueDate due}}}</div>
+			<div id="{{@index}}-timer" class="timer">
+				<input type="text" name="timer" placeholder="00:00:00" value="{{timer.0.hr}}:{{timer.0.min}}:{{timer.0.sec}}" readonly="readonly">
+				<button class="start_stop start" onclick="timer.start_stop('{{@index}}-timer')">&plus;</button>
+			</div>
+
+			<div class="card_options_menu"><button class="card-edit" onclick="cards.edit({{@index}})">edit</button>{{#if issue}}<button class="card-issue" onclick="redmine.issue({{issue}})">issue</button>{{/if}}<button class="card-timesheet" onclick="timer.timesheet({{@index}})">timesheet</button></div>
 
 		</div>
 	</li>

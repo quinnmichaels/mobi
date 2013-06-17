@@ -1,31 +1,45 @@
-	<div class="loading"></div>
-	<div class="data subject">{{issue.subject}}</div>
-	<div class="data author" data-id="{{issue.author.id}}">{{issue.author.name}}</div>
-	<div class="data assigned_to" data-id="{{issue.assigned_to.id}}">{{issue.assigned_to.name}}</div>
-	<div class="data created">{{issue.created_on}}</div>
-	<div class="data status" data-id="{{issue.status.id}}">{{issue.status.name}}</div>
-	<div class="data tracker" data-id="{{issue.tracker.id}}">{{issue.tracker.name}}</div>
-	<div class="data description">{{{issue.description}}}</div>
-	<div class="data journal">
-		{{#each issue.journals}}
-		<div class="journal_item">
-			<h1>{{issue.journals.user.name}}</h1>
-			<h2>{{issue.journals.created_on}}</h2>
-			<p>{{issue.journals.notes}}</p>
-		</div>
-		{{/each}}
+<div class="loading"></div>
+{{debug}}
+<div class="data subject">{{issue.subject}}</div>
+<div class="data author" data-id="{{issue.author.id}}">{{issue.author.name}}</div>
+<div class="data assigned_to" data-id="{{issue.assigned_to.id}}">{{issue.assigned_to.name}}</div>
+<div class="data created">{{issue.created_on}}</div>
+<div class="data status" data-id="{{issue.status.id}}">{{issue.status.name}}</div>
+<div class="data tracker" data-id="{{issue.tracker.id}}">{{issue.tracker.name}}</div>
+<div class="data description">{{{issue.description}}}</div>
+
+<div class="data journal">
+	{{#each issue.journals}}
+	<div class="journal_item">
+		<h1>{{user.name}}</h1>
+		<h2>{{created_on}}</h2>
+		<h3>Details</h3>
+		{{{formatIssueDetail details}}}
+		<h3>Notes</h3>
+		<p>{{notes}}</p>
 	</div>
-	<div class="update-issue">
+	{{/each}}
+</div>
+
+
+<div class="update-issue">
+	<button class="update-button" onclick="redmine.issueNote();"></button>
+	<form action="issue.hbs" method="post" accept-charset="utf-8">
 		<div>
 			<textarea id="redNotes" placeholder="notes"></textarea>
 		</div>
 		<div>
-			<select id="redUsers"></select>
-			<select id="redStatus"></select>
-			<button type="button" onclick="redmine.update({{issue.id}});">Update</button>
+			<label for="redUsers">assigned to</label><select id="redUsers"></select>
 		</div>
-	</div>
-	<button class="close-issue" onclick="redmine.close();">&times;</button>
+		<div>
+			<label for="redStatus">status</label><select id="redStatus"></select>
+		</div>
+		<button type="button" onclick="redmine.update({{issue.id}});">save</button>
+	</form>
+</div>
+
+<button class="close-issue" onclick="redmine.close();">&times;</button>
+
 <script>
 	var cur = '',
 		opt = '',
@@ -46,20 +60,4 @@
 		opt += '<option value="' + cur.id + '">' + cur.name + '</option>';
 	}
 	$('#redStatus').html(opt);
-	/*
-				$('#redmine_issue .subject').html(d.subject);
-				$('#redmine_issue .author').html(d.author.name);
-				$('#redmine_issue .assigned_to').html(d.assigned_to.name);
-				$('#redmine_issue .created').html(d.created_on);
-				$('#redmine_issue .status').html(d.status.name);
-				$('#redmine_issue .tracker').html(d.tracker.name);
-				$('#redmine_issue .description').html(d.description);
-
-				for (var x in d.journals) {
-					var cur = d.journals[x];
-				}
-				$('#redmine_issue .journal').html(cur_out);
-
-
-	 */
 </script>

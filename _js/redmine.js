@@ -4,6 +4,7 @@ var redmine = {
 	'service_url': 'http://q.dev/mobi/_cfc/mobi.cfc?method=callRedMine&redURL=',
 	'users': '',
 	'statuses': '',
+	'issue': '',
 
 	'init': function(k, u) {
 /*
@@ -11,8 +12,6 @@ var redmine = {
 		this.url = u;
 */
 
-		this.getUsers();
-		this.getStatuses();
 	},
 
 	'callURL': function(str) {
@@ -34,6 +33,9 @@ var redmine = {
 	'issue': function(i) {
 		$('#redmine_issue').fadeIn('fast');
 		//get issue
+		this.getUsers();
+		this.getStatuses();
+
 		$.ajax({
 			url: redmine.callURL('/issues/' + i + '.json?include=journals'),
 			async: false,
@@ -47,14 +49,21 @@ var redmine = {
 				var d = data.issue,
 				 	j_html = '',
 				 	cur_out = '';
-				 console.log(data);
 
 				loadTemplate('#redmine_issue', 'issue', data);
 			},
 			error: function(a, b, c) {
-				this.err();
+				redmine.err();
 			}
 		});
+	},
+
+	'issueDesc': function(i) {
+		console.log(i);
+	},
+
+	'issueNote': function() {
+		$('.update-issue form').slideToggle();
 	},
 
 	'getUsers': function() {
@@ -69,7 +78,7 @@ var redmine = {
 				return true;
 			},
 			error: function(a, b, c) {
-				this.err();
+				redmine.err();
 			}
 		});
 	},
