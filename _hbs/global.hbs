@@ -1,0 +1,22 @@
+<h1>hello i am global</h1>
+{{debug}}
+{{#each this}}
+	<h2 class="card-toggle" data-toggle="{{@index}}_site">{{title}}</h2>
+	<div class="card-list" id="{{@index}}_site">
+		<ol>
+			{{globalCards @index this}}
+		</ol>
+	</div>
+{{/each}}
+<script>
+	$(function() {
+		cards.cardSortable('.card-list ol');
+		$('.card-toggle').on('click', function() {
+			console.log('clicked');
+			var $tog = $('#'+ $(this).data('toggle'));
+
+			$tog.slideToggle('fast')
+		});
+	});
+</script>
+

@@ -11,7 +11,7 @@
 				<button class="start_stop start" onclick="timer.start_stop('{{@index}}-timer')">&plus;</button>
 			</div>
 
-			<div class="card_options_menu"><button class="card-edit" onclick="cards.edit({{@index}})">edit</button>{{#if issue}}<button class="card-issue" onclick="redmine.issue({{issue}})">issue</button>{{/if}}<button class="card-timesheet" onclick="timer.timesheet({{@index}})">timesheet</button></div>
+			<div class="card_options_menu"><button class="card-edit" onclick="cards.edit({{@index}})"><span class="icon-edit icon-large"></span></button>{{#if issue}}<button class="card-issue" onclick="redmine.issue({{issue}})"><span class="icon-external-link icon-large"></span></button>{{/if}}<button class="card-timesheet" onclick="timesheet.view({{@index}})"><span class="icon-time icon-large"></span></button></div>
 
 		</div>
 	</li>

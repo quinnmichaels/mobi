@@ -9,6 +9,7 @@
 	<title>My HTML File</title>
 
 	<link rel="stylesheet" type="text/css" href="_lib/jquery.ui/css/mobi-theme/jquery-ui-1.10.3.min.css"></script>
+	<link href="_lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
 	<link rel="stylesheet" type="text/css" href="_css/global.css">
 
 </head>
@@ -33,7 +34,7 @@
 	    <div id="menu_button"></div>
 	    <div id="mobi_menu">
 		    <div id="mobi_menu_container">
-		    	<div id="mobi_menu_cards">
+		    	<div id="mobi_menu_cards" class="card-list">
 		    		<ol id="card_list"></ol>
 		    	</div>
 		    </div>
@@ -49,6 +50,8 @@
     </div>
 
 <div id="redmine_issue"></div>
+<div id="timesheet"></div>
+
 <div id="modal">
 	<div class="loading"></div>
 	<div id="modal_error">
@@ -57,6 +60,7 @@
 	</div>
 </div>
 
+<div id="global_view"></div>
 
 <script src="_lib/jquery.min.js"></script>
 <script src="_lib/jquery.ui/js/jquery-ui-1.10.3.custom.min.js"></script>
@@ -79,55 +83,52 @@
 	});
 
 	Handlebars.registerHelper("formatDueDate", function(dueDate) {
-		dueDate = new Date(dueDate);
+		var due_ret = '';
 
+		console.log(dueDate);
+		if (dueDate) {
+			dueDate = new Date(dueDate);
+			var days = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'],
+				today = new Date(),
+				msDay = 60*60*24*1000,
+				t_date = today.getDate(),
+				t_month = today.getMonth() + 1,
+				t_year = today.getFullYear(),
+				d_date = dueDate.getDate(),
+				d_month = dueDate.getMonth() + 1,
+				d_year = dueDate.getFullYear();
 
-		var days = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'],
-			today = new Date(),
-			msDay = 60*60*24*1000,
-			t_date = today.getDate(),
-			t_month = today.getMonth() + 1,
-			t_year = today.getFullYear(),
-			d_date = dueDate.getDate(),
-			d_month = dueDate.getMonth() + 1,
-			d_year = dueDate.getFullYear();
+			var format_today = t_month + '-' + t_date + '-' + t_year,
+				format_dueDate = d_month + '-' + d_date + '-' + d_year,
+				due_diff = Math.ceil((dueDate - today) / msDay);
 
-		var format_today = t_month + '-' + t_date + '-' + t_year,
-			format_dueDate = d_month + '-' + d_date + '-' + d_year,
-			due_diff = Math.round((dueDate - today) / msDay),
-			due_ret = 'today';
-
-
-			console.log(format_dueDate);
-			console.log(format_today);
-		if (format_dueDate == format_today) {
-			due_ret = '<span style="color:yellow">today</span>';
-		} else {
-			console.log(due_diff);
-			switch(due_diff) {
-				case -1:
-					due_ret = '<span style="color:red">yesterday</span>';
-					break;
-				case 0:
-					due_ret = '<span style="color: green">tomorrow</span>';
-					break;
-				case 1:
-					break;
-				case 2:
-				case 3:
-				case 4:
-					due_ret = due_diff + ' days';
-					break;
-				default:
-					due_ret = format_dueDate;
-					break;
+			if (format_dueDate == format_today) {
+				due_ret = '<span style="color:yellow">today</span>';
+			} else {
+				switch(due_diff) {
+					case -1:
+						due_ret = '<span style="color:red">yesterday</span>';
+						break;
+					case 0:
+					case 1:
+						due_ret = '<span style="color: green">tomorrow</span>';
+						break;
+					case 2:
+					case 3:
+					case 4:
+						due_ret = due_diff + ' days';
+						break;
+					default:
+						due_ret = format_dueDate;
+						break;
+				}
 			}
 		}
-
 		return due_ret;
+
 	});
 
-	Handlebars.registerHelper("formatIssueDetail", function(issueDetails) {
+	Handlebars.registerHelper('formatIssueDetail', function(issueDetails) {
 		console.log(issueDetails);
 		var i = issueDetails,
 			ret = '',
@@ -145,6 +146,10 @@
 			}
 		}
 		return ret;
+	});
+
+	Handlebars.registerHelper('globalCards', function(idx, cardDetails) {
+		loadTemplate('#' + idx + '_site ol', 'card', cardDetails, 'insert');
 	});
 </script>
 

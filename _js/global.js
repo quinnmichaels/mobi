@@ -176,15 +176,19 @@ var timer = {
 //! cards
 var cards = {
 	'init': function() {
-		var $drag;
-		this.list();
-
+		cards.list();
+		cards.cardSortable('#card_list');
 		$('button[data-action="delete"]').on('click', cards.delete);
+	},
 
+	'cardSortable': function(sel) {
+		var $drag;
 		//! draggable cads
-		$('#card_list').sortable({
-			revert: true,
-			start: function(e,ui) {
+		$(sel).sortable({
+			revert: 200,
+			tolerance: 'pointer',
+			start: function(e, ui) {
+				timer.stop();
 				$drag = $('#' + ui.item[0].id);
 				$drag.addClass('dragging');
 			},
@@ -193,9 +197,8 @@ var cards = {
 				cards.cardSort();
 			}
 		});
-
 		//! card options menu
-		$('#card_list,#card_list li').disableSelection();
+		$(sel).disableSelection();
 	},
 
 	'cardBlank': function() {
@@ -234,6 +237,7 @@ var cards = {
 		});
 		s['cards'] = new_arr;
 		storage.set(mobi.site, s);
+		cards.list();
 	},
 
 	'get': function() {
@@ -241,7 +245,7 @@ var cards = {
 	},
 
 	'list': function() {
-		loadTemplate('#card_list', 'card', mobi.sites.get());
+		loadTemplate('#card_list', 'card', mobi.sites.get(), 'insert');
 
 /*
 		for (var x in c) {
@@ -363,7 +367,9 @@ var mobi = {
 		mobi.history.init();
 		cards.init();
 		//! load init templates into app
-		loadTemplate('#settings_panel', 'settings', mobi.sites.get()['settings']);
+		loadTemplate('#settings_panel', 'settings', mobi.sites.get()['settings'], 'insert');
+
+		mobi.sites.list();
 	},
 
 	'sites': {
@@ -389,7 +395,26 @@ var mobi = {
 			if (!storage.check(si)) {
 				storage.set(si, new_site);
 			}
+		},
+		'list': function() {
+			var sl = localStorage.length,
+				skip = ['url_history','view'],
+				retSites = [];
+
+			for (var i = 0; i < sl; i++) {
+				var tKey = localStorage.key(i);
+				if (skip.indexOf(tKey) == -1) {
+					retSites.push(storage.get(localStorage.key(i)));
+				}
+			}
+			return retSites;
+		},
+		'global_view': function() {
+			var s = mobi.sites.list();
+			s.reverse();
+			loadTemplate('#global_view', 'global', s, 'insert')
 		}
+
 	},
 
 	'devices': {
@@ -502,7 +527,7 @@ var mobi = {
 		'setTemplate': function() {
 			var hist = mobi.history.get();
 				hist['urls'].reverse();
-			loadTemplate('#history_panel', 'history', hist);
+			loadTemplate('#history_panel', 'history', hist, 'insert');
 		},
 
 		'get': function() {
@@ -527,7 +552,20 @@ var mobi = {
 	    this.go(mobi.site);
 	}
 };
+var timesheet = {
+	'close': function() {
+		$('#timesheet').fadeOut('fast');
+	},
 
+	'view': function(i) {
+		var s = storage.get(mobi.site),
+			ts = s['cards'][i].timer;
+
+		$('#timesheet').fadeIn('fast');
+		//get issue
+		loadTemplate('#timesheet', 'timesheet', ts);
+	}
+}
 //! modal
 var modal = {
 	'show': function() {
@@ -570,6 +608,9 @@ $(function() {
 				break;
 
 			case 186:
+				$('#global_view').fadeToggle('fast', function() {
+					mobi.sites.global_view();
+				});
 				vdev('fullscreen'); // alt/opt + 0
 				break;
 			case 161: // alt/opt + 1
@@ -598,7 +639,7 @@ $(function() {
 
 
 	//draggable stuff
-	$('#redmine_issue').draggable({ containment: "parent" });
+	$('#redmine_issue, #timesheet').draggable({ containment: "parent" });
 
     $('#rotate_iframe').on('click', function() {
 	    viewRotate();
