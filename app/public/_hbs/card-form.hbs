@@ -1,0 +1,25 @@
+<li class="card">
+	<form id="card_form">
+		<input type="hidden" name="idx" value="new">
+		<input type="text" name="title" placeholder="title" tabindex="1" value="{{title}}">
+		<div><label for="due">due</label><input type="text" id="due" name="due" placeholder="mm/dd/yyyy" tabindex="2" value="{{due}}"></div>
+		<div><label for="status">status</label><select id="status" name="status" tabindex="3"></select>
+		<div><label for="issue">issue</label><input type="text" name="issue" placeholder="#" tabindex="4" value="{{issue}}"></div>
+		<textarea name="desc" placeholder="notes" tabindex="4">{{desc}}</textarea>
+		<button class="card-save" type="button" onclick="cards.save()">save</button>
+	</form>
+</li>
+
+<script>
+	$(function() {
+		$('#due').datepicker();
+		$('#card_form input[name="title"]').focus();
+
+		var stat = '',
+			frm_stat = mobi.sites.get().statuses;
+		for (var x in frm_stat) {
+			stat += '<option value="' + frm_stat[x].name + '">'+ frm_stat[x].name + '</option>';
+		}
+		$('#status').html(stat);
+	});
+</script>

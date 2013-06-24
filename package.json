@@ -1,0 +1,24 @@
+{
+    "name"       : "mobi",
+    "version"    : "0.0.1",
+
+    "engines": {
+        "node": ">=0.8"
+    },
+
+     "dependencies": {
+        "async"     : "~0.2",
+        "glob"      : "3.x",
+        "handlebars": "1.x",
+        "semver"    : "1.x",
+        "mongodb"   : "1.x"
+    },
+
+    "devDependencies": {
+        "express": "3.x"
+    },
+
+    "main": "server.js",
+
+    "directories": {"lib": "./lib"}
+}

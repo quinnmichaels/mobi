@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black">
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+	<meta charset="utf-8">
+	<title>My HTML File</title>
+
+	<link rel="stylesheet" type="text/css" href="_lib/jquery.ui/css/mobi-theme/jquery-ui-1.10.3.min.css"></script>
+	<link href="_lib/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+	<link rel="stylesheet" type="text/css" href="_css/global.css">
+
+</head>
+<body>
+
+	<div class="content_container">
+	    <div class="content_wrapper">
+	    	<div class="content">
+	    	    <iframe frameborder="0" id="iframe_view" width="100%" height="100%" src="blank.html"></iframe>
+		    </div>
+	    </div>
+
+    </div>
+
+    <div id="panel">
+	    <form id="url_form" method="post">
+	    	<label for="url_input">url:</label>
+	    	<input type="text" name="url_input" id="url_input" tabindex="1">
+	    	<a href="#" id="frame_settings" class="panel-menu-button" data-id="settings_panel"></a><a href="#" id="frame_reload"></a><a href="#" id="frame_history" class="panel-menu-button" data-id="history_panel"></a>
+	    </form>
+	    <div id="menu_button"></div>
+	    <div id="mobi_menu">
+		    <div id="mobi_menu_container">
+		    	<div id="mobi_menu_cards" class="card-list">
+		    		<ol id="card_list"></ol>
+		    	</div>
+		    </div>
+		    <div id="mobi_menu_buttons">
+			    <button id="add_card" data-state="add">&plus;</button>
+			    <button id="rotate_iframe">R</button>
+			    <div id="devices"><ul></ul></div>
+<!-- 			    <div id="redmine_menu"><button>redmine</button></div> -->
+		    </div>
+	    </div>
+		<div id="settings_panel" class="panel-menu"></div>
+		<div id="history_panel" class="panel-menu"></div>
+    </div>
+
+<div id="redmine_issue"></div>
+<div id="timesheet"></div>
+
+<div id="modal">
+	<div class="loading"></div>
+	<div id="modal_error">
+		<h1>Error</h1>
+		<p></p>
+	</div>
+</div>
+
+<div id="global_view"></div>
+
+<script src="_lib/jquery.min.js"></script>
+<script src="_lib/jquery.ui/js/jquery-ui-1.10.3.custom.min.js"></script>
+<script src="_lib/handlebars.min.js"></script>
+<script src="_js/redmine.js"></script>
+<script src="_js/global.js"></script>
+
+
+<script>
+	Handlebars.registerHelper('debug', function(optVal) {
+		console.log("Current Context");
+		console.log("====================");
+		console.log(this);
+
+		if (optVal) {
+			console.log("Value");
+			console.log("====================");
+			console.log(optVal);
+		}
+	});
+
+	Handlebars.registerHelper("formatDueDate", function(dueDate) {
+		var due_ret = '';
+
+		console.log(dueDate);
+		if (dueDate) {
+			dueDate = new Date(dueDate);
+			var days = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'],
+				today = new Date(),
+				msDay = 60*60*24*1000,
+				t_date = today.getDate(),
+				t_month = today.getMonth() + 1,
+				t_year = today.getFullYear(),
+				d_date = dueDate.getDate(),
+				d_month = dueDate.getMonth() + 1,
+				d_year = dueDate.getFullYear();
+
+			var format_today = t_month + '-' + t_date + '-' + t_year,
+				format_dueDate = d_month + '-' + d_date + '-' + d_year,
+				due_diff = Math.ceil((dueDate - today) / msDay);
+
+			if (format_dueDate == format_today) {
+				due_ret = '<span style="color:yellow">today</span>';
+			} else {
+				switch(due_diff) {
+					case -1:
+						due_ret = '<span style="color:red">yesterday</span>';
+						break;
+					case 0:
+					case 1:
+						due_ret = '<span style="color:green">tomorrow</span>';
+						break;
+					case 2:
+					case 3:
+					case 4:
+						due_ret = due_diff + ' days';
+						break;
+					default:
+						due_ret = format_dueDate;
+						break;
+				}
+			}
+		}
+		return due_ret;
+
+	});
+
+	Handlebars.registerHelper('formatIssueDetail', function(issueDetails) {
+		console.log(issueDetails);
+		var i = issueDetails,
+			ret = '',
+			cur = '';
+
+		for (var x in issueDetails) {
+			cur = issueDetails[x];
+			switch (cur.name) {
+				case 'status_id':
+					ret = '<p>changed status</p>';
+					break;
+				case 'tracker_id':
+					ret = '<p>changed tracker</p>';
+					break;
+			}
+		}
+		return ret;
+	});
+
+	Handlebars.registerHelper('globalCards', function(idx, cardDetails) {
+		loadTemplate('#' + idx + '_site ol', 'card', cardDetails, 'insert');
+	});
+</script>
+
+
+</body>
+</html>
+
+

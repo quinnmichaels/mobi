@@ -1,0 +1,48 @@
+{{#each cards}}
+	<li class="card" id="{{@index}}-card">
+		<div class="card-box">
+			<div class="title">{{title}}<button class="card-delete" onclick="cards.delete({{@index}});">&times;</button></div>
+			<div class="desc">{{{desc}}}</div>
+
+			<div class="status {{status}}">{{status}}</div>
+			<div class="due-date">{{{formatDueDate due}}}</div>
+			<div id="{{@index}}-timer" class="timer">
+				<input type="text" name="timer" placeholder="00:00:00" value="{{timer.0.hr}}:{{timer.0.min}}:{{timer.0.sec}}" readonly="readonly">
+				<button class="start_stop start" onclick="timer.start_stop('{{@index}}-timer')">&plus;</button>
+			</div>
+
+			<div class="card_options_menu">
+				<button class="card-edit" onclick="cards.edit({{@index}})">
+					<span class="icon-edit icon-large"></span>
+				</button>
+				{{#if issue}}
+				<button class="card-issue" onclick="redmine.issue({{issue}})">
+					<span class="icon-asterisk icon-large"></span>
+				</button>
+				{{/if}}
+				<button class="card-checklist" onclick="cards.checklist.view({{@index}}, this)"><span class="icon-tasks icon-large"></span><span class="tasks-count">{{checklist.length}}</span></button>
+				<button class="card-timesheet" onclick="timesheet.view({{@index}})"><span class="icon-time icon-large"></span></button>
+			</div>
+
+		</div><div id="{{@index}}-checklist" class="checklist">
+			<div>
+				<div class="check-form-container">
+					<input type="hidden" name="checklist-index" value="{{@index}}">
+					<input type="hidden" name="checklist-done" value="0">
+					<input type="text" name="checklist-item" placeholder="add checklist item"><button onclick="cards.checklist.checklistSave(this)" data-index="{{@index}}">&plus;</button>
+				</div>
+				<ul class="check-list">
+					{{#each checklist}}
+						<li class="check-item"><span class="check-done icon-unchecked"></span><span class="check-text">{{text}}</span></li>
+					{{/each}}
+				</ul>
+			</div>
+		</div>
+	</li>
+{{/each}}
+
+<script>
+	$(function() {
+		cards.checklist.checklistSortable();
+	});
+</script>
