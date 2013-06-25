@@ -9,9 +9,6 @@ function toggleMenu() {
 		nextPos = $pos == 0 ? '-' + $height + 'px' : 0,
 		contPos = $pos == $height ? $height : 0;
 
-		console.log('pos: ' + $pos);
-		console.log('content: ' + contPos);
-
 	$('#panel').animate({
 	    bottom: nextPos
 	});
@@ -201,13 +198,31 @@ var cards = {
 				$drag = $('#' + ui.item[0].id);
 				$drag.addClass('dragging');
 			},
-			stop: function() {
+			stop: function(e, ui) {
 				$drag.removeClass('dragging');
-				cards.cardSort();
+				cards.cardSort($drag);
 			}
 		});
 		//! card options menu
 		$(sel).disableSelection();
+	},
+
+	'cardSort': function(caller) {
+		var new_arr = [],
+			s = mobi.sites.get(),
+			crds = s.cards,
+			idx = parseFloat($(caller).attr('id'));
+
+		console.log(caller);
+
+		$('#card_list li').each(function() {
+			console.log('list loop: ' + crds[parseFloat(this.id)]);
+			new_arr.push(crds[parseFloat(this.id)]);
+		});
+
+		s.cards = new_arr;
+		storage.set(mobi.site, s);
+		cards.list();
 	},
 
 	'cardBlank': function() {
@@ -237,33 +252,13 @@ var cards = {
 			})
 	},
 
-	'cardSort': function(e,u) {
-		var new_arr = [],
-			s = mobi.sites.get();
-
-		$('#card_list li').each(function() {
-			new_arr.push(s['cards'][parseFloat(this.id)]);
-		});
-		s['cards'] = new_arr;
-		storage.set(mobi.site, s);
-		cards.list();
-	},
-
 	'get': function() {
 		return mobi.sites.get()['cards'];
 	},
 
 	'list': function() {
+		timer.stop();
 		loadTemplate('#card_list', 'card', mobi.sites.get(), 'insert');
-
-/*
-		for (var x in c) {
-			if (c[x] != null) {
-				ret += this.cardHTML(c[x], x + '-card');
-			}
-		}
-		$('#mobi_menu_container ol').html(ret);
-*/
 	},
 
 	'create': function(e) {
@@ -278,7 +273,7 @@ var cards = {
 
 				$('#add_card').html('&times;');
 
-				loadTemplate('#card_list', 'card-form', cards.cardBlank(), 'append');
+				loadTemplate('#card_list', 'card-form', cards.cardBlank(), 'prepend');
 				break;
 
 			case 'close':
@@ -288,6 +283,7 @@ var cards = {
 				break;
 		}
 
+
 		$('#add_card').attr('data-state', n_state);
 
 	},
@@ -296,9 +292,11 @@ var cards = {
 		var s = mobi.sites.get(),
 			c = s['cards'];
 
+		c.reverse();
 		c.push(new_card);
+		c.reverse();
 
-		s['cards'] = c;
+		s.cards = c;
 		storage.set(mobi.site, s);
 	},
 	'update': function(idx, new_card) {
@@ -323,7 +321,6 @@ var cards = {
 				'timer': []
 			};
 			save_card.timer.push(timer.tmr());
-			console.log(s.cards);
 
 			if (s.cards.length && idx != 'new') {
 				save_card.checklist = s.cards[idx].checklist;
@@ -336,7 +333,7 @@ var cards = {
 			} else {
 				this.update(idx, save_card);
 			}
-			this.list();
+			cards.list();
 	    }
 	},
 
@@ -377,7 +374,6 @@ var cards = {
 		},
 
 		'view': function(idx, caller) {
-			console.log(caller);
 			$(caller).toggleClass('active');
 
 			var $clkID = '#' + idx + '-checklist';
@@ -392,15 +388,13 @@ var cards = {
 				lst += '<li class="check-item"><span class="check-done icon-unchecked"></span><span class="check-text">' + crd.checklist[x].text + '</span></li>';
 			}
 			$('#' + idx + '-card .card_options_menu .card-checklist .tasks-count').html(crd.checklist.length);
-			$('#' + idx + '-checklist > div .check-list').html(lst);
+			$('#' + idx + '-checklist > div .check-list').html(lst).toggleCheckListButtons();
 		},
 
 		'checklistAdd': function(idx, dn, tx) {
 			var s = mobi.sites.get(),
 				chk = s.cards[idx].checklist,
 				newItem = {'done':dn,'text':tx};
-
-				console.log(idx);
 
 				chk.reverse();
 				chk.push(newItem);
@@ -412,14 +406,13 @@ var cards = {
 		},
 
 		'checklistSave': function(sender) {
-			console.log(sender);
 			var $chkIdx = $(sender).data('index'),
 				$chkDone = $('#' + $chkIdx + '-card .check-form-container [name="checklist-done"]'),
 				$chkVal = $('#' + $chkIdx + '-card .check-form-container [name="checklist-item"]');
 
-			console.log($chkVal.val());
-
-			if ($chkVal.val() !== 'undefined') {
+			console.log('chkVal');
+			console.log($chkVal.val().length);
+			if ($chkVal.val() !== 'undefined' && $chkVal.val().length) {
 				cards.checklist.checklistAdd($chkIdx, $chkDone.val(), $chkVal.val());
 
 				$chkVal.val('');
@@ -441,12 +434,6 @@ var cards = {
 			//! card options menu
 			$('.check-list').disableSelection();
 
-			$('.check-done').on('click', function() {
-				$(this).toggleClass('icon-unchecked').toggleClass('icon-check').parent().toggleClass('done');
-				if ($(this).hasClass('icon-check')) {
-					console.log(this);
-				}
-			});
 		},
 		'checklistSort': function(e,u) {
 			var new_arr = [],

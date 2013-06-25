@@ -172,7 +172,6 @@ button:focus {
 	display: inline-block;
     margin: 5px 5px 0 5px;
     padding: 18px;
-    overflow: hidden;
 
 	.content {
 		position: relative;
@@ -183,7 +182,7 @@ button:focus {
 			width: 100%;
 			height: 100%;
 		    margin: 0;
-			.shadow(0 3px 18px rgba(0,0,0,.4));
+			.shadow(0 9px 72px rgba(0,0,0,.7));
 		}
 	}
 }
@@ -704,12 +703,20 @@ button:focus {
 					font-size: 8pt;
 
 					&.to-do {
+						background: rgba(255, 150, 0, .2);
+						color: rgb(255, 150, 0);
+					}
+					&.in-progress {
 						background: rgba(0, 255, 0, .1);
 						color: rgb(0, 255, 0);
 					}
-					&.in-progress {
-						background: rgba(255, 150, 0, .2);
-						color: rgb(255, 150, 0);
+					&.on-hold {
+						background: rgba(255, 255, 0, .2);
+						color: rgb(255, 255, 0);
+					}
+					&.complete {
+						background: rgba(255,0,0,.2);
+						color: rgb(255,0,0);
 					}
 				}
 
@@ -865,7 +872,7 @@ button:focus {
 
 					button {
 						position: relative;
-						color: #fff;
+						color: #666;
 						display: inline-block;
 						width: 40px;
 						height: 25px;
@@ -874,6 +881,13 @@ button:focus {
 						border: 0;
 						background: transparent;
 
+						&:hover {
+							color: #ccc;
+							cursor: pointer;
+						}
+						&:active {
+							color: #999;
+						}
 						&:first-child {
 							.radius(5px 0 0 5px);
 							margin-left: 4px;
@@ -903,8 +917,8 @@ button:focus {
 							.radius(8px;)
 						}
 						&.active {
-							.gradient(rgba(255,255,255,.1), rgba(255,255,255,.2));
-							.shadow(0 0 5px rgba(255,255,255,.4) inset);
+							.gradient(rgba(0,0,0,.5), rgba(0,0,0,.4));
+							.shadow(0 0 5px rgba(0,0,0,.9) inset);
 						}
 					}
 
@@ -934,7 +948,7 @@ button:focus {
 					position: relative;
 					padding: 0;
 					margin: 0;
-					height: 250px;
+					height: 245px;
 					overflow: auto;
 
 					.dragging {
@@ -973,6 +987,30 @@ button:focus {
 							white-space: normal;
 							margin-left: 20px;
 						}
+						.check-menu {
+							display: none;
+							position: absolute;
+							top: 2px;
+							right: 0;
+							padding: 2px;
+							background: rgba(0,0,0,.3);
+							.radius(5px 0 0 5px);
+							overflow: hidden;
+
+							button {
+								border: none;
+								background: rgba(0,0,0,.5);
+								color: rgb(180, 180, 180);
+								padding: 3px;
+								margin: 0 1px 0 0;
+								line-height: 8px;
+								font-size: 13px;
+								letter-spacing: -1px;
+								width: 19px;
+								height: 19px;
+								.radius(3px);
+							}
+						}
 					}
 				}
 
@@ -983,14 +1021,14 @@ button:focus {
 
 					input[type="text"] {
 						resize: none;
-						background: rgba(255,255,255,.1);
+						background: rgba(255,255,255,.5);
 						width: 185px;
 						padding: 3px;
 						font-size: 1.1em;
 						.radius(5px);
 						.shadow(0 2px 3px rgba(0,0,0,.2) inset);
-						border-bottom: 1px solid rgba(255,255,255,.15);
-						border-top: 1px solid rgba(0,0,0,.8);
+						border-bottom: 1px solid rgba(255,255,255,.4);
+						border-top: 1px solid rgba(0,0,0,.3);
 					}
 					button {
 						.b-defaults();

@@ -20,7 +20,7 @@
 					<span class="icon-asterisk icon-large"></span>
 				</button>
 				{{/if}}
-				<button class="card-checklist" onclick="cards.checklist.view({{@index}}, this)"><span class="icon-tasks icon-large"></span><span class="tasks-count">{{checklist.length}}</span></button>
+				<button class="card-checklist" onclick="cards.checklist.view({{@index}}, this)"><span class="icon-list-alt icon-large"></span><span class="tasks-count">{{checklist.length}}</span></button>
 				<button class="card-timesheet" onclick="timesheet.view({{@index}})"><span class="icon-time icon-large"></span></button>
 			</div>
 
@@ -44,5 +44,22 @@
 <script>
 	$(function() {
 		cards.checklist.checklistSortable();
+		$('.check-item').toggleCheckListButtons();
+		$('.check-item').hover(
+			function () {
+				console.log($(this).filter('.check-menu'));
+				$(this).children().filter('.check-menu').fadeIn('fast');
+			},
+			function () {
+				$(this).children().filter('.check-menu').fadeOut('fast');
+			}
+		);
+
+		$('.check-done').on('click', function() {
+			$(this).toggleClass('icon-unchecked').toggleClass('icon-check').parent().toggleClass('done');
+			if ($(this).hasClass('icon-check')) {
+				console.log(this);
+			}
+		});
 	});
 </script>
