@@ -1,0 +1,59 @@
+<button class="close-checklist" onclick="checklist.close();">&times;</button>
+<h1 class="data subject"><span class="icon-list-alt"></span> {{title}}</h1>
+<div id="check-list-container">
+	<div>
+		<div id="check-form-container">
+			<form data-index="{{idx}}">
+			<input type="hidden" name="checklist-index" value="{{idx}}">
+			<input type="hidden" name="checklist-done" value="0">
+			<input type="text" name="checklist-item" placeholder="add checklist item"><button id="check-priority" class="p-none" type="button">none</button><button id="check-save" data-index="{{idx}}" type="submit">&plus;</button>
+			<div id="check-priority-select">
+				<button id="check-btn-normal" class="p-none">none</button>
+				<button id="check-btn-high" class="p-high">high</button>
+				<button id="check-btn-medium" class="p-medium">medium</button>
+				<button id="check-btn-low" class="p-low">low</button>
+			</div>
+			</form>
+		</div>
+		<ul id="check-list-items" data-index="{{idx}}">
+			{{#each checklist}}
+				<li class="check-item l-{{priority}}" data-index="{{@index}}"><span class="check-done icon-unchecked"></span><span class="check-text">{{text}}</span></li>
+			{{/each}}
+		</ul>
+	</div>
+</div>
+
+<script>
+	$(function() {
+
+		// make checklsit sortable
+		checklist.checklistSortable();
+
+		// focus input field
+		$('input[name="checklist-item"]').focus();
+
+		// run custom plugin to show checklist menu
+		$('.check-item').toggleCheckListButtons();
+
+		$('#check-priority').on('click', function(e) {
+			e.preventDefault();
+			$('#check-priority-select').fadeIn('fast');
+		});
+
+		$('#check-priority-select button').on('click', function(e) {
+			e.preventDefault();
+			$('#check-priority').attr('class', $(this).attr('class')).text($(this).text());
+			$('#check-priority-select').fadeOut('fast');
+		});
+
+		$('.check-done').on('click', function() {
+			$(this).toggleClass('icon-unchecked').toggleClass('icon-check').parent().toggleClass('done');
+			if ($(this).hasClass('icon-check')) {}
+		});
+
+		$('#check-form-container form').on('submit', function(e) {
+			e.preventDefault();
+			checklist.checklistSave(this);
+		});
+	})
+</script>

@@ -102,7 +102,7 @@ var timer = {
 		if (s['cards'][timer.idx].timer[endIdx]['date'] == timer.timerDate()) {
 			s['cards'][timer.idx].timer[endIdx] = t;
 		} else {
-			s['cards'][timer.idx].timer.push(timer.tmr());
+			s.cards[timer.idx].timer.splice(0,0,timer.tmr);
 		}
 		storage.set(mobi.site, s);
 	},
@@ -197,6 +197,8 @@ var cards = {
 				timer.stop();
 				$drag = $('#' + ui.item[0].id);
 				$drag.addClass('dragging');
+
+				if ($('#checklist').is(':visible')) checklist.close();
 			},
 			stop: function(e, ui) {
 				$drag.removeClass('dragging');
@@ -213,10 +215,7 @@ var cards = {
 			crds = s.cards,
 			idx = parseFloat($(caller).attr('id'));
 
-		console.log(caller);
-
 		$('#card_list li').each(function() {
-			console.log('list loop: ' + crds[parseFloat(this.id)]);
 			new_arr.push(crds[parseFloat(this.id)]);
 		});
 
@@ -292,9 +291,7 @@ var cards = {
 		var s = mobi.sites.get(),
 			c = s['cards'];
 
-		c.reverse();
-		c.push(new_card);
-		c.reverse();
+		c.splice(0,0,new_card);
 
 		s.cards = c;
 		storage.set(mobi.site, s);
@@ -367,88 +364,6 @@ var cards = {
 			nextPos = $pos == 0 ? '-' + $height + 'px' : 0;
 		$cm.animate({bottom: nextPos});
 	},
-
-	'checklist': {
-		'get': function() {
-
-		},
-
-		'view': function(idx, caller) {
-			$(caller).toggleClass('active');
-
-			var $clkID = '#' + idx + '-checklist';
-			$($clkID + ' > div').animate({width: 'toggle'});
-		},
-
-		'list': function(idx) {
-			var s = mobi.sites.get(),
-				crd = s.cards[idx],
-				lst = '';
-			for (var x in crd.checklist) {
-				lst += '<li class="check-item"><span class="check-done icon-unchecked"></span><span class="check-text">' + crd.checklist[x].text + '</span></li>';
-			}
-			$('#' + idx + '-card .card_options_menu .card-checklist .tasks-count').html(crd.checklist.length);
-			$('#' + idx + '-checklist > div .check-list').html(lst).toggleCheckListButtons();
-		},
-
-		'checklistAdd': function(idx, dn, tx) {
-			var s = mobi.sites.get(),
-				chk = s.cards[idx].checklist,
-				newItem = {'done':dn,'text':tx};
-
-				chk.reverse();
-				chk.push(newItem);
-				chk.reverse();
-
-				s.cards[idx].checklist = chk;
-				storage.set(mobi.site, s);
-				cards.checklist.list(idx);
-		},
-
-		'checklistSave': function(sender) {
-			var $chkIdx = $(sender).data('index'),
-				$chkDone = $('#' + $chkIdx + '-card .check-form-container [name="checklist-done"]'),
-				$chkVal = $('#' + $chkIdx + '-card .check-form-container [name="checklist-item"]');
-
-			console.log('chkVal');
-			console.log($chkVal.val().length);
-			if ($chkVal.val() !== 'undefined' && $chkVal.val().length) {
-				cards.checklist.checklistAdd($chkIdx, $chkDone.val(), $chkVal.val());
-
-				$chkVal.val('');
-				cards.checklist.list($chkIdx);
-			}
-		},
-
-		'checklistSortable': function() {
-			$('.check-list').sortable({
-				revert: 200,
-				tolerance: 'pointer',
-				start: function(e, ui) {
-					$(this).addClass('dragging');
-				},
-				stop: function() {
-					$(this).removeClass('dragging');
-				}
-			});
-			//! card options menu
-			$('.check-list').disableSelection();
-
-		},
-		'checklistSort': function(e,u) {
-			var new_arr = [],
-				s = mobi.sites.get();
-
-/*
-			$('#card_list li').each(function() {
-				new_arr.push(s['cards'][parseFloat(this.id)]);
-			});
-			s['cards'] = new_arr;
-			storage.set(mobi.site, s);
-			cards.list();
-*/
-		}
-	}
 };
 
 //! mobi
@@ -667,6 +582,88 @@ var timesheet = {
 		loadTemplate('#timesheet', 'timesheet', ts);
 	}
 }
+
+//! checklist
+var checklist = {
+	'view': function(idx, caller) {
+		var $caller = $(caller),
+			s = storage.get(mobi.site),
+			crd = s['cards'][idx];
+
+			crd.idx = idx;
+
+		if (caller) {
+			$('.card-checklist').removeClass('active');
+			$(caller).toggleClass('active');
+			$('#checklist').fadeIn('fast');
+		}
+
+		//get issue
+		loadTemplate('#checklist', 'checklist', crd);
+	},
+
+	'close': function() {
+		$('.card-checklist.active').removeClass('active');
+		$('#checklist').fadeOut('fast');
+	},
+
+	'checklistAdd': function(idx, dn, tx, pr) {
+		var s = mobi.sites.get(),
+			chk = s.cards[idx].checklist,
+			newItem = {'done':dn,'text':tx,'priority':pr};
+
+		chk.splice(0,0,newItem);
+
+		s.cards[idx].checklist = chk;
+		storage.set(mobi.site, s);
+
+		$('#' + idx + '-card .tasks-count').text(chk.length);
+
+		this.view(idx, false);
+	},
+
+	'checklistSave': function(sender) {
+		var $chkIdx = $(sender).data('index'),
+			$chkDone = $('#check-form-container [name="checklist-done"]'),
+			$chkVal = $('#check-form-container [name="checklist-item"]'),
+			$chkPrior = $('#check-priority').text();
+
+		if ($chkVal.val() !== 'undefined' && $chkVal.val().length) {
+			checklist.checklistAdd($chkIdx, $chkDone.val(), $chkVal.val(), $chkPrior);
+			$chkVal.val('');
+			checklist.view($chkIdx, false);
+		}
+	},
+
+	'checklistSortable': function() {
+		$('#check-list-items').sortable({
+			revert: 200,
+			tolerance: 'pointer',
+			start: function(e, ui) {
+				$(this).addClass('dragging');
+			},
+			stop: function() {
+				$(this).removeClass('dragging');
+				checklist.checklistSort();
+			}
+		});
+		//! card options menu
+		$('#check-list-items').disableSelection();
+
+	},
+	'checklistSort': function() {
+		var new_arr = [],
+			s = mobi.sites.get(),
+			$idx = $('#check-list-items').data('index');
+
+		$('#check-list-items li').each(function() {
+			new_arr.push(s.cards[$idx].checklist[$(this).data('index')]);
+		});
+		s.cards[$idx].checklist = new_arr;
+		storage.set(mobi.site, s);
+	}
+};
+
 //! modal
 var modal = {
 	'show': function() {
@@ -743,7 +740,7 @@ $(function() {
 
 
 	//draggable stuff
-	$('#redmine_issue, #timesheet').draggable({ containment: "parent" });
+	$('#redmine_issue, #timesheet, #checklist').draggable({ containment: "parent" });
 
     $('#rotate_iframe').on('click', function() {
 	    viewRotate();
