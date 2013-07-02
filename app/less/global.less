@@ -37,7 +37,7 @@
 
 .b-defaults (@color1: @ui-color-1, @color2: @ui-color-2) {
 	border: 0px;
-	color: lighten(@color1, 40%);
+	color: lighten(@color1, 80%);
 	text-shadow: 0 -1px 1px darken(@color1, 20%);
 	.gradient(@color1; @color2);
 	&:hover {
@@ -140,6 +140,16 @@ body {
     margin:0px;
     padding:5px 0 0 0;
     text-align: center;
+
+}
+#bg-logo {
+    background: url(/_img/bg/02-wood-logo.png) no-repeat center top;
+    width: 192px;
+    height: 30px;
+    position: absolute;
+    top: 0;
+    left: 50%;
+    margin-left: -96px;
 }
 
 input,
@@ -260,7 +270,7 @@ button:focus {
     padding: 0;
     margin: auto;
     text-align: center;
-	background: url(/_img/bg/01-02-black-chalk.jpg) no-repeat center top;
+	background: url(/_img/bg/01-black-chalk.jpg) no-repeat center top;
 	background-size: cover;
     .shadow(0 -1px 9px rgba(0,0,0,.4));
 
@@ -738,7 +748,7 @@ button:focus {
 					.radius(@card-radius @card-radius 0 0);
 					white-space: normal;
 					text-overflow: ellipsis;
-					.gradient(rgba(255,255,255,.15), rgba(255,255,255,.0), 30%);
+					.gradient(rgba(255,255,255,.15), rgba(255,255,255,.0), 100%);
 
 					button.card-delete {
 						font-size: 1em;
