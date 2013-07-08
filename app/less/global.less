@@ -80,10 +80,10 @@
 }
 
 //! ----- shadow -----
-.shadow (@shade: 3px 3px 5px 6px #ccc) {
-  -moz-box-shadow:    @shade;
-  -webkit-box-shadow: @shade;
-  box-shadow:         @shade;
+.shadow (@shade1: 3px 3px 5px 6px #ccc;) {
+  -moz-box-shadow:    @shade1;
+  -webkit-box-shadow: @shade1;
+  box-shadow:         @shade1;
 }
 
 //! ----- border radius -----
@@ -137,13 +137,13 @@ body {
 	background-size: cover;
     font-size: 100%;
     font-size:12px;
-    margin:0px;
-    padding:5px 0 0 0;
+    margin:0;
+    padding:0;
     text-align: center;
 
 }
 #bg-logo {
-    background: url(/_img/bg/02-wood-logo.png) no-repeat center top;
+//    background: url(/_img/bg/02-wood-logo.png) no-repeat center top;
     width: 192px;
     height: 30px;
     position: absolute;
@@ -178,19 +178,26 @@ button:focus {
 	position: relative;
 	padding: 1px;
 	display: inline-block;
-    margin: 5px 5px 0 5px;
-    padding: 18px;
+    margin: 9px;
 
 	.content {
 		position: relative;
 	    text-align: center;
 	    display: inline-block;
+	    margin: 0;
+	    padding: 1px;
+	    overflow: hidden;
+	    .radius(5px);
+		.gradient(rgba(0,0,0,.5),rgba(255,255,255,.5));
+		.shadow(~'0 -1px 2px rgba(0,0,0,.5), 0 1px 2px rgba(255,255,255,.5)');
+
 		iframe {
-			background: rgba(255,255,255,.5);
+			display: block;
+			background: rgba(255,255,255,.7);
 			width: 100%;
 			height: 100%;
 		    margin: 0;
-			.shadow(0 9px 72px rgba(0,0,0,.7));
+			.radius(3px);
 		}
 	}
 }
@@ -237,6 +244,9 @@ button:focus {
 
 //! ----- iframe display styles -----
 .fullscreen {
+	display: block;
+	width: 100%;
+	height: 100%;
 	bottom: 43px;
 	.content_wrapper {
 		margin: 0 0 0 0;
@@ -656,7 +666,7 @@ button:focus {
 					padding: 5px;
 					resize: none;
 					margin: 0;
-					.radius(0px);
+					.radius(0);
 					.shadow(0 1px 3px rgba(0,0,0,.3) inset);
 					width: @cardW - 20;
 				}
@@ -707,26 +717,38 @@ button:focus {
 				}
 
 				.status {
+					position: relative;
 					padding: 2px 9px 3px 9px;
 					text-shadow: 0px -1px 1px rgba(0,0,0,.9);
 					font-size: 8pt;
 
-					&.to-do {
-						background: rgba(255, 150, 0, .2);
-						color: rgb(255, 150, 0);
+					&:hover {
+						cursor: pointer !important;
 					}
-					&.in-progress {
-						background: rgba(0, 255, 0, .1);
-						color: rgb(0, 255, 0);
-					}
-					&.on-hold {
-						background: rgba(255, 255, 0, .2);
-						color: rgb(255, 255, 0);
-					}
-					&.complete {
-						background: rgba(255,0,0,.2);
-						color: rgb(255,0,0);
-					}
+					.status-select {
+						display: none;
+						position: absolute;
+						width: 93px;
+						right: 5px;
+						top: -55px;
+						background: rgb(0,0,0);
+						z-index: 5;
+						padding: 2px;
+						border-radius: 5px;
+
+						> div {
+							padding: 5px;
+							&:hover {
+								cursor: pointer !important;
+							}
+							&:first-child {
+								.radius(3px 3px 0 0);
+							}
+							&:last-child {
+								.radius(0 0 3px 3px);
+							}
+						}
+ 					}
 				}
 
 				> div {
@@ -883,6 +905,7 @@ button:focus {
 					right: 0;
 					.gradient(rgba(200,200,200,.1), rgba(255,255,255,0));
 					border-top: 1px solid rgba(200,200,200,.2);
+					font-size: 16px;
 
 					button {
 						position: relative;
@@ -1075,9 +1098,90 @@ button:focus {
 	margin-top: -250px;
 }
 #checklist {
-	.subject {
+	h1 {
 		background: rgba(0,0,0,.1);
 		text-shadow: 0 1px 0 white;
+
+		&:after {
+			content: 'checklist';
+		}
+	}
+}
+#timesheet {
+	position: relative;
+
+	#total-time {
+		position: relative;
+		color: #666;
+		padding: 3px 5px 0 5px;
+		margin: 0 0 5px 0;
+		font-size: 1.3em;
+		background: rgba(0,0,0,.05);
+		.radius(5px);
+		.shadow(0 1px 2px rgba(0,0,0,.2) inset);
+		border-bottom: 1px solid rgb(200,200,200);
+		border-top: 1px solid rgb(150,150,150);
+		text-align: right;
+
+		&:before {
+			content: "Total Time:";
+			text-align: left;
+			display: inline-block;
+			position: absolute;
+			top: 4px;
+			left: 7px;
+			text-shadow: 0 1px 0 white;
+			width: 300px;
+		}
+
+		> span {
+			display: inline-block;
+			font-size: .8em;
+			.radius(3px);
+			margin: 0 5px 0 0;
+			padding: 3px;
+		}
+	}
+	h1:after {
+		content: 'timesheet';
+	}
+
+	#timesheet-items {
+		position: relative;
+		height: 441px;
+		overflow: auto;
+
+		.timesheet-item {
+			position: relative;
+			border-bottom: 1px solid rgba(255,0,0,.1);
+			text-align: center;
+			padding: 5px 0 5px 0;
+			&:nth-child(odd) {
+				background: rgba(255,255,0,.05);
+			}
+			> span {
+				display: inline-block;
+				font-size: 1.2em;
+			}
+			.timesheet-date {
+				width: 261px;
+				text-align: left;
+
+				.timesheet-day {
+					display: inline-block;
+					width: 30px;
+					padding: 5px;
+					margin-right: 9px;
+					background: rgb(235,235,235);
+					.radius(5px);
+					font-size: .7em;
+				}
+			}
+			.timesheet-time {
+				width: 125px;
+				text-align: right;
+			}
+		}
 	}
 }
 
@@ -1108,13 +1212,33 @@ button:focus {
 		padding: 5px 0 5px 0;
 	}
 
-	.subject {
+	h1 {
+		position: relative;
 		color: lighten(@ui-color-1, 35%);
 		font-size: 1.5em;
 		margin: -36px -36px 1px -36px;
-		padding: 9px 30px 9px 9px;
+		padding: 9px 30px 9px 45px;
 		font-weight: 300;
 		.radius(9px 9px 0 0);
+
+		&:after {
+			position: absolute;
+			top: 0;
+			left: 45px;
+			display: block;
+			clear: both;
+			font-size: .6em;
+			font-weight: 300;
+		}
+
+		> span {
+			position: absolute;
+			top: 6px;
+			left: 7px;
+			display: inline-block;
+			margin: 0;
+			font-size: 32px;
+		}
 	}
 	.author:before {
 		content: 'author';
@@ -1320,7 +1444,7 @@ button:focus {
 						cursor: move;
 					}
 
-					&.done {
+					&[data-done="1"] {
 						span {
 							color: rgb(150,150,150);
 							&.check-text {
@@ -1403,9 +1527,9 @@ button:focus {
 					padding: 5px 82px 5px 5px;
 					font-size: 1.1em;
 					.radius(5px);
-					.shadow(0 1px 3px rgba(0,0,0,.3) inset);
+					.shadow(0 1px 3px rgba(0,0,0,.2) inset);
 					border-bottom: 1px solid rgba(255,255,255,.4);
-					border-top: 1px solid rgba(0,0,0,.5);
+					border-top: 1px solid rgba(0,0,0,.3);
 				}
 				button {
 					height: 32px;
@@ -1462,6 +1586,27 @@ button:focus {
 }
 .l-low {
 	background: rgba(0,255,0,.05);
+}
+
+[data-status="to-do"] {
+	background: rgba(255, 150, 0, .2);
+	color: rgb(255, 150, 0);
+	.shadow(0 0 13px rgba(255, 150, 0, .4) inset);
+}
+[data-status="in-progress"] {
+	background: rgba(0, 255, 0, .1);
+	color: rgb(0, 255, 0);
+	.shadow(0 0 13px rgba(0, 255, 0, .1) inset);
+}
+[data-status="on-hold"] {
+	background: rgba(255, 255, 0, .2);
+	color: rgb(255, 255, 0);
+	.shadow(0 0 13px rgba(255, 255, 0, .2) inset);
+}
+[data-status="complete"] {
+	background: rgba(255,0,0,.2);
+	color: rgb(255,0,0);
+	.shadow(0 0 13px rgba(255,0,0,.2) inset);
 }
 
 

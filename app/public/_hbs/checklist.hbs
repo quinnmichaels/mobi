@@ -1,5 +1,5 @@
 <button class="close-checklist" onclick="checklist.close();">&times;</button>
-<h1 class="data subject"><span class="icon-list-alt"></span> {{title}}</h1>
+<h1><span class="icon-list-alt"></span>{{title}}</h1>
 <div id="check-list-container">
 	<div>
 		<div id="check-form-container">
@@ -17,7 +17,7 @@
 		</div>
 		<ul id="check-list-items" data-index="{{idx}}">
 			{{#each checklist}}
-				<li class="check-item l-{{priority}}" data-index="{{@index}}"><span class="check-done icon-unchecked"></span><span class="check-text">{{text}}</span></li>
+				<li class="check-item l-{{priority}}" data-index="{{@index}}" data-done="{{done}}"><span class="check-done {{checklistIcon done}}" onclick="checklist.done(this)"></span><span class="check-text">{{text}}</span></li>
 			{{/each}}
 		</ul>
 	</div>
@@ -46,10 +46,6 @@
 			$('#check-priority-select').fadeOut('fast');
 		});
 
-		$('.check-done').on('click', function() {
-			$(this).toggleClass('icon-unchecked').toggleClass('icon-check').parent().toggleClass('done');
-			if ($(this).hasClass('icon-check')) {}
-		});
 
 		$('#check-form-container form').on('submit', function(e) {
 			e.preventDefault();

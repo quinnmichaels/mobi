@@ -91,20 +91,23 @@ var timer = {
 	},
 
 	'get': function() {
-		var t = mobi.sites.get()['cards'][timer.idx].timer;
-		return t[t.length - 1];
+		return cards.cardList[timer.idx].timer;
 	},
 
-	'set': function(t) {
-		var s = mobi.sites.get(),
-			endIdx = s['cards'][timer.idx].timer.length - 1;
+	'set': function(t, tMethod) {
+		var curTimer = timer.get();
 
-		if (s['cards'][timer.idx].timer[endIdx]['date'] == timer.timerDate()) {
-			s['cards'][timer.idx].timer[endIdx] = t;
-		} else {
-			s.cards[timer.idx].timer.splice(0,0,timer.tmr);
+		switch (tMethod) {
+			case 'new':
+				curTimer.splice(0,0,t);
+				break;
+
+			case 'update':
+				curTimer[0] = t;
+				break;
 		}
-		storage.set(mobi.site, s);
+		cards.cardList[timer.idx].timer = curTimer;
+		cards.cardStorage();
 	},
 
 	'timerDate': function() {
@@ -144,11 +147,19 @@ var timer = {
 
 	'start': function() {
 		timer.stop();
+
 		var $timer = $('#' + this.cur + ' > input'),
-			t = timer.get();
-			t.hr = parseFloat(t.hr);
-			t.min = parseFloat(t.min);
-			t.sec = parseFloat(t.sec);
+			tM = 'update',
+			t = timer.get()[0];
+
+		if (t.date != timer.timerDate()) {
+			tM = 'new';
+			t = timer.tmr();
+		}
+
+		t.hr = parseFloat(t.hr);
+		t.min = parseFloat(t.min);
+		t.sec = parseFloat(t.sec);
 
 		t.sec++;
 		if (t.sec == 60) {
@@ -164,8 +175,9 @@ var timer = {
 		t.min = t.min < 10 ? '0' + t.min : t.min;
 		t.sec = t.sec < 10 ? '0' + t.sec : t.sec;
 
+		timer.set(t, tM);
+
 		$timer.val( t.hr + ':' + t.min + ':' + t.sec );
-		timer.set(t);
 		window_timer = setTimeout('timer.start()', 1*1000);
 	},
 
@@ -182,9 +194,23 @@ var timer = {
 //! cards
 var cards = {
 	'init': function() {
+		cards.cardList = mobi.sites.get().cards;
 		cards.list();
 		cards.cardSortable('#card_list');
+
 		$('button[data-action="delete"]').on('click', cards.delete);
+	},
+
+	'cardList': '',
+
+	'cardBlank': function() {
+		return {'title':'','due':'', 'issue':'', 'status':'','desc':'', 'timer': [timer.tmr()], 'checklist':[]};
+	},
+
+	'cardStorage': function() {
+		var s = mobi.sites.get();
+			s.cards = cards.cardList;
+			storage.set(mobi.site, s)
 	},
 
 	'cardSortable': function(sel) {
@@ -211,53 +237,20 @@ var cards = {
 
 	'cardSort': function(caller) {
 		var new_arr = [],
-			s = mobi.sites.get(),
-			crds = s.cards,
 			idx = parseFloat($(caller).attr('id'));
 
 		$('#card_list li').each(function() {
-			new_arr.push(crds[parseFloat(this.id)]);
+			new_arr.push(this.cardList[parseFloat(this.id)]);
 		});
 
-		s.cards = new_arr;
-		storage.set(mobi.site, s);
+		cards.cardList = new_arr;
+		cards.cardStorage();
 		cards.list();
-	},
-
-	'cardBlank': function() {
-		return {'title':'','due':'', 'issue':'', 'status':'','desc':'', 'timer': [timer.tmr()], 'checklist':[]};
-	},
-
-	'cardScroll': function(e, ui) {
-		var id = this.id,
-			$card_box = $('#mobi_menu_cards').width(),
-			$cards = $('#card_list'),
-			pos = $cards.scrollLeft(),
-			wid = $cards.width(),
-			jump = 411,
-			can_jump = false,
-			animate_to;
-
-			switch (id) {
-				case 'cards_scroll_l':
-					animate_to = Math.abs(pos) - jump;
-					break;
-				case 'cards_scroll_r':
-					animate_to = Math.abs(pos + jump);
-					break;
-			}
-			$cards.animate({
-				scrollLeft: animate_to
-			})
-	},
-
-	'get': function() {
-		return mobi.sites.get()['cards'];
 	},
 
 	'list': function() {
 		timer.stop();
-		loadTemplate('#card_list', 'card', mobi.sites.get(), 'insert');
+		loadTemplate('#card_list', 'card', cards.cardList, 'insert');
 	},
 
 	'create': function(e) {
@@ -287,27 +280,16 @@ var cards = {
 
 	},
 
-	'add': function(new_card) {
-		var s = mobi.sites.get(),
-			c = s['cards'];
+	'update': function(idx, update_card) {
+		var c = update_card;
+			c.timer = cards.cardList[idx].timer;
+			c.checklist = cards.cardList[idx].checklist;
 
-		c.splice(0,0,new_card);
-
-		s.cards = c;
-		storage.set(mobi.site, s);
-	},
-	'update': function(idx, new_card) {
-		var s = mobi.sites.get(),
-			c = new_card;
-			c.timer = s.cards[idx].timer;
-
-		s.cards[idx] = c;
-		storage.set(mobi.site, s);
+		cards.cardList[idx] = c;
 	},
 
 	'save': function() {
-		var s = mobi.sites.get(),
-			idx = $('#card_form [name="idx"]').val(),
+		var $idx = $('#card_form [name="idx"]').val(),
 			save_card = {
 		    	'title': $('#card_form [name="title"]').val(),
 				'due': $('#card_form [name="due"]').val(),
@@ -317,19 +299,18 @@ var cards = {
 				'checklist': [],
 				'timer': []
 			};
+
 			save_card.timer.push(timer.tmr());
 
-			if (s.cards.length && idx != 'new') {
-				save_card.checklist = s.cards[idx].checklist;
-			}
-
 		if (save_card.title) {
-			if (idx == 'new') {
-			    this.add(save_card);
+			if ($idx == 'new') {
+				cards.cardList.splice(0,0,save_card);
 				this.create();
 			} else {
-				this.update(idx, save_card);
+				this.update($idx, save_card);
 			}
+
+			cards.cardStorage();
 			cards.list();
 	    }
 	},
@@ -340,36 +321,23 @@ var cards = {
 	},
 
 	'delete': function(idx) {
-		var s = mobi.sites.get(),
-			$id = $('#'+idx+'-card');
-
-		s['cards'].splice(idx, 1);
+		var $id = $('#'+idx+'-card');
 
 		if (confirm('are you sure')) {
-			storage.set(mobi.site, s);
+			cards.cardList.splice(idx, 1);
+			cards.cardStorage();
+
 			$id.hide(175, function() {
-				$id.remove();
+				$(this).remove();
 			});
 		}
-	},
-
-	'archive': function() {
-
-	},
-
-	'menu': function(e) {
-		var $cm = $('#'+e),
-			$height = $cm.height() - 18,
-			$pos = Math.abs(parseFloat($cm.css('bottom'))),
-			nextPos = $pos == 0 ? '-' + $height + 'px' : 0;
-		$cm.animate({bottom: nextPos});
 	},
 };
 
 //! mobi
 var mobi = {
-	'site': '',
 	'init': function() {
+
 		redmine.init()
 		mobi.site = $('#iframe_view').attr('src');
 		mobi.sites.init();
@@ -382,6 +350,8 @@ var mobi = {
 
 		mobi.sites.list();
 	},
+
+	'site': '',
 
 	'sites': {
 		'init': function() {
@@ -568,14 +538,14 @@ var mobi = {
 	    this.go(mobi.site);
 	}
 };
+
 var timesheet = {
 	'close': function() {
 		$('#timesheet').fadeOut('fast');
 	},
 
 	'view': function(i) {
-		var s = storage.get(mobi.site),
-			ts = s['cards'][i].timer;
+		var ts = cards.cardList[i];
 
 		$('#timesheet').fadeIn('fast');
 		//get issue
@@ -587,9 +557,7 @@ var timesheet = {
 var checklist = {
 	'view': function(idx, caller) {
 		var $caller = $(caller),
-			s = storage.get(mobi.site),
-			crd = s['cards'][idx];
-
+			crd = cards.cardList[idx];
 			crd.idx = idx;
 
 		if (caller) {
@@ -602,23 +570,43 @@ var checklist = {
 		loadTemplate('#checklist', 'checklist', crd);
 	},
 
+	'done': function(caller) {
+		var $call = $(caller),
+			chkIdx = $call.parent().data('index'),
+			crdIdx = $call.parent().parent().data('index'),
+			crd = cards.cardList[crdIdx],
+			chk = crd.checklist[chkIdx],
+			chkDone = chk.done == 0 ? 1 : 0;
+
+		$call.toggleClass('icon-unchecked').toggleClass('icon-check').parent().attr('data-done', chkDone);;
+
+		cards.cardList[crdIdx].checklist[chkIdx].done = chkDone;
+		checklist.checklistCount(crdIdx);
+		cards.cardStorage();
+	},
+
 	'close': function() {
 		$('.card-checklist.active').removeClass('active');
 		$('#checklist').fadeOut('fast');
 	},
 
+	'checklistCount': function(idx) {
+		var chkList = cards.cardList[idx].checklist,
+			openItems = chkList.filter(function(x) {return (x.done == 0)}).length,
+			$taskCount = $('#' + idx + '-card .tasks-count');
+
+		$taskCount.html(openItems);
+	},
+
 	'checklistAdd': function(idx, dn, tx, pr) {
-		var s = mobi.sites.get(),
-			chk = s.cards[idx].checklist,
+		var chk = cards.cardList[idx].checklist,
 			newItem = {'done':dn,'text':tx,'priority':pr};
 
 		chk.splice(0,0,newItem);
 
-		s.cards[idx].checklist = chk;
-		storage.set(mobi.site, s);
-
-		$('#' + idx + '-card .tasks-count').text(chk.length);
-
+		cards.cardList[idx].checklist = chk;
+		cards.cardStorage();
+		checklist.checklistCount(idx);
 		this.view(idx, false);
 	},
 
@@ -651,16 +639,16 @@ var checklist = {
 		$('#check-list-items').disableSelection();
 
 	},
+
 	'checklistSort': function() {
 		var new_arr = [],
-			s = mobi.sites.get(),
 			$idx = $('#check-list-items').data('index');
 
 		$('#check-list-items li').each(function() {
-			new_arr.push(s.cards[$idx].checklist[$(this).data('index')]);
+			new_arr.push(cards.cardList[$idx].checklist[$(this).data('index')]);
 		});
-		s.cards[$idx].checklist = new_arr;
-		storage.set(mobi.site, s);
+		cards.cardList[$idx].checklist = new_arr;
+		cards.cardStorage();
 	}
 };
 
@@ -690,14 +678,24 @@ var modal = {
 $(function() {
 
 	$(document).keypress(function(e) {
+//		console.log(e.which);  // log keypress
+
 		function vdev(d) {
 			mobi.devices.view(d);
 		}
 		switch (e.which) {
+			case 172:
+				e.preventDefault();
+				$('#url_input').focus().select();
+				break;
+
 			case 8710: //alt/opt + j to toggle menu
+				e.preventDefault();
 				toggleMenu();
 				break;
+
 			case 730: // alt/opt + k create a new card;
+				e.preventDefault();
 				var panel_pos = Math.abs(parseFloat($('#panel').css('bottom')));
 				if (panel_pos) {
 					toggleMenu();
@@ -714,24 +712,31 @@ $(function() {
 				*/
 				vdev('fullscreen'); // alt/opt + 0
 				break;
+
 			case 161: // alt/opt + 1
 				vdev('desktop');
 				break;
+
 			case 8482: // alt/opt + 2
 				vdev('ipad');
 				break;
+
 			case 163: // alt/opt + 3
 				vdev('iphone5');
 				break;
+
 			case 162: // alt/opt + 4
 				vdev('iphone4');
 				break;
+
 			case 8734: // alt/opt + 5 samsung galaxy
 				vdev('galaxy');
 				break;
+
 			case 167: // alt/opt + 6 android tab
 				vdev('droidtab');
 				break;
+
 			case 171:
 				viewRotate();
 				break;
@@ -803,4 +808,10 @@ $(function() {
     });
 
 	$('#redmine_issue .close_issue').on('click', redmine.closeIssue);
+});
+
+
+// run when window unloads
+$(window).on('unload', function() {
+	timer.stop();
 });

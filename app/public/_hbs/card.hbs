@@ -1,27 +1,49 @@
-{{#each cards}}
+{{#each this}}
 	<li class="card" id="{{@index}}-card">
 		<div class="card-box">
 			<div class="title">{{title}}</div>
 			<div class="desc">{{{desc}}}</div>
 
-			<div class="status {{status}}">{{status}}</div>
+			<div class="status" data-status="{{status}}">{{status}}<div class="status-select" data-active="{{status}}">{{{listCardStatus status}}}</div></div>
 			<div class="due-date">{{{formatDueDate due}}}</div>
 			<div id="{{@index}}-timer" class="timer">
-				{{debug timer}}
 				<input type="text" name="timer" placeholder="00:00:00" value="{{timer.0.hr}}:{{timer.0.min}}:{{timer.0.sec}}" readonly="readonly">
 				<button class="start_stop start" onclick="timer.start_stop('{{@index}}-timer')">&plus;</button>
 			</div>
 
 			<div class="card_options_menu">
-				<button class="card-edit" onclick="cards.edit({{@index}})"><span class="icon-edit icon-large"></span></button>
+				<button class="card-edit" onclick="cards.edit({{@index}})"><span class="icon-edit"></span></button>
 				{{#if issue}}
-				<button class="card-issue" onclick="redmine.issue({{issue}})"><span class="icon-asterisk icon-large"></span></button>
+				<button class="card-issue" onclick="redmine.issue({{issue}})"><span class="icon-asterisk"></span></button>
 				{{/if}}
-				<button class="card-checklist" onclick="checklist.view({{@index}}, this)"><span class="icon-list-alt icon-large"></span><span class="tasks-count">{{checklist.length}}</span></button>
-				<button class="card-timesheet" onclick="timesheet.view({{@index}})"><span class="icon-time icon-large"></span></button>
-				<button class="card-delete" onclick="cards.delete({{@index}})"><span class="icon-trash icon-large"></span></button>
+				<button class="card-checklist" onclick="checklist.view({{@index}}, this)"><span class="icon-list-alt"></span><span class="tasks-count">{{checklistCount checklist}}</span></button>
+				<button class="card-timesheet" onclick="timesheet.view({{@index}})"><span class="icon-time"></span></button>
+				<button class="card-delete" onclick="cards.delete({{@index}})"><span class="icon-trash"></span></button>
 			</div>
 		</div>
 	</li>
 {{/each}}
 
+<script>
+	$(function() {
+		$('.card-box .status').on('click', clickStatus);
+
+		$('.status-select div').on('click', function() {
+			$('.status-select').attr('data-active', $(this).data('status'));
+			$('.status-select div span').attr('class', 'icon-check-empty');
+			$(this).find('span').attr('class', 'icon-check');
+		});
+
+		function clickStatus() {
+			var $status = $(this).find('.status-select'),
+				$statusAll = $('.card-box .status-select');
+
+			$statusAll.each(function() {
+				var stat = $(this).data('active') == $status.data('active') ? true:false;
+				console.log(stat);
+			});
+			$status.fadeToggle('fast');
+		}
+	});
+
+</script>

@@ -1,3 +1,8 @@
-{{debug}}
-
 <button class="close-timesheet" onclick="timesheet.close();">&times;</button>
+<h1><span class="icon-time"></span>{{title}}</h1>
+<div id="total-time">{{{totalTimesheetTime timer}}}</div>
+<div id="timesheet-items">
+	{{#each timer}}
+	<div class="timesheet-item"><span class="timesheet-date">{{{formatTimesheetDate date}}}</span><span class="timesheet-time">{{hr}}:{{min}}:{{sec}}</span></div>
+	{{/each}}
+</div>

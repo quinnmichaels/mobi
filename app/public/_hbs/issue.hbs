@@ -1,6 +1,5 @@
-<div class="loading"></div>
-{{debug}}
-<div class="data subject">{{issue.subject}}</div>
+<button class="close-issue" onclick="issue.close();">&times;</button>
+<h1>{{issue.subject}}</h1>
 <div class="data author" data-id="{{issue.author.id}}">{{issue.author.name}}</div>
 <div class="data assigned_to" data-id="{{issue.assigned_to.id}}">{{issue.assigned_to.name}}</div>
 <div class="data created">{{issue.created_on}}</div>

@@ -1,15 +1,16 @@
 (function( $ ){
 
 	$.fn.toggleCheckListButtons = function() {
-		var html = '<div class="check-menu"><button class="icon-edit"></button><button class="icon-trash"></button></div>';
-		$(this).append(html).hover(
-			function () {
-				console.log($(this).filter('.check-menu'));
-				$(this).children().filter('.check-menu').fadeIn('fast');
-			},
-			function () {
-				$(this).children().filter('.check-menu').hide(0);
-			}
+		var chkHTML = '<div class="check-menu"><button class="icon-edit"></button><button class="icon-trash"></button></div>';
+		$(this)
+			.append(chkHTML)
+			.hover(
+				function () {
+					$(this).children().filter('.check-menu').show(0);
+				},
+				function () {
+					$(this).children().filter('.check-menu').hide(0);
+				}
 		);
 
 	};

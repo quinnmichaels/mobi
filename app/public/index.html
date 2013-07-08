@@ -16,14 +16,7 @@
 </head>
 <body>
 	<div id="bg-logo"></div>
-	<div class="content_container">
-	    <div class="content_wrapper">
-	    	<div class="content">
-	    	    <iframe frameborder="0" id="iframe_view" width="100%" height="100%" src="blank.html"></iframe>
-		    </div>
-	    </div>
-
-    </div>
+	<div class="content_container"><div class="content_wrapper"><div class="content"><iframe frameborder="0" id="iframe_view" width="100%" height="100%" src="blank.html"></iframe></div></div></div>
 
     <div id="panel">
 	    <form id="url_form" method="post">
@@ -152,6 +145,61 @@
 
 	Handlebars.registerHelper('globalCards', function(idx, cardDetails) {
 		loadTemplate('#' + idx + '_site ol', 'card', cardDetails, 'insert');
+	});
+
+	Handlebars.registerHelper('checklistCount', function(chk) {
+		return chk.filter(function(x){return (x.done == 0)}).length;
+	});
+	Handlebars.registerHelper('checklistIcon', function(dn) {
+		var icons = ['icon-unchecked','icon-check'];
+		return icons[dn];
+	});
+	Handlebars.registerHelper('formatTimesheetDate', function(tDate) {
+		var td = new Date(tDate),
+			months = ['January','February','March','April','May','June','July','August','September','October','November', 'December'],
+			days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+			return '<span class="timesheet-day">' + days[td.getDay()] + '</span>' + months[td.getMonth()] + ' ' + td.getDate() + ', ' + td.getFullYear();
+	});
+	Handlebars.registerHelper('totalTimesheetTime', function(tSheet) {
+		var hr, min, sec,
+			totalTime = 0;
+
+		function formatTime(t) {
+		    var sec_num = parseInt(t, 10), // don't forget the second parm
+		    	hours   = Math.floor(sec_num / 3600),
+		    	minutes = Math.floor((sec_num - (hours * 3600)) / 60),
+		    	seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+		    if (minutes < 10) {minutes = "0"+minutes;}
+		    if (seconds < 10) {seconds = "0"+seconds;}
+		    var time    = hours+':'+minutes+':'+seconds;
+		    return time;
+		}
+
+		for (var x in tSheet) {
+			hr = parseFloat(tSheet[x].hr) * 60 * 60;
+			min = parseFloat(tSheet[x].min) * 60;
+			sec = parseFloat(tSheet[x].sec);
+			totalTime += hr + min + sec;
+		};
+		return '<span>' + tSheet.length + 'd</span>' + formatTime(totalTime);
+	});
+
+	Handlebars.registerHelper('listCardStatus', function(stat) {
+
+		var statuses = mobi.sites.get().statuses,
+			statusHTML = '',
+			statusCheck;
+
+		console.log(statuses);
+		for (var x in statuses) {
+			var thisStat = statuses[x].name,
+			 	activeStat = thisStat == stat ? 'icon-check':'icon-check-empty';
+
+			statusHTML += '<div data-status="'+statuses[x].name+'"><span class="icon ' + activeStat + '"></span> ' + statuses[x].name + '</div>';
+		}
+		return statusHTML;
 	});
 </script>
 
