@@ -7,7 +7,7 @@ var http = require('http'),
     exphbs  = require('../'), // "express3-handlebars"
     hbsHelpers = require('./hbs_helpers'),
     app = express(),
-    port = 3000,
+    port = 9000,
     hbs = exphbs.create({
 	    defaultLayout: 'main',
 		helpers: hbsHelpers,
@@ -35,24 +35,31 @@ app.set('view engine', 'hbs');
 
 
 // get api
-app.get('/issue', function(req, res) {
-	var key = '3ca22d5c3a4cc0d1281689b76f66e15553531cb0', //request.body.key,
-		issueID = 1600, //request.body.issue,
-		redmineURL = 'https://popart.plan.io', //request.body.redmineURL,
+app.get('/issue/:issueID', function(req, res) {
+
+	var issueID = req.param('issueID'),
+		key = req.query.key,
+		redURL = req.query.red + '/issues/' + issueID + '.json?include=journals',
+		callURL = 'http://q.dev/mobi/_cfc/mobi.cfc?method=callRedMine&key=' + key + '&redURL=' + redURL,
 		options = {
-			uri: redmineURL + '/issues/' + issueID + '.json?include=journals',
+			uri: callURL,
 			json: true,
 			headers: {
 			  'X-Redmine-API-Key': key
 			}
 		};
-	request(options.uri, options, function (error, response, body) {
+
+	request(callURL, options, function (error, response, body) {
 		if (!error && response.statusCode == 200) {
-			res.end(body);
+			res.json(body);
 		} else {
 			console.log(response);
 		}
 	});
+});
+
+app.get('/users', function(req, res) {
+	res.send('getting users');
 });
 
 app.get('/sites', function(req, res) {

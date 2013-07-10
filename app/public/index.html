@@ -80,7 +80,6 @@
 	Handlebars.registerHelper("formatDueDate", function(dueDate) {
 		var due_ret = '';
 
-		console.log(dueDate);
 		if (dueDate) {
 			dueDate = new Date(dueDate);
 			var days = ['sunday','monday','tuesday','wednesday','thursday','friday','saturday'],
@@ -124,7 +123,6 @@
 	});
 
 	Handlebars.registerHelper('formatIssueDetail', function(issueDetails) {
-		console.log(issueDetails);
 		var i = issueDetails,
 			ret = '',
 			cur = '';
@@ -192,7 +190,6 @@
 			statusHTML = '',
 			statusCheck;
 
-		console.log(statuses);
 		for (var x in statuses) {
 			var thisStat = statuses[x].name,
 			 	activeStat = thisStat == stat ? 'icon-check':'icon-check-empty';

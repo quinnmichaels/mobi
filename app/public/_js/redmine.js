@@ -1,7 +1,7 @@
 var redmine = {
 	'key': '3ca22d5c3a4cc0d1281689b76f66e15553531cb0',
 	'url': 'https://popart.plan.io',
-	'service_url': 'http://q.dev/mobi/_cfc/mobi.cfc?method=callRedMine&redURL=',
+	'service_url': 'http://q.dev:9000/issue/',
 	'users': '',
 	'statuses': '',
 	'issue': '',
@@ -15,7 +15,7 @@ var redmine = {
 	},
 
 	'callURL': function(str) {
-		return this.service_url + this.url + str + '&key=' + this.key + '&callback=?';
+		return this.service_url + str + '?red=' + this.url + '&key=' + this.key;
 	},
 
 	'loading': function() {
@@ -36,25 +36,8 @@ var redmine = {
 		this.getUsers();
 		this.getStatuses();
 
-		$.ajax({
-			url: redmine.callURL('/issues/' + i + '.json?include=journals'),
-			async: false,
-			dataType: 'json',
-			contentType: 'application/json',
-			beforeSend: function() {
-				redmine.loading();
-			},
-			success: function(data) {
-				redmine.loading()
-				var d = data.issue,
-				 	j_html = '',
-				 	cur_out = '';
-
-				loadTemplate('#redmine_issue', 'issue', data);
-			},
-			error: function(a, b, c) {
-				redmine.err();
-			}
+		$.getJSON(redmine.callURL(i), function(data) {
+			loadTemplate('#redmine_issue', 'issue', data);
 		});
 	},
 

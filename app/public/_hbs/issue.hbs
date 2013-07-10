@@ -19,24 +19,6 @@
 	</div>
 	{{/each}}
 </div>
-
-
-<div class="update-issue">
-	<button class="update-button" onclick="redmine.issueNote();"></button>
-	<form action="issue.hbs" method="post" accept-charset="utf-8">
-		<div>
-			<textarea id="redNotes" placeholder="notes"></textarea>
-		</div>
-		<div>
-			<label for="redUsers">assigned to</label><select id="redUsers"></select>
-		</div>
-		<div>
-			<label for="redStatus">status</label><select id="redStatus"></select>
-		</div>
-		<button type="button" onclick="redmine.update({{issue.id}});">save</button>
-	</form>
-</div>
-
 <button class="close-issue" onclick="redmine.close();">&times;</button>
 
 <script>
