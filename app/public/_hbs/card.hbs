@@ -16,7 +16,7 @@
 				{{#if issue}}
 				<button class="card-issue" onclick="redmine.issue({{issue}})"><span class="icon-asterisk"></span></button>
 				{{/if}}
-				<button class="card-checklist" onclick="checklist.view({{@index}}, this)"><span class="icon-list-alt"></span><span class="tasks-count">{{checklistCount checklist}}</span></button>
+				<button class="card-checklist" onclick="checklist.view({{@index}}, this)"><span class="icon-list-alt"></span>{{#if checklist}}<span class="tasks-count">{{checklistCount checklist}}</span>{{/if}}</button>
 				<button class="card-timesheet" onclick="timesheet.view({{@index}})"><span class="icon-time"></span></button>
 				<button class="card-delete" onclick="cards.delete({{@index}})"><span class="icon-trash"></span></button>
 			</div>

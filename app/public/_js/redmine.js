@@ -15,7 +15,8 @@ var redmine = {
 	},
 
 	'callURL': function(str) {
-		return this.service_url + str + '?red=' + this.url + '&key=' + this.key;
+		return this.url + str;
+//		return this.service_url + str + '?red=' + this.url + '&key=' + this.key;
 	},
 
 	'loading': function() {
@@ -31,14 +32,15 @@ var redmine = {
 	},
 
 	'issue': function(i) {
-		$('#redmine_issue').fadeIn('fast');
 		//get issue
+		$('#redmine_issue').fadeIn('fast');
+		loadTemplate('#redmine_issue', 'issue', redmine.callURL('/issues/'+i));
+/*
 		this.getUsers();
 		this.getStatuses();
-
 		$.getJSON(redmine.callURL(i), function(data) {
-			loadTemplate('#redmine_issue', 'issue', data);
 		});
+*/
 	},
 
 	'issueDesc': function(i) {

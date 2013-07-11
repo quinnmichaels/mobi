@@ -1,5 +1,6 @@
-<button class="close-issue" onclick="issue.close();">&times;</button>
-<h1>{{issue.subject}}</h1>
+<button class="close-issue" onclick="redmine.close();">&times;</button>
+<iframe src="{{this}}"></iframe>
+<!--
 <div class="data author" data-id="{{issue.author.id}}">{{issue.author.name}}</div>
 <div class="data assigned_to" data-id="{{issue.assigned_to.id}}">{{issue.assigned_to.name}}</div>
 <div class="data created">{{issue.created_on}}</div>
@@ -19,7 +20,6 @@
 	</div>
 	{{/each}}
 </div>
-<button class="close-issue" onclick="redmine.close();">&times;</button>
 
 <script>
 	var cur = '',
@@ -42,3 +42,4 @@
 	}
 	$('#redStatus').html(opt);
 </script>
+-->

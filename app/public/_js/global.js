@@ -194,9 +194,9 @@ var timer = {
 //! cards
 var cards = {
 	'init': function() {
-		cards.cardList = mobi.sites.get().cards;
-		cards.list();
-		cards.cardSortable('#card_list');
+		this.cardList = mobi.sites.get().cards;
+		this.list();
+		this.cardSortable('#card_list');
 
 		$('button[data-action="delete"]').on('click', cards.delete);
 	},
@@ -237,15 +237,16 @@ var cards = {
 
 	'cardSort': function(caller) {
 		var new_arr = [],
-			idx = parseFloat($(caller).attr('id'));
+			idx = parseFloat($(caller).attr('id')),
+			cl = this.cardList;
 
 		$('#card_list li').each(function() {
-			new_arr.push(this.cardList[parseFloat(this.id)]);
+			new_arr.push(cl[parseFloat(this.id)]);
 		});
 
-		cards.cardList = new_arr;
-		cards.cardStorage();
-		cards.list();
+		this.cardList = new_arr;
+		this.cardStorage();
+		this.list();
 	},
 
 	'list': function() {
@@ -338,17 +339,17 @@ var cards = {
 var mobi = {
 	'init': function() {
 
-		redmine.init()
 		mobi.site = $('#iframe_view').attr('src');
 		mobi.sites.init();
 		mobi.devices.display();
 		mobi.devices.view(mobi.devices.get());
 		mobi.history.init();
-		cards.init();
 		//! load init templates into app
 		loadTemplate('#settings_panel', 'settings', mobi.sites.get()['settings'], 'insert');
 
 		mobi.sites.list();
+		cards.init();
+		redmine.init()
 	},
 
 	'site': '',
@@ -406,30 +407,44 @@ var mobi = {
 	'devices': {
 		'list': {
 			'fullscreen': {
-				'width': '100%',
-				'height': '100%'
+				'label':	'Fullscreen',
+				'icon': 	'icon-fullscreen',
+				'width': 	'100%',
+				'height': 	'100%'
 			},
 			'desktop': {
+				'label':	'Desktop',
+				'icon': 	'icon-desktop',
 				'width': 	'1600px',
 				'height': 	'850px'
 			},
 			'ipad': {
+				'label':	'iPad',
+				'icon': 	'icon-tablet',
 				'width': 	'1024px',
 				'height': 	'768px'
 			},
 			'iphone5': {
+				'label':	'iPhone 5',
+				'icon':		'icon-mobile-phone',
 				'width': 	'320px',
 				'height': 	'568px'
 			},
 			'iphone4': {
+				'label':	'iPhone 4',
+				'icon':		'icon-mobile-phone',
 				'width': 	'320px',
 				'height': 	'480px'
 			},
 			'galaxy': {
+				'label':	'Galaxy SIII',
+				'icon':		'icon-mobile-phone',
 				'width': 	'360px',
 				'height':	'640px'
 			},
 			'droidtab': {
+				'label':	'Droit Tablet',
+				'icon': 	'icon-tablet',
 				'width': 	'1280px',
 				'height': 	'800px'
 			}
@@ -453,10 +468,10 @@ var mobi = {
 		'display': function() {
 
 			var deviceLI = '',
-				dList = mobi.devices['list'];
+				dList = mobi.devices.list;
 
 			for (var x in dList) {
-				deviceLI += '<li id="' + x + '"><button data-view="' + x + '">' + x + '</button></li>';
+				deviceLI += '<li id="' + x + '"><button data-view="' + x + '"><span class="' + dList[x].icon + '"></span>' + x + '</button></li>';
 			}
 			$('#devices ul').html(deviceLI);
 
