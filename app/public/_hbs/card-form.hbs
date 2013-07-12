@@ -3,10 +3,9 @@
 		<input type="hidden" name="idx" value="new">
 		<input type="text" name="title" placeholder="title" tabindex="1" value="{{title}}">
 		<div><label for="due">due</label><input type="text" id="due" name="due" placeholder="mm/dd/yyyy" tabindex="2" value="{{due}}"></div>
-		<div><label for="status">status</label><select id="status" name="status" tabindex="3"></select>
+		<div><label for="status">status</label><select id="status" name="status" tabindex="3"></select></div>
 		<div><label for="issue">issue</label><input type="text" name="issue" placeholder="#" tabindex="4" value="{{issue}}"></div>
-		<textarea name="desc" placeholder="notes" tabindex="4">{{desc}}</textarea>
-		<button class="card-save" type="button" onclick="cards.save()">save</button>
+		<textarea name="desc" placeholder="notes" tabindex="4">{{desc}}</textarea><button class="card-save" type="button" onclick="cards.save()">save</button>
 	</form>
 </li>
 

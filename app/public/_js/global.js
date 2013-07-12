@@ -410,43 +410,71 @@ var mobi = {
 				'label':	'Fullscreen',
 				'icon': 	'icon-fullscreen',
 				'width': 	'100%',
-				'height': 	'100%'
+				'height': 	'100%',
+				'statusbar': {
+					'template': '',
+					'height': ''
+				}
 			},
 			'desktop': {
 				'label':	'Desktop',
 				'icon': 	'icon-desktop',
 				'width': 	'1600px',
-				'height': 	'850px'
+				'height': 	'850px',
+				'statusbar': {
+					'template': '',
+					'height': ''
+				}
 			},
 			'ipad': {
 				'label':	'iPad',
-				'icon': 	'icon-tablet',
+				'icon': 	'icon-apple',
 				'width': 	'1024px',
-				'height': 	'768px'
-			},
-			'iphone5': {
-				'label':	'iPhone 5',
-				'icon':		'icon-mobile-phone',
-				'width': 	'320px',
-				'height': 	'568px'
+				'height': 	'748px',
+				'statusbar': {
+					'template': '',
+					'height': ''
+				}
 			},
 			'iphone4': {
 				'label':	'iPhone 4',
-				'icon':		'icon-mobile-phone',
+				'icon':		'icon-apple',
 				'width': 	'320px',
-				'height': 	'480px'
+				'height': 	'460px',
+				'statusbar': {
+					'template': '',
+					'height': ''
+				}
+			},
+			'iphone5': {
+				'label':	'iPhone 5',
+				'icon':		'icon-apple',
+				'width': 	'320px',
+				'height': 	'548px',
+				'statusbar': {
+					'template': '',
+					'height': ''
+				}
 			},
 			'galaxy': {
-				'label':	'Galaxy SIII',
-				'icon':		'icon-mobile-phone',
+				'label':	'Galaxy',
+				'icon':		'icon-android',
 				'width': 	'360px',
-				'height':	'640px'
+				'height':	'620px',
+				'statusbar': {
+					'template': '',
+					'height': ''
+				}
 			},
 			'droidtab': {
-				'label':	'Droit Tablet',
-				'icon': 	'icon-tablet',
+				'label':	'Droid Tablet',
+				'icon': 	'icon-android',
 				'width': 	'1280px',
-				'height': 	'800px'
+				'height': 	'780px',
+				'statusbar': {
+					'template': '',
+					'height': ''
+				}
 			}
 		},
 		'get': function() {
@@ -471,7 +499,7 @@ var mobi = {
 				dList = mobi.devices.list;
 
 			for (var x in dList) {
-				deviceLI += '<li id="' + x + '"><button data-view="' + x + '"><span class="' + dList[x].icon + '"></span>' + x + '</button></li>';
+				deviceLI += '<li id="' + x + '"><button data-view="' + x + '"><span class="' + dList[x].icon + '"></span>' + dList[x].label + '</button></li>';
 			}
 			$('#devices ul').html(deviceLI);
 
@@ -490,6 +518,8 @@ var mobi = {
 			} else {
 				$con.removeClass('fullscreen');
 			}
+
+			$('#status-view').text(cur_view.label);
 
 	    	$('#iframe_view').animate({
 	    		width: cur_view.width,
@@ -737,11 +767,11 @@ $(function() {
 				break;
 
 			case 163: // alt/opt + 3
-				vdev('iphone5');
+				vdev('iphone4');
 				break;
 
 			case 162: // alt/opt + 4
-				vdev('iphone4');
+				vdev('iphone5');
 				break;
 
 			case 8734: // alt/opt + 5 samsung galaxy

@@ -137,7 +137,7 @@ html, body {
 	overflow: hidden;
 }
 body {
-	background: url(/_img/bg/green_blue_paper.jpg) no-repeat center center fixed;
+	background: url(/_img/bg/02-wood.jpg) no-repeat center center fixed;
 	background-size: cover;
     font-size: 100%;
     font-size:12px;
@@ -195,6 +195,22 @@ button:focus {
 		.gradient(rgba(0,0,0,.5),rgba(255,255,255,.5));
 		.shadow(~'0 -1px 2px rgba(0,0,0,.5), 0 1px 2px rgba(255,255,255,.5)');
 
+		#status-bar {
+			position: relative;
+			background: black;
+			height: 20px;
+			color: white;
+			font-size: 11px;
+			font-weight: 500;
+			line-height: 20px;
+
+			#status-view {
+				position: absolute;
+				top: 0;
+				left: 0;
+				margin-left: 5px;
+			}
+		}
 		iframe {
 			display: block;
 			background: rgba(255,255,255,.7);
@@ -248,10 +264,12 @@ button:focus {
 
 //! ----- iframe display styles -----
 .fullscreen {
+	position: absolute;
 	display: block;
-	width: 100%;
-	height: 100%;
-	bottom: 43px;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 47px;
 	.content_wrapper {
 		margin: 0 0 0 0;
 		padding: 0;
@@ -284,7 +302,7 @@ button:focus {
     padding: 0;
     margin: auto;
     text-align: center;
-	background: rgba(0,0,0,.5);
+	background: rgba(0,0,0,.75);
 	background-size: cover;
     .shadow(0 -1px 9px rgba(0,0,0,.4));
 
@@ -295,14 +313,15 @@ button:focus {
 	    margin: 5px;
 	    padding: 0;
 	    height: 33px;
-		background: lighten(@border-color, 39%);
 		margin-right: 65px;
 		border: 2px solid @border-color;
-		.radius(2.2em);
+		.gradient(rgb(15,15,15), rgb(25,25,25));
+		.radius(18px);
+		.shadow(0 0 2px lighten(@border-color, 30%) inset);
 	}
 
 	label[for="url_input"] {
-		color: rgba(0,0,0,.3);
+		color: darken(@border-color, 40%);
 		display: inline-block;
 		position: absolute;
 		font-size: 1.7em;
@@ -311,18 +330,19 @@ button:focus {
 	}
 
 	#url_input {
+		.global-font();
 		text-align: left;
 		width: 100%;
-		font-family: Helvetica, Arial;
-		font-weight: bold;
+		font-weight: 300;
 		text-transform: lowercase;
 		font-size: 1.8em;
 		border: none;
 		outline: none;
-	    margin: 4px 0 0 0;
+	    margin: 0;
 	    padding: 2px 0 2px 45px;
 	    background: none;
 	    text-align: left;
+	    color: lighten(@border-color, 10%);
 	}
 
 	#frame_reload,
@@ -330,19 +350,25 @@ button:focus {
 	#frame_settings {
 		display: inline-block;
 		position: absolute;
-		top: 1px;
-	    background-size: 30px auto !important;
-	    background-image: url(/_img/icons/icons-history-settings-refresh.png);
-	    background-repeat: no-repeat;
+		top: 0;
 	    width: 30px;
 	    height: 30px;
-
+		text-decoration: none;
+		color: @border-color;
+		text-shadow: 0 1px 1px darken(@border-color, 20%);
+		font-size: 25px;
+		line-height: 30px;
 		&:hover {
-		    background-image: url(/_img/icons/icons-history-settings-refresh-hover.png);
+			color: lighten(@border-color, 20%);
+			text-shadow: 0 0 5px darken(@border-color, 30%);
 		}
+
 	    &:active {
-		    background-image: url(/_img/icons/icons-history-settings-refresh-active.png);
+			color: darken(@border-color, 30%);
+			text-shadow: 0 0 5px lighten(@border-color, 30%);
 	    }
+
+
 	}
 	#frame_reload {
 		right: 3px;
@@ -554,7 +580,7 @@ button:focus {
 
 			//! ---- device buttons
 			#devices {
-				margin: 50px 0 0 -13px;
+				margin: 80px 0 0 -26px;
 			    text-align: center;
 
 			    ul {
@@ -567,16 +593,24 @@ button:focus {
 					    padding: 0;
 
 					    button {
-					    	font-size: 7px;
+					    	position: relative;
+					    	font-size: 8px;
 							.b-defaults();
 							border: none;
-							width: 45px;
+							width: 81px;
+							height: 25px;
 							margin-bottom: 2px;
-							padding: 2px;
+							padding: 2px 0 2px 25px;
 							.radius(5px);
+							text-align: left;
 
 
 							> span {
+								display: inline-block;
+								width: 21px;
+								position: absolute;
+								top: 2px;
+								left: 0;
 								padding: 2px;
 								display: block;
 								text-align: center;
@@ -619,7 +653,7 @@ button:focus {
 			position: relative;
 			display: inline-block;
 			margin-right: @gutter;
-			margin-top: @gutter - 2;
+			margin-top: @gutter - 1;
 			vertical-align: top;
 
 			overflow: hidden;
@@ -634,13 +668,11 @@ button:focus {
 				position: relative;
 				display: block;
 				padding: 0;
-				width: @cardW - 10;
-				height: @cardH - 10;
+				width: @cardW - 9;
+				height: @cardH - 9;
 				padding: 5px;
 				overflow: hidden !important;
-				.radius(@card-radius);
-				.gradient(rgba(255,255,255,.3),rgba(255,255,255,.1));
-				.shadow(0 0 3px rgba(0,0,0,.5));
+				background: darken(@border-color, 40%);
 
 
 				label {
@@ -656,46 +688,53 @@ button:focus {
 				input,
 				textarea,
 				select {
-					background: rgba(255,255,255,.7);
+					background: black;
+					border-top: 1px solid @border-color;
+					border-left: 1px solid @border-color;
+					border-right: 1px solid @border-color;
 					font-size: 1.3em;
 					padding: 5px;
-					resize: none;
 					margin: 0;
+					resize: none;
+					width: @cardW - 21;
+					color: lighten(@border-color, 30%);
 					.radius(0);
 					.shadow(0 1px 3px rgba(0,0,0,.3) inset);
-					width: @cardW - 20;
+
+					&:focus {
+						.shadow(0 0 13px lighten(@border-color, 20%) inset);
+					}
 				}
 
 				input[name="title"] {
-					.radius(5px 5px 0 0);
+					.radius(4px 4px 0 0);
 				}
 
 				input[name="due"],
 				input[name="issue"],
 				select[name="status"] {
-					width: @cardW - 55;
-					margin-top: 1px;
+					width: @cardW - 56;
 					padding-left: 40px;
 					margin-left: -40px;
 				}
 				select[name="status"] {
-					width: @cardW - 10;
+					background: black url('/_img/form-select.png');
+					background-repeat: no-repeat;
+					background-position: 96% 10px;
+					width: @cardW - 9;
 				}
 				textarea[name="desc"] {
 					font-size: 1em;
-					margin-top: 1px;
-					margin-bottom: 0;
-					height: 100px;
+					height: 103px;
 				}
 				button {
 					display: block;
-					.gradient(rgba(0,0,0,.4), rgba(0,0,0,.7));
-					border: none;
-					width: @cardW - 10;
-					margin: 0;
+					.b-defaults();
+					border: 1px solid @border-color;
+					width: @cardW - 9;
+					margin: -4px 0 0 0;
 					padding: 10px 0 10px 0;
-					.radius(0 0 5px 5px);
-					color: rgb(200,200,200);
+					.radius(0 0 4px 4px);
 				}
 			}
 			> .card-box {
@@ -927,11 +966,6 @@ button:focus {
 						&:last-child {
 							.radius(0 5px 5px 0);
 							margin-right: 4px;
-						}
-						&.card-save {
-							.radius(5px);
-							display: block;
-							width: @cardW - 8;
 						}
 
 						.tasks-count {
@@ -1543,7 +1577,8 @@ button:focus {
 						line-height: 16px;
 						padding-bottom: 5px;
 						font-size: 22px;
-						.b-defaults(rgba(0,0,0,.2), rgba(0,0,0,.3));
+						.b-defaults();
+						border: none;
 						color: white;
 						.radius(0 5px 5px 0);
 						right: 5px;
@@ -1562,12 +1597,14 @@ button:focus {
 
 .p-style (@c) {
 	.b-defaults(darken(@c, 10%), darken(@c, 20%));
+	border: none;
 	color: white;
 }
 
 .p-none {
-	.b-defaults(rgba(0,0,0,.2), rgba(0,0,0,.3));
+	.b-defaults();
 	color: white;
+	border: none;
 	border-right: 1px solid rgba(0,0,0,.2);
 }
 .p-high {

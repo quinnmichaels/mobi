@@ -7,7 +7,7 @@ var http = require('http'),
     exphbs  = require('../'), // "express3-handlebars"
     hbsHelpers = require('./hbs_helpers'),
     app = express(),
-    port = 9000,
+    port = 9300,
     hbs = exphbs.create({
 	    defaultLayout: 'main',
 		helpers: hbsHelpers,
