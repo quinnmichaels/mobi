@@ -61,6 +61,20 @@ function loadTemplate(id, tmp, tmpData, _tmpType) {
 	});
 }
 
+function statusTime() {
+	var d = new Date(),
+		hours = d.getHours(),
+		minutes = d.getMinutes(),
+		ampm = hours >= 12 ? 'p' : 'a',
+		strTime;
+
+	hours = hours ? hours % 12 : 12; // the hour '0' should be '12'
+	minutes = minutes < 10 ? '0'+minutes : minutes;
+	strTime = hours + ':' + minutes + ampm;
+
+	$('#status-time').text(strTime);
+}
+
 //! storage
 var storage = {
 
@@ -580,6 +594,7 @@ var mobi = {
 	},
 
 	'refresh': function() {
+		statusTime();
 	    this.go(mobi.site);
 	}
 };
@@ -800,25 +815,9 @@ $(function() {
     	e.preventDefault();
     	mobi.refresh();
     });
-
-	$('.panel-menu-button').on('click', function(e) {
-		e.preventDefault();
-
-		if (Math.abs(parseFloat($('#panel').css('bottom')))) {
-			toggleMenu();
-		}
-
-		var $cl = $(this).data('id'),
-			$mnu = $('.panel-menu'),
-			$mobi = $('#mobi_menu');
-
-		$mnu.each(function() {
-			if ($(this).is(':visible') && $(this).attr('id') != $cl) {
-				$mnu.hide()
-			}
-		});
-		$('#'+$cl).fadeToggle('fast');
-	});
+    $('#frame_history').on('click', function(e) {
+	    $('#history_panel').fadeIn();
+    });
 
     $('#menu_button').on('click', toggleMenu);
 
