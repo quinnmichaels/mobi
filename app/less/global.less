@@ -47,9 +47,11 @@
 		color: lighten(@border-color, 20%);
 	}
 	&:active {
-		color: darken(@border-color, 20%);
-		border-color: darken(@border-color, 20%);
-		text-shadow: none;
+		@darkenBorder: darken(@border-color, 20%);
+		color: @darkenBorder;
+		border-color: @darkenBorder;
+		.shadow(0 0 13px @darkenBorder inset);
+		text-shadow: 0px 0px 13px @darkenBorder;
 	}
 }
 .button-ok () {
@@ -401,23 +403,45 @@ button:focus {
 
 
 	.panel-menu {
-		@border-color: lighten(@menu-color-1, 25%);
+		position: relative;
 		.cover();
-		padding: 5px;
+		padding: 0;
 		display: none;
-		.gradient(rgba(0,0,0,.95), rgba(0,0,0,.85));
+		.gradient(rgb(10,10,10), rgb(20,20,20));
 		z-index: 1000;
+
+		h1 {
+			position: absolute;
+			width: 400px;
+			top: -36px;
+			height: 36px;
+			left: 50%;
+			display: inline-block;
+			color: @border-color;
+			font-size: 16px;
+			font-weight: 300;
+			margin: 0 0 0 -200px;
+			padding: 7px;
+			.gradient(rgb(60,60,60), rgb(10,10,10));
+			.radius(20px 20px 0 0);
+
+			> span {
+				display: inline-block;
+				margin-right: 9px;
+			}
+		}
+
 
 		.panel-close {
 			position: absolute;
-			top: 5px;
-			right: 5px;
-			width: 30px;
-			height: 30px;
-			font-size: 2em;
-			line-height: 0px;
+			top: 10px;
+			right: 10px;
+			width: 21px;
+			height: 21px;
+			font-size: 14px;
+			line-height: 11px;
 			padding-bottom: 5px;
-			text-indent: -2px;
+			text-indent: -3px;
 			.radius(15px);
 			.b-defaults();
 		}
@@ -427,16 +451,17 @@ button:focus {
 	}
 
 	#settings_panel {
-		right: 102px;
-
 		.settings {
+			text-align: left;
+			margin: 9px;
 			fieldset {
 				position: relative;
+				display: inline-block;
 				border-radius: 9px;
 				border: none;
-				box-shadow: 0 0 1px darken(@menu-color-2, 25%);
-				background: lighten(@menu-color-1, 10%);
-				padding: 23px 0 9px 0;
+				background: @border-color;
+				padding: 27px 5px 9px 5px;
+				height: 295px;
 				legend {
 					position: absolute;
 					padding: 3px 5px;
@@ -453,7 +478,7 @@ button:focus {
 				> div {
 					label {
 						display: inline-block;
-						width: 50px;
+						width: 100px;
 						text-align: left;
 						color: darken(@menu-color-1, 30%);
 						text-shadow: 0 1px 0 lighten(@menu-color-1, 30%);
@@ -462,7 +487,7 @@ button:focus {
 					}
 					input {
 						border: none;
-						width: 148px;
+						width: 150px;
 						padding: 5px;
 						.radius(5px);
 					}
@@ -473,17 +498,28 @@ button:focus {
 	#history_panel {
 		padding: 0;
 		margin: 0;
+
 		.history_list {
-			overflow: visible;
-			padding: 5px;
+			overflow: hidden;
+			padding: 9px;
 			margin: 0;
 			vertical-align: top;
-			.columns(4, 10px);
 			height: 325px;
+			text-align: left;
+
 			li {
+				position: relative;
+				text-align: left;
+				display: inline-block;
 				border: 0;
-				margin: 0 5px 5px 5px;
+				margin: 0 5px 5px 0;
 				font-size: .9em;
+				width: @cardW / 2 + 30;
+				height: @cardH / 2;
+				top: 0;
+//				background: @border-color;
+				border: 1px solid @border-color;
+				.radius(7px);
 				a {
 					text-align: left;
 					display: block;
@@ -492,10 +528,8 @@ button:focus {
 					font-weight: bold;
 					text-decoration: none;
 					color: white;
-					background: rgba(255,255,255,.1);
 					padding: 9px;
 					text-overflow: ellipsis;
-					.radius(9px);
 					&:hover {
 						background: rgba(255,255,255,.2);
 					}
@@ -927,68 +961,6 @@ button:focus {
 						color: lighten(@ui-color-1, 60%);
 					}
 				}
-
-				.card_options_menu {
-					text-align: center;
-					margin: 0;
-					position: absolute;
-					bottom: 0;
-					left: 0;
-					right: 0;
-					.gradient(rgba(200,200,200,.1), rgba(255,255,255,0));
-					border-top: 1px solid @border-color;
-					font-size: 16px;
-
-					button {
-						position: relative;
-						display: inline-block;
-						width: 40px;
-						height: 25px;
-						margin: 0;
-						font-size: .8em;
-						border: 0;
-						background: transparent;
-						color: @border-color;
-
-						&:hover {
-							text-shadow: 0px 0px 5px @border-color;
-							color: lighten(@border-color, 40%);
-							cursor: pointer;
-						}
-						&:active {
-							color: darken(@border-color, 20%);
-							text-shadow: none;
-						}
-						&:first-child {
-							.radius(5px 0 0 5px);
-							margin-left: 4px;
-						}
-						&:last-child {
-							.radius(0 5px 5px 0);
-							margin-right: 4px;
-						}
-
-						.tasks-count {
-							font-size: 7px;
-							position: absolute;
-							top: -2px;
-							right: 4px;
-							width: 12px;
-							height: 12px;
-							letter-spacing: 0;
-							line-height: 14px;
-							background: red;
-							color: white;
-							border: 1px solid white;
-							.radius(8px;)
-						}
-						&.active {
-							.gradient(rgba(0,0,0,.5), rgba(0,0,0,.4));
-							.shadow(0 0 13px rgba(255,255,255,.5) inset);
-						}
-					}
-
-				}
 			}
 
 			&:first-child {
@@ -1003,6 +975,67 @@ button:focus {
 				.shadow(0 9px 25px #000);
 
 			}
+		}
+	}
+}
+
+.card_options_menu {
+	text-align: center;
+	margin: 0;
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	.gradient(rgba(200,200,200,.1), rgba(255,255,255,0));
+	border-top: 1px solid @border-color;
+	font-size: 16px;
+
+	button {
+		position: relative;
+		display: inline-block;
+		width: 40px;
+		height: 25px;
+		margin: 0;
+		font-size: .8em;
+		border: 0;
+		background: transparent;
+		color: @border-color;
+
+		&:hover {
+			text-shadow: 0px 0px 5px @border-color;
+			color: lighten(@border-color, 40%);
+			cursor: pointer;
+		}
+		&:active {
+			color: darken(@border-color, 20%);
+			text-shadow: none;
+		}
+		&:first-child {
+			.radius(5px 0 0 5px);
+			margin-left: 4px;
+		}
+		&:last-child {
+			.radius(0 5px 5px 0);
+			margin-right: 4px;
+		}
+
+		.tasks-count {
+			font-size: 7px;
+			position: absolute;
+			top: -2px;
+			right: 4px;
+			width: 12px;
+			height: 12px;
+			letter-spacing: 0;
+			line-height: 14px;
+			background: red;
+			color: white;
+			border: 1px solid white;
+			.radius(8px;)
+		}
+		&.active {
+			.gradient(rgba(0,0,0,.5), rgba(0,0,0,.4));
+			.shadow(0 0 13px rgba(255,255,255,.5) inset);
 		}
 	}
 }

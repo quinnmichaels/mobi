@@ -1,12 +1,10 @@
+<h1><span class="icon-gear"></span>Settings<button class="panel-close" onclick="$('.panel-menu').fadeOut();">&times;</button></h1>
 <div class="settings">
+	<form>
 	<fieldset>
-		<legend>Redmine</legend>
-		<div>
-			<label for="red_url">url</label><input id="red_url" type="text" name="red_url" value="{{red_url}}">
-		</div>
-		<div>
-			<label for="red_key">api key</label><input id="red_key" type="text" name="red_key" value="{{red_key}}">
-		</div>
+		<legend>issue tracking</legend>
+		<div><label for="issue_url">issue url</label><input id="issue_url" type="text" name="red_url" value="{{red_url}}"><span class="icon-question" id="issue-question"></span></div>
 	</fieldset>
+	</form>
 </div>
-<button class="panel-close" onclick="$(this).parent().fadeOut();">&times;</button>
+

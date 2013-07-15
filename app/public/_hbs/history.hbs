@@ -1,7 +1,15 @@
+<h1><span class="icon-star"></span>Project History<button class="panel-close" onclick="$('.panel-menu').fadeOut();">&times;</button></h1>
 <ul class="history_list">
 	{{#each urls}}
-	<li class="history_url"><a href="javascript:mobi.history.go('{{this}}');">{{this}}</a></li>
+	<li class="history_url">
+		<a href="javascript:mobi.history.go('{{this}}');">{{this}}</a>
+		<div class="card_options_menu">
+			<button class="card-edit" onclick="sites.edit()"><span class="icon-edit"></span></button>
+			<button class="card-checklist" onclick="sites.checklist(, this)"><span class="icon-list-alt"></span><span class="tasks-count">25</span></button>
+			<button class="card-timesheet" onclick="timesheet.view()"><span class="icon-time"></span></button>
+		</div>
+	</li>
 	{{/each}}
 </ul>
-<button class="panel-close" onclick="$(this).parent().fadeOut();">&times;</button>
+
 

@@ -2,6 +2,9 @@
 // global variables
 var window_timer = 0;
 
+function panelPos() {
+	return Math.abs(parseFloat($('#panel').css('bottom')));
+}
 function toggleMenu() {
 	var offset = 0,
 		$height = $('#mobi_menu').height() + offset,
@@ -756,8 +759,7 @@ $(function() {
 
 			case 730: // alt/opt + k create a new card;
 				e.preventDefault();
-				var panel_pos = Math.abs(parseFloat($('#panel').css('bottom')));
-				if (panel_pos) {
+				if (panelPos()) {
 					toggleMenu();
 				}
 				cards.create();
@@ -815,8 +817,19 @@ $(function() {
     	e.preventDefault();
     	mobi.refresh();
     });
+
     $('#frame_history').on('click', function(e) {
+		if (panelPos()) {
+			toggleMenu();
+		}
 	    $('#history_panel').fadeIn();
+    });
+
+    $('#frame_settings').on('click', function(e) {
+		if (panelPos()) {
+			toggleMenu();
+		}
+	    $('#settings_panel').fadeIn();
     });
 
     $('#menu_button').on('click', toggleMenu);
