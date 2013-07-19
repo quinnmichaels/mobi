@@ -1,6 +1,7 @@
 "use strict"
 // global variables
-var window_timer = 0;
+var window_timer = 0,
+	remote_site = '';
 
 function panelPos() {
 	return Math.abs(parseFloat($('#panel').css('bottom')));
@@ -18,8 +19,7 @@ function toggleMenu() {
 	$('.content_container').animate({
 //		bottom: Math.abs(contPos)
 	});
-
-}
+};
 
 function viewRotate() {
 	var $iframe = $('#iframe_view'),
@@ -30,7 +30,7 @@ function viewRotate() {
 		width: frameH,
 		height: frameW
 	});
-}
+};
 
 function loadTemplate(id, tmp, tmpData, _tmpType) {
 	var source,
@@ -813,19 +813,24 @@ $(function() {
 	    viewRotate();
     });
 
+	//! click: reload site
     $('#frame_reload').on('click', function(e) {
     	e.preventDefault();
     	mobi.refresh();
     });
 
+	//! click: history button
     $('#frame_history').on('click', function(e) {
+    	e.preventDefault();
 		if (panelPos()) {
 			toggleMenu();
 		}
 	    $('#history_panel').fadeIn();
     });
 
+	//! click: settings button
     $('#frame_settings').on('click', function(e) {
+    	e.preventDefault();
 		if (panelPos()) {
 			toggleMenu();
 		}
