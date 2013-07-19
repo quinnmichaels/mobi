@@ -1,6 +1,13 @@
 {
     "name"       : "mobi",
+    "description": "A web development panel that allows you to track issues.  It supports timers and integration with Redmine.",
+    "author": "Quinn Michaels (http://thequinnshow.com/)",
+    "contributors": [
+        "Quinn Michaels (http://thequinnshow.com/)",
+        "Ethan Brown <e@zepln.com>"
+    ],
     "version"    : "0.0.1",
+    "license": "GPL",
 
     "engines": {
         "node": ">=0.8"
