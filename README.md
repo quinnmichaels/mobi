@@ -11,18 +11,23 @@ Redmine).
 
 Version Control Integration
 ---------------------------
+
 Integration with Redmine is currently underway.
+
+
 
 Downloading and Installing mobi
 -------------------------------
-# Clone the repository: `git clone https://github.com/quinnmichaels/mobi.git`
-# Install dependencies: `npm install`
-# Start mobi server: `cd app; node app.js`
-# Navigate to http://localhost:9300
+
+1. Clone the repository: `git clone https://github.com/quinnmichaels/mobi.git`
+2. Install dependencies: `npm install`
+3. Start mobi server: `cd app; node app.js`
+4. Navigate to http://localhost:9300
 
 
 Using mobi
 ----------
+
 - When you first connect to mobi, you'll see a URL bar at the bottom of thte screen.  Enter the URL of the site or project you're working on (you must include the `http://`).
 - To access mobi's features, click the menu button in the lower right-hand corner (it looks like three horizontal bars).
 - To view your website as it would appear on a different device, click one of the user agent buttons (Desktop, iPad, iPhone4, etc.).
