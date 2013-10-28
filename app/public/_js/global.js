@@ -144,7 +144,10 @@ var timer = {
 	'start_stop': function(id) {
 
 		var sym = '&plus;',
-			$this = $('#'+id+' .start_stop');
+			$this = $('#'+id+' .start_stop'),
+			$parent = $this.parent().parent().parent();
+
+		$('.card.card-active').removeClass('card-active');
 
 		if ($this.hasClass('start')) {
 			$('.start_stop').removeClass('stop', function() {
@@ -155,11 +158,16 @@ var timer = {
 			timer.get();
 			timer.start();
 			sym = '&times;';
+
+			$parent.addClass('card-active');
+
 		} else {
 			timer.stop();
 		}
 
-		$this.toggleClass('start').toggleClass('stop').html(sym);
+			$this.toggleClass('start')
+				.toggleClass('stop')
+				.html(sym);
 	},
 
 	'start': function() {
@@ -211,8 +219,9 @@ var timer = {
 //! cards
 var cards = {
 	'init': function() {
-		this.cardList = mobi.sites.get().cards;
+		this.cardList = mobi.sites.get()['cards'];
 		this.list();
+		console.log(this.cardList);
 		this.cardSortable('#card_list');
 
 		$('button[data-action="delete"]').on('click', cards.delete);
@@ -356,7 +365,7 @@ var cards = {
 var mobi = {
 	'init': function() {
 
-		mobi.site = $('#iframe_view').attr('src');
+		mobi.site = 'blank.html'; //$('#iframe_view').attr('src');
 		mobi.sites.init();
 		mobi.devices.display();
 		mobi.devices.view(mobi.devices.get());
@@ -483,11 +492,11 @@ var mobi = {
 					'height': ''
 				}
 			},
-			'droidtab': {
-				'label':	'Droid Tablet',
+			'galaxyt3': {
+				'label':	'Galaxy Tab 3',
 				'icon': 	'icon-android',
-				'width': 	'1280px',
-				'height': 	'780px',
+				'width': 	'1200px',
+				'height': 	'580px',
 				'statusbar': {
 					'template': '',
 					'height': ''

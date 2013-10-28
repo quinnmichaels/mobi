@@ -136,11 +136,11 @@ html, body, div, span, a, input, select, textarea, label {
 }
 html, body {
 	height: 100%;
-	overflow: hidden;
 }
 body {
-	background: url(/_img/bg/02-wood.jpg) no-repeat center center fixed;
+	background: url(../_img/bg/02-wood.jpg) no-repeat center top;
 	background-size: cover;
+	background-attachment: fixed;
     font-size: 100%;
     font-size:12px;
     margin:0;
@@ -297,14 +297,9 @@ button:focus {
 
 //! -panel styles
 #panel {
-	position: fixed;
-	bottom: -300px;
-	left: 0;
-	right: 0;
-    padding: 0;
     margin: auto;
     text-align: center;
-	background: rgba(0,0,0,.75);
+	background: rgba(0,0,0,.3);
 	background-size: cover;
     .shadow(0 -1px 9px rgba(0,0,0,.4));
 
@@ -551,135 +546,115 @@ button:focus {
 		background: url(/_img/menu.png) no-repeat;
 	}
 
-	//! -- expanded menu styles
-	#mobi_menu {
-		@height: 300px;
-		height: @height;
-		position: relative;
 
-		#mobi_menu_container {
-			height: @height;
-			position: relative;
-			margin-top: 5px;
-			margin-right: 65px;
-			text-align: left;
+	#mobi_menu_buttons {
+		height: 50px;
+		position: absolute;
+		bottom: 0;
+		right: 0;
+		width: 65px;
+
+		#add_card {
+			position: absolute;
+			top: 3px;
+			left: 5px;
+			width: 40px;
+			height: 40px;
+			font-size: 23px;
+			line-height: 0px;
+			font-weight: bold;
+			margin-bottom: 9px;
+			padding-bottom: 7px;
+			text-indent: -2px;
+			font-size: 36px;
+
+			.radius(20px);
+
+			&[data-state="add"] {
+				.b-defaults();
+			}
+
+			&[data-state="close"] {
+				text-indent: -2px;
+				.b-defaults();
+			}
+		}
+		#rotate_iframe {
+		    position: absolute;
+		    width: 24px;
+		    height: 24px;
+		    top: 42px;
+		    right: 4px;
+		    .b-defaults();
+		    .radius(12px);
+		    text-indent: -1px;
+		    font-size: 14px;
+		    line-height: 12px;
 		}
 
-		//! --- mobi buttons
-		#mobi_menu_buttons {
-			height: @height;
-			position: absolute;
-			top: 0;
-			right: 0;
-			width: 65px;
 
-			#add_card {
-				position: absolute;
-				top: 3px;
-				left: 5px;
-				width: 40px;
-				height: 40px;
-				font-size: 23px;
-				line-height: 0px;
-				font-weight: bold;
-				margin-bottom: 9px;
-				padding-bottom: 7px;
-				text-indent: -2px;
-				font-size: 36px;
+		//! ---- device buttons
+		#devices {
+			margin: 80px 0 0 -26px;
+		    text-align: center;
 
-				.radius(20px);
+		    ul {
+			    list-style: none;
+			    margin: 0;
+			    padding: 0;
 
-				&[data-state="add"] {
-					.b-defaults();
-				}
-
-				&[data-state="close"] {
-					text-indent: -2px;
-					.b-defaults();
-				}
-			}
-			#rotate_iframe {
-			    position: absolute;
-			    width: 24px;
-			    height: 24px;
-			    top: 42px;
-			    right: 4px;
-			    .b-defaults();
-			    .radius(12px);
-			    text-indent: -1px;
-			    font-size: 14px;
-			    line-height: 12px;
-			}
-
-
-			//! ---- device buttons
-			#devices {
-				margin: 80px 0 0 -26px;
-			    text-align: center;
-
-			    ul {
-				    list-style: none;
+			    li {
 				    margin: 0;
 				    padding: 0;
 
-				    li {
-					    margin: 0;
-					    padding: 0;
-
-					    button {
-					    	position: relative;
-					    	font-size: 8px;
-							.b-defaults();
-							border: none;
-							width: 81px;
-							height: 25px;
-							margin-bottom: 2px;
-							padding: 2px 0 2px 25px;
-							.radius(5px);
-							text-align: left;
+				    button {
+				    	position: relative;
+				    	font-size: 8px;
+						.b-defaults();
+						border: none;
+						width: 81px;
+						height: 25px;
+						margin-bottom: 2px;
+						padding: 2px 0 2px 25px;
+						.radius(5px);
+						text-align: left;
 
 
-							> span {
-								display: inline-block;
-								width: 21px;
-								position: absolute;
-								top: 2px;
-								left: 0;
-								padding: 2px;
-								display: block;
-								text-align: center;
-								font-size: 16px;
-							}
-					    }
+						> span {
+							display: inline-block;
+							width: 21px;
+							position: absolute;
+							top: 2px;
+							left: 0;
+							padding: 2px;
+							display: block;
+							text-align: center;
+							font-size: 16px;
+						}
 				    }
 			    }
-			}
+		    }
 		}
 	}
 }
 
 //! ---- card styles
 .card-list {
-	@gutter: 5px;
-	@card-radius: 8px;
+	@gutter: 3px;
+	@card-radius: 5px;
 
-	position: relative;
-	overflow: hidden;
 	text-align: left;
+	overflow: auto;
 
 	ol {
 		@newcolor1: #c8dbed;
 		@newcolor2: #8aa9c6;
-		position: relative;
 		list-style: none;
 		display: block;
-		white-space: nowrap;
-		width: 100%;
-		height: 100%;
 		vertical-align: top;
-		margin: 0 0 -30px 0;
-		padding: 0 0 30px 0;
-		overflow-x: scroll;
+		margin: 0 0 0 0;
+		padding: 0 0 0 0;
+		overflow: auto;
 
 		//! ------ card styles
 		.card {
@@ -687,15 +662,15 @@ button:focus {
 			position: relative;
 			display: inline-block;
 			margin-right: @gutter;
-			margin-top: @gutter - 1;
+			margin-top: @gutter + 2;
 			vertical-align: top;
 
 			overflow: hidden;
 
-			border: 2px solid @border-color;
+			border: 1px solid @border-color;
 
 			.radius(@card-radius);
-			.gradient(rgb(15,15,15), rgb(25,25,25));
+			.gradient(rgba(15,15,15,.5), rgba(25,25,25,.5));
 			.shadow(0 -2px 6px rgba(0,0,0,.9) inset);
 
 			> form {
@@ -962,10 +937,9 @@ button:focus {
 					}
 				}
 			}
-
-			&:first-child {
-				margin-left: @gutter;
-			}
+		}
+		.card-active {
+			.gradient(rgb(35,35,35), rgb(45,45,45));
 		}
 
 		//! ------ dragging styles
