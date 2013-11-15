@@ -1,0 +1,32 @@
+.shadow (@shadow) {
+	-moz-box-shadow: @shadow;
+	-webkit-box-shadow: @shadow;
+	box-shadow: @shadow;
+}
+
+.gradient (@grad1: #eee; @grad2: #ccc; @percent: 100%) {
+	background: @grad1; /* Old browsers */
+	background: -webkit-linear-gradient(top,  @grad1 0%,@grad2 @percent); /* Chrome10+,Safari5.1+ */
+	background: linear-gradient(to bottom,  @grad1 0%,@grad2 @percent); /* W3C */
+}
+
+.gradient-radial (@color1: #fff; @color2: #eee) {
+	background: @color1; /* Old browsers */
+	background: -moz-radial-gradient(center, ellipse cover,  @color1 0%, @color2 100%); /* FF3.6+ */
+	background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(0%,@color1), color-stop(100%,@color2)); /* Chrome,Safari4+ */
+	background: -webkit-radial-gradient(center, ellipse cover,  @color1 0%,@color2 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-radial-gradient(center, ellipse cover,  @color1 0%,@color2 100%); /* Opera 12+ */
+	background: -ms-radial-gradient(center, ellipse cover,  @color1 0%,@color2 100%); /* IE10+ */
+	background: radial-gradient(ellipse at center,  @color1 0%,@color2 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='@color1', endColorstr='@color2',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+}
+
+.bg-fade-in (@duration: .5s) {
+	-o-transition: @duration ease-in-out;
+	-ms-transition: @duration ease-in-out;
+	-moz-transition: @duration ease-in-out;
+	-webkit-transition: @duration ease-in-out;
+	transition: @duration ease-in-out;
+}
+
+

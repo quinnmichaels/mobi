@@ -5,11 +5,12 @@
 		$(this)
 			.append(chkHTML)
 			.hover(
+				var $this = $(this);
 				function () {
-					$(this).children().filter('.check-menu').show(0);
+					$this.children().filter('.check-menu').show(0);
 				},
 				function () {
-					$(this).children().filter('.check-menu').hide(0);
+					$this.children().filter('.check-menu').hide(0);
 				}
 		);
 

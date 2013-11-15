@@ -138,9 +138,7 @@ html, body {
 	height: 100%;
 }
 body {
-	background: url(../_img/bg/02-wood.jpg) no-repeat center top;
-	background-size: cover;
-	background-attachment: fixed;
+	.gradient(#333; #000);
     font-size: 100%;
     font-size:12px;
     margin:0;
@@ -297,11 +295,15 @@ button:focus {
 
 //! -panel styles
 #panel {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	width: 100%;
+	height: 100%;
     margin: auto;
     text-align: center;
-	background: rgba(0,0,0,.3);
-	background-size: cover;
-    .shadow(0 -1px 9px rgba(0,0,0,.4));
 
 	//! --url bar styles
 	#url_form {
@@ -557,7 +559,7 @@ button:focus {
 		#add_card {
 			position: absolute;
 			top: 3px;
-			left: 5px;
+			left: 20px;
 			width: 40px;
 			height: 40px;
 			font-size: 23px;
@@ -1141,93 +1143,6 @@ button:focus {
 	margin-left: -200px;
 	margin-top: -250px;
 }
-#checklist {
-	h1 {
-		background: rgba(0,0,0,.1);
-		text-shadow: 0 1px 0 white;
-
-		&:after {
-			content: 'checklist';
-		}
-	}
-}
-#timesheet {
-	position: relative;
-
-	#total-time {
-		position: relative;
-		color: #666;
-		padding: 3px 5px 0 5px;
-		margin: 0 0 5px 0;
-		font-size: 1.3em;
-		background: rgba(0,0,0,.05);
-		.radius(5px);
-		.shadow(0 1px 2px rgba(0,0,0,.2) inset);
-		border-bottom: 1px solid rgb(200,200,200);
-		border-top: 1px solid rgb(150,150,150);
-		text-align: right;
-
-		&:before {
-			content: "Total Time:";
-			text-align: left;
-			display: inline-block;
-			position: absolute;
-			top: 4px;
-			left: 7px;
-			text-shadow: 0 1px 0 white;
-			width: 300px;
-		}
-
-		> span {
-			display: inline-block;
-			font-size: .8em;
-			.radius(3px);
-			margin: 0 5px 0 0;
-			padding: 3px;
-		}
-	}
-	h1:after {
-		content: 'timesheet';
-	}
-
-	#timesheet-items {
-		position: relative;
-		height: 441px;
-		overflow: auto;
-
-		.timesheet-item {
-			position: relative;
-			border-bottom: 1px solid rgba(255,0,0,.1);
-			text-align: center;
-			padding: 5px 0 5px 0;
-			&:nth-child(odd) {
-				background: rgba(255,255,0,.05);
-			}
-			> span {
-				display: inline-block;
-				font-size: 1.2em;
-			}
-			.timesheet-date {
-				width: 261px;
-				text-align: left;
-
-				.timesheet-day {
-					display: inline-block;
-					width: 30px;
-					padding: 5px;
-					margin-right: 9px;
-					background: rgb(235,235,235);
-					.radius(5px);
-					font-size: .7em;
-				}
-			}
-			.timesheet-time {
-				width: 125px;
-				text-align: right;
-			}
-		}
-	}
-}
 
 #redmine_issue,
 #timesheet,
@@ -1601,6 +1516,106 @@ button:focus {
 		}
 	}
 }
+
+#checklist {
+	position: fixed;
+	display: none;
+	top: 0;
+	left: auto;
+	right: 0;
+	bottom: 0;
+	height: 100%;
+	width: 360px;
+	margin: 0;
+
+	h1 {
+		background: rgba(0,0,0,.1);
+		text-shadow: 0 1px 0 white;
+
+		&:after {
+			content: 'checklist';
+		}
+	}
+}
+
+#timesheet {
+	position: relative;
+
+	#total-time {
+		position: relative;
+		color: #666;
+		padding: 3px 5px 0 5px;
+		margin: 0 0 5px 0;
+		font-size: 1.3em;
+		background: rgba(0,0,0,.05);
+		.radius(5px);
+		.shadow(0 1px 2px rgba(0,0,0,.2) inset);
+		border-bottom: 1px solid rgb(200,200,200);
+		border-top: 1px solid rgb(150,150,150);
+		text-align: right;
+
+		&:before {
+			content: "Total Time:";
+			text-align: left;
+			display: inline-block;
+			position: absolute;
+			top: 4px;
+			left: 7px;
+			text-shadow: 0 1px 0 white;
+			width: 300px;
+		}
+
+		> span {
+			display: inline-block;
+			font-size: .8em;
+			.radius(3px);
+			margin: 0 5px 0 0;
+			padding: 3px;
+		}
+	}
+	h1:after {
+		content: 'timesheet';
+	}
+
+	#timesheet-items {
+		position: relative;
+		height: 441px;
+		overflow: auto;
+
+		.timesheet-item {
+			position: relative;
+			border-bottom: 1px solid rgba(255,0,0,.1);
+			text-align: center;
+			padding: 5px 0 5px 0;
+			&:nth-child(odd) {
+				background: rgba(255,255,0,.05);
+			}
+			> span {
+				display: inline-block;
+				font-size: 1.2em;
+			}
+			.timesheet-date {
+				width: 261px;
+				text-align: left;
+
+				.timesheet-day {
+					display: inline-block;
+					width: 30px;
+					padding: 5px;
+					margin-right: 9px;
+					background: rgb(235,235,235);
+					.radius(5px);
+					font-size: .7em;
+				}
+			}
+			.timesheet-time {
+				width: 125px;
+				text-align: right;
+			}
+		}
+	}
+}
+
 
 .p-style (@c) {
 	.b-defaults(darken(@c, 10%), darken(@c, 20%));

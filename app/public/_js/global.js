@@ -816,7 +816,7 @@ $(function() {
 
 
 	//draggable stuff
-	$('#redmine_issue, #timesheet, #checklist').draggable({ containment: "parent" });
+	$('#redmine_issue, #timesheet').draggable({ containment: "parent" });
 
     $('#rotate_iframe').on('click', function() {
 	    viewRotate();
