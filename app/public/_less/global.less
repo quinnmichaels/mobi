@@ -26,7 +26,7 @@
 
 @border-color: #2aa2ff;
 //! ----- global font -----
-.global-font () {
+.global-font {
 	font-family: 'Open Sans', 'HelveticaNeue-Light', 'HelveticaNeue', Helvetica, Arial, sans-serif;
 };
 
@@ -37,6 +37,7 @@
 }
 
 .b-defaults (@color1: @ui-color-1, @color2: @ui-color-2) {
+	.animateObj(.3s);
 	border: 2px solid @border-color;
 	color: @border-color;
 	.gradient(@color1; @color2);
@@ -132,20 +133,20 @@
 
 //! ----- global styles -----
 html, body, div, span, a, input, select, textarea, label {
-	.global-font();
+	.global-font;
 }
+
 html, body {
 	height: 100%;
 }
 body {
-	.gradient(#333; #000);
     font-size: 100%;
     font-size:12px;
     margin:0;
     padding:0;
     text-align: center;
-
 }
+
 #bg-logo {
 //    background: url(/_img/bg/02-wood-logo.png) no-repeat center top;
     width: 192px;
@@ -295,13 +296,16 @@ button:focus {
 
 //! -panel styles
 #panel {
+	.animated(0s,1s);
+	.fadeIn;
+
+	background: rgba(0,0,0,.7);
 	position: fixed;
-	top: 0;
 	bottom: 0;
 	left: 0;
 	right: 0;
 	width: 100%;
-	height: 100%;
+	height: 355px;
     margin: auto;
     text-align: center;
 
@@ -329,7 +333,7 @@ button:focus {
 	}
 
 	#url_input {
-		.global-font();
+		.global-font;
 		text-align: left;
 		width: 100%;
 		font-weight: 300;
@@ -550,16 +554,19 @@ button:focus {
 
 
 	#mobi_menu_buttons {
-		height: 50px;
+		height: 310px;
 		position: absolute;
 		bottom: 0;
 		right: 0;
 		width: 65px;
 
 		#add_card {
+			.b-defaults();
+			.radius(20px);
+
 			position: absolute;
 			top: 3px;
-			left: 20px;
+			left: 9px;
 			width: 40px;
 			height: 40px;
 			font-size: 23px;
@@ -570,25 +577,20 @@ button:focus {
 			text-indent: -2px;
 			font-size: 36px;
 
-			.radius(20px);
-
-			&[data-state="add"] {
-				.b-defaults();
-			}
 
 			&[data-state="close"] {
 				text-indent: -2px;
-				.b-defaults();
 			}
 		}
 		#rotate_iframe {
+		    .b-defaults();
+		    .radius(12px);
+
 		    position: absolute;
 		    width: 24px;
 		    height: 24px;
 		    top: 42px;
 		    right: 4px;
-		    .b-defaults();
-		    .radius(12px);
 		    text-indent: -1px;
 		    font-size: 14px;
 		    line-height: 12px;
@@ -610,9 +612,9 @@ button:focus {
 				    padding: 0;
 
 				    button {
+						.b-defaults();
 				    	position: relative;
 				    	font-size: 8px;
-						.b-defaults();
 						border: none;
 						width: 81px;
 						height: 25px;
@@ -672,8 +674,7 @@ button:focus {
 			border: 1px solid @border-color;
 
 			.radius(@card-radius);
-			.gradient(rgba(15,15,15,.5), rgba(25,25,25,.5));
-			.shadow(0 -2px 6px rgba(0,0,0,.9) inset);
+			background: rgba(0,0,0,.5);
 
 			> form {
 				position: relative;
