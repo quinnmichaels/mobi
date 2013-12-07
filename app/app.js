@@ -41,6 +41,8 @@ app.get('/consent', function(req, res) {
 });
 
 app.get('/auth', function(req, res) {
+	if (!req.query.code) res.redirect('/consent');
+	console.log(req.query.code);
 	res.send(req.query.code);
 });
 
