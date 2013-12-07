@@ -40,7 +40,7 @@ app.get('/consent', function(req, res) {
 	res.redirect(url);
 });
 
-app.get('/auth', function(res, req) {
+app.get('/auth', function(req, res) {
 	res.send('auth page');
 });
 
