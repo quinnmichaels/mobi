@@ -10,6 +10,7 @@
     "express3-handlebars": "*",
     "mongodb": "*",
     "monk": "*",
-    "crypto": "*"
+    "crypto": "*",
+    "googleapis": "*"
   }
 }
