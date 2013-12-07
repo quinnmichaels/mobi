@@ -29,12 +29,6 @@ app.set('view engine', 'handlebars');
 
 app.get('/userlist', routes.userlist(db));
 
-// returns a new private key
-app.get('/key', function(req, res) {
-	var str = new Date().toString() + Math.floor(Math.random()*1000000 * Math.PI()).toString();
-	res.send(crypto.createHash('md5').update(str).digest('hex'));
-});
-
 app.get('/consent', function(req, res) {
 	var clientID = '19939366693-mnn18qkhbhon5fiqi30ovs7a0p6gq0ir.apps.googleusercontent.com',
 		clientSecret = 'iNGcI4rA-K-aPcKkZWqw2DOp',
@@ -43,6 +37,11 @@ app.get('/consent', function(req, res) {
 							access_type: 'offline',
 							scope: 'https://www.googleapis.com/auth/plus.me'
 						});
+	res.redirect(url);
+});
+
+app.get('/auth?code=:code', function(res, req) {
+	res.send(code);
 });
 
 app.get('/enter', function(req, res) {
