@@ -7,7 +7,10 @@ var http = require('http'),
     mongo = require('mongodb'),
 	monk = require('monk'),
 	crypto = require('crypto'),
-	db = monk('localhost:27017/mobi'),
+	googleapis = require('googleapis');
+
+var OAuth2Client = googleapis.OAuth2Client,
+    db = monk('localhost:27017/mobi'),
     app = express(),
 	hbs = exphbs.create({ /* config */ }),
 	routes = require('./routes'),
@@ -30,6 +33,16 @@ app.get('/userlist', routes.userlist(db));
 app.get('/key', function(req, res) {
 	var str = new Date().toString() + Math.floor(Math.random()*1000000 * Math.PI()).toString();
 	res.send(crypto.createHash('md5').update(str).digest('hex'));
+});
+
+app.get('/consent', function(req, res) {
+	var clientID = '19939366693-mnn18qkhbhon5fiqi30ovs7a0p6gq0ir.apps.googleusercontent.com',
+		clientSecret = 'iNGcI4rA-K-aPcKkZWqw2DOp',
+		oauth2Client = new OAuth2Client(clientID, clientSecret, 'http://mobi.bleubrain.com/auth'),
+		url = oauth2Client.generateAuthUrl({
+							access_type: 'offline',
+							scope: 'https://www.googleapis.com/auth/plus.me'
+						});
 });
 
 app.get('/enter', function(req, res) {
