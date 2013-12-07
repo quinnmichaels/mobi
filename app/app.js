@@ -72,11 +72,6 @@ app.get('/sites', function(req, res) {
 // serve static files first
 app.use(express.static('public'));
 
-app.use(function(err, req, res, next){
-  console.error(err.stack);
-  res.send(500, 'Something broke!');
-});
-
 app.listen(port);
 
 console.log( 'Listening on port ' + port + '....');
