@@ -15,7 +15,18 @@ var OAuth2Client = googleapis.OAuth2Client,
 	hbs = exphbs.create({ /* config */ }),
 	routes = require('./routes'),
 	user = require('./routes/user'),
+	lib = require('./lib/lib'),
     port = 9300;
+
+var clientID = '19939366693-mnn18qkhbhon5fiqi30ovs7a0p6gq0ir.apps.googleusercontent.com',
+	clientSecret = 'iNGcI4rA-K-aPcKkZWqw2DOp';
+
+
+function newKey() {
+	var str = new Date().toString() + Math.floor(Math.random()*1000000).toString(),
+		key = crypto.createHash('md5').update(str).digest('hex');
+	return key;
+}
 
 app.enable('view cache');
 app.set('views', path.join(__dirname, 'views'));
@@ -30,9 +41,7 @@ app.set('view engine', 'handlebars');
 app.get('/userlist', routes.userlist(db));
 
 app.get('/consent', function(req, res) {
-	var clientID = '19939366693-mnn18qkhbhon5fiqi30ovs7a0p6gq0ir.apps.googleusercontent.com',
-		clientSecret = 'iNGcI4rA-K-aPcKkZWqw2DOp',
-		oauth2Client = new OAuth2Client(clientID, clientSecret, 'http://mobi.bleubrain.com/auth'),
+	var	oauth2Client = new OAuth2Client(clientID, clientSecret, 'http://mobi.bleubrain.com/auth'),
 		url = oauth2Client.generateAuthUrl({
 							access_type: 'offline',
 							scope: 'https://www.googleapis.com/auth/plus.me'
@@ -42,14 +51,20 @@ app.get('/consent', function(req, res) {
 
 app.get('/auth', function(req, res) {
 	if (!req.query.code) res.redirect('/consent');
-	console.log(req.query.code);
-	res.send(req.query.code);
+	var tbl = db.get('auth'),
+		ins = {
+			auth: req.query.code,
+			user: newKey(),
+			team: newKey()
+		};
+
+	tbl.insert(ins, function (err, doc) {
+	  if (err) throw err;
+	});
+	res.send(ins);
 });
 
 app.get('/enter', function(req, res) {
-	function newKey() {
-		return crypto.createHash('md5').update(new Date().toString() + Math.floor(Math.random()*1000000).toString()).digest('hex');
-	}
 	var newKeys = {
 		user: newKey(),
 		team: newKey()
