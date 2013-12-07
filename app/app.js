@@ -41,7 +41,7 @@ app.get('/consent', function(req, res) {
 });
 
 app.get('/auth', function(req, res) {
-	res.send('auth page');
+	res.send(req.query.code);
 });
 
 app.get('/enter', function(req, res) {
