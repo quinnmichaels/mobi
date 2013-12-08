@@ -4,29 +4,22 @@ var http = require('http'),
 	express = require('express'),
 	exphbs = require('express3-handlebars'),
 	request = require('request'),
-    mongo = require('mongodb'),
-	monk = require('monk'),
-	crypto = require('crypto'),
-	googleapis = require('googleapis');
+	googleapis = require('googleapis')
+	mongo = require('mongodb'),
+	monk = require('monk');
 
 var OAuth2Client = googleapis.OAuth2Client,
     db = monk('localhost:27017/mobi'),
     app = express(),
-	hbs = exphbs.create({ /* config */ }),
+	hbs = exphbs.create({}),
 	routes = require('./routes'),
 	user = require('./routes/user'),
-	lib = require('./lib/lib'),
+	lib = require('./lib/lib.js'),
     port = 9300;
 
 var clientID = '19939366693-mnn18qkhbhon5fiqi30ovs7a0p6gq0ir.apps.googleusercontent.com',
 	clientSecret = 'iNGcI4rA-K-aPcKkZWqw2DOp';
 
-
-function newKey() {
-	var str = new Date().toString() + Math.floor(Math.random()*1000000).toString(),
-		key = crypto.createHash('md5').update(str).digest('hex');
-	return key;
-}
 
 app.enable('view cache');
 app.set('views', path.join(__dirname, 'views'));
@@ -38,41 +31,29 @@ app.set('view engine', 'handlebars');
 // team stuff
 // user stuff
 
+app.get('/', function(req,res) {
+	res.redirect('/enter');
+});
+
 app.get('/userlist', routes.userlist(db));
 
-app.get('/consent', function(req, res) {
+
+//! /auth --- in progress
+app.get('/auth', lib.newuser(db));
+
+
+//! /enter --- in progress
+app.get('/enter', function(req, res) {
 	var	oauth2Client = new OAuth2Client(clientID, clientSecret, 'http://mobi.bleubrain.com/auth'),
 		url = oauth2Client.generateAuthUrl({
 							access_type: 'offline',
 							scope: 'https://www.googleapis.com/auth/plus.me'
 						});
-	res.redirect(url);
-});
 
-app.get('/auth', function(req, res) {
-	if (!req.query.code) res.redirect('/consent');
-	var tbl = db.get('auth'),
-		ins = {
-			auth: req.query.code,
-			user: newKey(),
-			team: newKey()
-		};
-
-	tbl.insert(ins, function (err, doc) {
-	  if (err) throw err;
+	res.render('enter', {layout: 'main',
+		title: 'Get Ready',
+		gurl: url
 	});
-	res.send(ins);
-});
-
-app.get('/enter', function(req, res) {
-	var newKeys = {
-		user: newKey(),
-		team: newKey()
-	};
-
-	res.render('enter', { 	layout: 'main',
-							title: 'Express',
-							keys: newKeys });
 });
 
 // sync stuff
@@ -87,7 +68,7 @@ app.get('/sites', function(req, res) {
 });
 
 // serve static files first
-app.use(express.static('public'));
+app.use('/app', express.static('public'));
 
 app.listen(port);
 
