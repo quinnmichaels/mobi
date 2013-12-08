@@ -66,7 +66,7 @@ exports.newuser = function(db) {
 			} else {
 				collection.insert(prof, function (err, doc) {
 					if (err) throw err;
-					res.redirect('/app');
+					res.redirect('/app?auth='+prof.auth);
 				});
 			}
 		});
