@@ -66,10 +66,7 @@ exports.newuser = function(db) {
 			} else {
 				collection.insert(prof, function (err, doc) {
 					if (err) throw err;
-					res.render('success', {layout: 'main',
-						title: 'Success',
-						data: doc
-					});
+					res.redirect('/app');
 				});
 			}
 		});
